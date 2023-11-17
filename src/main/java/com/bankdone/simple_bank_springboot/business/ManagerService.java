@@ -9,6 +9,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,21 +21,41 @@ public class ManagerService {
     private ManagerRepository managerRepository;
 
     @Cacheable("Manager")
-    public List<Manager> listAll() {
+    public List<Manager> getAllManagers() {
         return (List<Manager>) managerRepository.findAll();
     }
 
     public List<Manager> getAllManagersByStatus(ManagerStatus manStatus) {
         System.out.println("stringStatus " + manStatus);
-        return (List<Manager>) managerRepository.findAllManagersByStatus(manStatus);
+        return (List<Manager>) managerRepository.findAllByStatus(manStatus);
     }
 
-    public Optional<Manager> getManagerById(Integer id){
+    public Optional<Manager> getManagerById(Long id){
         return managerRepository.findById(id);
     }
 
-    public void deleteById(Integer id){
+    @Cacheable("Manager")
+    public void deleteById(Long id){
         managerRepository.deleteById(id);
     }
 
+    public List<Manager> getAllManagersWorkingWith(LocalDateTime dateTime) {
+        return  managerRepository.findAllByCreatedAtAfter(dateTime);}
+
+    public List<Manager> getAllManagersWorkingWithTo(LocalDateTime dateTimeWith,  LocalDateTime dateTimeTo) {
+        return  managerRepository.findAllByCreatedAtIsBetween(dateTimeWith, dateTimeTo);}
+
+//    @Cacheable("Manager")
+    public Manager create(Manager manager) {
+        manager = managerRepository.save(manager);
+        return manager;
+    }
+
+    public Manager editManager(Long id, Manager manager){
+        Manager updateManager = new Manager();
+        managerRepository.save(manager);
+        updateManager = managerRepository.findById(id).get();
+        return updateManager;
+//        managerRepository.
+    }
 }

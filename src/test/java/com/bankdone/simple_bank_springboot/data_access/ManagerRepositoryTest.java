@@ -9,8 +9,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
+import static java.time.LocalDateTime.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -42,6 +46,26 @@ class ManagerRepositoryTest {
         assertTrue(foundManager.isPresent());
         assertEquals(managerFake, foundManager.get());
         verify(managerRepository, times(1)).findById(managerFake.getId());
+    }
+
+    @Test
+    void testData(){
+        String data = "2023-07-14";
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+//        LocalDateTime dateTime = LocalDateTime.parse(data, formatter);
+//        LocalDateTime dateTime = LocalDateTime.parse("2007-12-03T10:15:30");
+
+
+//        LocalDateTime dateTime = LocalDateTime.parse("2007-12-03T10:15:30");
+//        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+//        String timeString = "23-02-2019";
+//        LocalDateTime dateTime = LocalDateTime.parse(timeString, dateTimeFormatter);
+//        System.out.println(dateTime);
+
+//        String str = "1986-04-08";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDateTime dateTime = LocalDate.parse(data, formatter).atStartOfDay();
+        System.out.println(dateTime);
     }
 
 //    public Optional<Manager> getManagerById(Integer id){return managerRepository.findById(id);

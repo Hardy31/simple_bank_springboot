@@ -7,12 +7,25 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
-@Repository
-public interface ManagerRepository extends  JpaRepository<Manager, Integer> {
+//Аннотация @Repository не нужна так как интерфейс наследуется от JpaRepository<Manager, Integer>!
+// где Manager это entity с которым будет работать данный репозиторий и Integer это PrimaryKey нащей таблици Long!
+//@Repository
+public interface ManagerRepository extends  JpaRepository<Manager, Long> {
 
-    @Query(" SELECT m FROM Manager m WHERE m.status=?1 ")
-    List<Manager> findAllManagersByStatus(ManagerStatus status);
+    List<Manager> findAllByStatus(ManagerStatus status);
+
+    List<Manager> findAllByCreatedAtAfter(LocalDateTime dateTime);
+
+    List<Manager> findAllByCreatedAtIsBetween (LocalDateTime dateTimeWith, LocalDateTime dateTimeTo );
+
+//    Manager updateById(long id, Manager manager);
+
+
+
+
+
 
 }
