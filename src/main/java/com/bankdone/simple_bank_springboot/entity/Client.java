@@ -1,6 +1,7 @@
 package com.bankdone.simple_bank_springboot.entity;
 
 
+import com.bankdone.simple_bank_springboot.entity.enums.ClientStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,7 +25,8 @@ public class Client {
     private Long id;
 
     @Column(name="status")
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private ClientStatus status;
 
     @Column(name="tax_code")
     private String taxCode ;

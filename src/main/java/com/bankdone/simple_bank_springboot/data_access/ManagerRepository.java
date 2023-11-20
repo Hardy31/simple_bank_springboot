@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 //Аннотация @Repository не нужна так как интерфейс наследуется от JpaRepository<Manager, Integer>!
 // где Manager это entity с которым будет работать данный репозиторий и Integer это PrimaryKey нащей таблици Long!
@@ -21,10 +22,7 @@ public interface ManagerRepository extends  JpaRepository<Manager, Long> {
 
     List<Manager> findAllByCreatedAtIsBetween (LocalDateTime dateTimeWith, LocalDateTime dateTimeTo );
 
-//    Manager updateById(long id, Manager manager);
-
-
-
+    Manager findByFirstNameAndLastName(String firstName, String lastName);
 
 
 

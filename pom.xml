@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.bankdone</groupId>
-    <artifactId>simple_bank_springboot</artifactId>
+    <artifactId>simple-bank-springboot</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 <!--    <packaging>war</packaging>-->
     <name>simple_bank_springboot</name>

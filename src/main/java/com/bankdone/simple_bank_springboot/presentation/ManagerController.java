@@ -38,12 +38,10 @@ public class ManagerController {
     @Autowired
     private ManagerService managerService;
 
-
     @GetMapping("managers/all")
     //    http://localhost:8080/rest/managers/all
     public List<Manager> getAllManagers() {
         return managerService.getAllManagers();
-
     }
 
     @GetMapping("managerStatus/{status}")
@@ -63,7 +61,8 @@ public class ManagerController {
     }
 
 
-    @DeleteMapping ("deleteManager/{id}")
+
+    @DeleteMapping("deleteManager/{id}")
     //    http://localhost:8080/rest/deleteManager/id?id=30
     public void delete(Long id) {
         managerService.deleteById(id);
@@ -75,12 +74,11 @@ public class ManagerController {
         return managerService.create(manager);
     }
 
-    @PostMapping("editManager/{id}")
+    @PutMapping("editManager/{id}")
     //    http://localhost:8080/rest/editManager/5
     public Manager edit(@PathVariable Long id, @RequestBody Manager manager) {
         return managerService.editManager(id, manager);
     }
-
 
     @GetMapping("ManagersWorkingWith/{data}")
     //    http://localhost:8080/rest/ManagersWorkingWith/2023-07-14
@@ -98,5 +96,12 @@ public class ManagerController {
         LocalDateTime dateTimeWith = LocalDate.parse(dataWith, formatter).atStartOfDay();
         LocalDateTime dateTimeTo = LocalDate.parse(dataTo, formatter).atStartOfDay();
         return managerService.getAllManagersWorkingWithTo(dateTimeWith, dateTimeTo);
+    }
+
+    @PostMapping("getManagerFIO")
+    //    http://localhost:8080/rest/getManagerFIO
+    public Manager getManagerByNameSurname(@RequestBody Manager manager){
+        Manager managerdb = managerService.getManagersByFIO(manager);
+        return managerdb;
     }
 }

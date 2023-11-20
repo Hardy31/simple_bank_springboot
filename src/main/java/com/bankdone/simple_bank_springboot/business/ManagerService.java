@@ -19,6 +19,7 @@ public class ManagerService {
 
     @Autowired
     private ManagerRepository managerRepository;
+    private Manager manager;
 
     @Cacheable("Manager")
     public List<Manager> getAllManagers() {
@@ -26,7 +27,7 @@ public class ManagerService {
     }
 
     public List<Manager> getAllManagersByStatus(ManagerStatus manStatus) {
-        System.out.println("stringStatus " + manStatus);
+//        System.out.println("stringStatus " + manStatus);
         return (List<Manager>) managerRepository.findAllByStatus(manStatus);
     }
 
@@ -34,7 +35,7 @@ public class ManagerService {
         return managerRepository.findById(id);
     }
 
-    @Cacheable("Manager")
+
     public void deleteById(Long id){
         managerRepository.deleteById(id);
     }
@@ -47,8 +48,7 @@ public class ManagerService {
 
 //    @Cacheable("Manager")
     public Manager create(Manager manager) {
-        manager = managerRepository.save(manager);
-        return manager;
+        return managerRepository.save(manager);
     }
 
     public Manager editManager(Long id, Manager manager){
@@ -56,6 +56,24 @@ public class ManagerService {
         managerRepository.save(manager);
         updateManager = managerRepository.findById(id).get();
         return updateManager;
-//        managerRepository.
+    }
+
+    public Manager getManagersByFIO(Manager manager) {
+        String firstName = manager.getFirstName();
+        String lastName = manager.getLastName();
+       Manager managerfromDB =  managerRepository.findByFirstNameAndLastName(firstName, lastName);
+        if(managerfromDB == null){
+            manager.setStatus(ManagerStatus.ACTIVE);
+            manager.setCreatedAt(LocalDateTime.now());
+            manager = create(manager);
+            System.out.println(" Добро пожаловать в наш коллектив!");
+        }else if(managerfromDB.getStatus().equals(ManagerStatus.DISMISSED)){
+            manager = managerfromDB;
+            System.out.println(" В приеме на работу отказать! Был ранее уволен");
+        }else{
+            manager = managerfromDB;
+            System.out.println(" Данный человек уже работает в Банке");
+        }
+        return manager;
     }
 }

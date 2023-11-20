@@ -27,8 +27,8 @@ class ManagerRepositoryTest {
     private Manager managerFake;
 
     @BeforeEach
-    void presetting(){
-        managerFake = CreatorFakeEntity.getFakeManager(5);
+    void presetting() {
+        managerFake = CreatorFakeEntity.getFakeManager(5L);
         System.out.println(managerFake);
 
 //        Optional<Manager> foundManager = managerRepository.findById(managerFake.getId());
@@ -36,11 +36,10 @@ class ManagerRepositoryTest {
     }
 
     @Test
-
-    void testGetManagerById(int id){
+    void testGetManagerById(Long id) {
         when(managerRepository.findById(id)).thenReturn(Optional.ofNullable(managerFake));
-        Optional<Manager>  foundManager = managerRepository.findById(managerFake.getId());
-        Manager man  = foundManager.get();
+        Optional<Manager> foundManager = managerRepository.findById(managerFake.getId());
+        Manager man = foundManager.get();
         System.out.println(man);
 
         assertTrue(foundManager.isPresent());
@@ -49,25 +48,11 @@ class ManagerRepositoryTest {
     }
 
     @Test
-    void testData(){
+    void testData() {
         String data = "2023-07-14";
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-//        LocalDateTime dateTime = LocalDateTime.parse(data, formatter);
-//        LocalDateTime dateTime = LocalDateTime.parse("2007-12-03T10:15:30");
-
-
-//        LocalDateTime dateTime = LocalDateTime.parse("2007-12-03T10:15:30");
-//        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-//        String timeString = "23-02-2019";
-//        LocalDateTime dateTime = LocalDateTime.parse(timeString, dateTimeFormatter);
-//        System.out.println(dateTime);
-
-//        String str = "1986-04-08";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDateTime dateTime = LocalDate.parse(data, formatter).atStartOfDay();
         System.out.println(dateTime);
     }
-
-//    public Optional<Manager> getManagerById(Integer id){return managerRepository.findById(id);
 
 }
