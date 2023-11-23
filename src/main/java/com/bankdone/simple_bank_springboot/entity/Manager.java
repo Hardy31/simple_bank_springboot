@@ -63,14 +63,4 @@ public class Manager {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-//    public Manager toManager(){
-//        Manager managerEntity = new Manager();
-//        managerEntity.setId(id);
-//        managerEntity.setFirstName(firstName);
-//        managerEntity.setLastName(lastName);
-//        managerEntity.setStatus(status);
-//        managerEntity.setCreatedAt(createdAt);
-//        managerEntity.setUpdatedAt(updatedAt);
-//        return managerEntity;
-//    }
 }
