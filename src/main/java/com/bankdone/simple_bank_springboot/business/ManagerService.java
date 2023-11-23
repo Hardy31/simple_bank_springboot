@@ -2,6 +2,7 @@ package com.bankdone.simple_bank_springboot.business;
 
 
 import com.bankdone.simple_bank_springboot.data_access.ManagerRepository;
+import com.bankdone.simple_bank_springboot.entity.Client;
 import com.bankdone.simple_bank_springboot.entity.Manager;
 import com.bankdone.simple_bank_springboot.entity.enums.ManagerStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,18 +24,16 @@ public class ManagerService {
 
     @Cacheable("Manager")
     public List<Manager> getAllManagers() {
-        return (List<Manager>) managerRepository.findAll();
+        return managerRepository.findAll();
     }
 
     public List<Manager> getAllManagersByStatus(ManagerStatus manStatus) {
-//        System.out.println("stringStatus " + manStatus);
-        return (List<Manager>) managerRepository.findAllByStatus(manStatus);
+        return  managerRepository.findAllByStatus(manStatus);
     }
 
     public Optional<Manager> getManagerById(Long id){
         return managerRepository.findById(id);
     }
-
 
     public void deleteById(Long id){
         managerRepository.deleteById(id);
@@ -52,9 +51,8 @@ public class ManagerService {
     }
 
     public Manager editManager(Long id, Manager manager){
-        Manager updateManager = new Manager();
         managerRepository.save(manager);
-        updateManager = managerRepository.findById(id).get();
+        Manager updateManager = managerRepository.findById(id).get();
         return updateManager;
     }
 
@@ -76,4 +74,8 @@ public class ManagerService {
         }
         return manager;
     }
+
+//    public List<Client> findAllClientsByManagerId(Long id){
+//        return managerRepository.findAllClientsByManagerId(id);
+//    }
 }

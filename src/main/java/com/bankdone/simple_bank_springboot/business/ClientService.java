@@ -15,14 +15,41 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Класс  ClientService
+ * @Service
+ * @Transactional
+ *
+ * List<Client> findAllByManager_Id(Long id); использован построитель запросов по имени метода.
+ * Поиск клиента по Id
+ *
+ * Optional<Client> findClientByPhone(String phone); использован построитель запросов по имени метода.
+ * Поиск клиента по телефону
+ *
+ *   List<Client> findClientByAddress(String address); использован построитель запросов по имени метода.
+ * Поиск клиентов по адресу
+ *
+ * List<Client> findClientByStatus(ClientStatus status); использован построитель запросов по имени метода.
+ * Поиск клиентов по статусуадресу
+ *
+ * List<Client> findClientByCreatedAtIsBetween (LocalDateTime dateTimeWith, LocalDateTime dateTimeTo );
+ * использован построитель запросов по имени метода.
+ * Возвращает список клиентов которые были созданы в промежутке переданных дат ( с по).
+ *
+ *
+ * @автор  Hardy
+ * @версия 1.0
+ * @от   2023-11-19
+ */
+
+
 @Service
 @Transactional
 public class ClientService {
 
     @Autowired
     private ClientRepository clientRepository;
-    private ManagerRepository managerRepository;
-    private Client updatedClient;
+
     @Cacheable("Manager")
     public List<Client> getAllClients() {
         return (List<Client>) clientRepository.findAll();
@@ -31,26 +58,15 @@ public class ClientService {
     public Optional<Client> getClientById(Long id){ return clientRepository.findById(id);}
 
     public Client create(Client client){
-//        Manager manager = managerRepository.findById(client.getManager().getId()).get();
-//        client.setManager(manager);
-//        System.out.println(client);
-        clientRepository.save(client);
+//        clientRepository.save(client);
         return clientRepository.save(client);
     }
 
-//    public Client editClieny(long id, Client client){
     public Client editClieny(Client client){
-        Client updateClient = new Client();
         clientRepository.save(client);
         Long clientid = client.getId();
-        updateClient = clientRepository.findById(clientid).get();
-        System.out.println(updateClient);
+        Client updateClient = clientRepository.findById(clientid).get();
        return updateClient;
-
-//        Manager updateManager = new Manager();
-//        managerRepository.save(manager);
-//        updateManager = managerRepository.findById(id).get();
-//        return updateManager;
     }
     public void  delite(@PathVariable long id){
         clientRepository.deleteById(id);
@@ -74,5 +90,4 @@ public class ClientService {
     public List<Client> getAllClientsCreatedBetween(LocalDateTime dateTimeWith, LocalDateTime dateTimeTo){
         return clientRepository.findClientByCreatedAtIsBetween(dateTimeWith, dateTimeTo);
     }
-
 }

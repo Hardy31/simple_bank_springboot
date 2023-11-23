@@ -14,6 +14,37 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Класс  ManagerController
+ * Данный клас является обработчиком запросов которые будут поступать от dispatcher Servlet.
+ *
+ * public List<Client> geAllClients()  - Возвращаетсписок Всех Клиентов.
+ * public Client getById(@PathVariable Long id) - Возвращает Клиента по Id
+ * public List<Client> getClientService(@PathVariable Long id) - возвращает Всех клиентов  по Id Mенеджера.
+ * public Client geClientByPhone(@PathVariable String phone) возвращает Слиента по номеру телефона.
+ * public List<Client> geClientByAddress(@RequestBody Client client) возвращает Клиентов по Адресу проживания.
+ * public List<Client> getAllClientStatus(@RequestBody Client client) возвращает список Клиентов по выбранному статусу.
+ * public  Client create(@RequestBody Client client) создание Клиента.
+ * public Client editClient(@RequestBody Client client) редактирование Клиента.
+ * public void getClientById(@PathVariable Long id) возвращает Клиента по Id.
+ *
+ *
+ * @RestController (@ Controller + @ ResponsBody) указывает, что этот класс является контроллером,
+ * обрабатывающим HTTP-запросы.
+ * @RequestMapping("/rest") - указывает базовый путь URL-адреса для всех конечных точек в этом контроллере. который будет "/rest".
+ * @Autowired в Spring Framework используется для автоматического связывания компонентов бина между собой.
+ * По умолчанию скоуп бина - синглтон.
+ * @GetMapping("managers") используется для сопоставления HTTP-запросов GET с определенными методами в классе контроллера.
+ * Он указывает URL-путь для конечной точки и определяет логику обработки запроса GET и генерации ответа.
+ * Metod public List<ManagerEntity> getManagerEntitys()  возвращает список всех ManagerEntity в JSON формате
+ *
+ *
+ *
+ * @автор  Hardy
+ * @версия 1.0
+ * @от 2023-11-09
+ */
+
 @RestController
 @RequestMapping("/rest")
 public class ClientController {
@@ -22,8 +53,7 @@ public class ClientController {
 
     @GetMapping("clients/all")
     //    http://localhost:8080/rest/clients/all
-    public List<Client> getClients() {
-    //        return clientService.listAll();
+    public List<Client> geAllClients() {
         return clientService.getAllClients().stream().map(Client::toClient).collect(Collectors.toList());
     }
 

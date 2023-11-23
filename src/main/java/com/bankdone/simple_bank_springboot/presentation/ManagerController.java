@@ -1,6 +1,7 @@
 package com.bankdone.simple_bank_springboot.presentation;
 
 import com.bankdone.simple_bank_springboot.business.ManagerService;
+import com.bankdone.simple_bank_springboot.entity.Client;
 import com.bankdone.simple_bank_springboot.entity.Manager;
 import com.bankdone.simple_bank_springboot.entity.enums.ManagerStatus;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,18 @@ import java.util.Optional;
  * Класс  ManagerController
  * Данный клас является обработчиком запросов которые будут поступать от dispatcher Servlet.
  *
+ * public List<Manager> getAllManagers() - Возвращаетсписок Всех Менеджеров.
+ * public List<Manager> getAllManagersByStatus(@PathVariable String status) - возвращает список всех Менеджеров с выбранным статусом.
+ * public Optional<Manager> getManagerById(@PathVariable Long id) возвращает менеджера по Id.
+ * public void delete(Long id - удаление Менеджера по Id.
+ * public Manager save(@RequestBody Manager manager) - сохранение Менеджера в БД
+ * public Manager edit(@PathVariable Long id, @RequestBody Manager manager)  внесение изменений в уже существующего Менеджера.
+ * public List<Manager> getAllManagersWorkingWith(@PathVariable String data)  возвращает всех Менеджеров работающих с Даты.
+ * public List<Manager> getAllManagersWorkingWith(@PathVariable String dataWith, @PathVariable String dataTo)
+ *       возвращает список Всех Менеджеров работающих с по даты.
+ * public Manager getManagerByNameSurname(@RequestBody Manager manager) поиск менеджера в БД по Имени.
+ *
+ *
  * @RestController (@ Controller + @ ResponsBody) указывает, что этот класс является контроллером,
  * обрабатывающим HTTP-запросы.
  * @RequestMapping("/rest") - указывает базовый путь URL-адреса для всех конечных точек в этом контроллере. который будет "/rest".
@@ -25,7 +38,10 @@ import java.util.Optional;
  * @GetMapping("managers") используется для сопоставления HTTP-запросов GET с определенными методами в классе контроллера.
  * Он указывает URL-путь для конечной точки и определяет логику обработки запроса GET и генерации ответа.
  * Metod public List<ManagerEntity> getManagerEntitys()  возвращает список всех ManagerEntity в JSON формате
- * @автор rest
+ *
+ *
+ *
+ * @автор  Hardy
  * @версия 1.0
  * @от 2023-11-09
  */
@@ -89,9 +105,9 @@ public class ManagerController {
     }
 
     @GetMapping("ManagersWorkingWith/{dataWith}/to/{dataTo}")
-    //    http://localhost:8080/rest/ManagersWorkingWith/2023-07-14/to/2023-07-16
-    //    http://localhost:8080/rest/ManagersWorkingWith/1998-07-08/to/1998-07-20
-    public List<Manager> getAllManagersWorkingWith(@PathVariable String dataWith, @PathVariable String dataTo) {
+    //    http://localhost:8080/rest/ManagersWorkingWithTo/2023-07-14/to/2023-07-16
+    //    http://localhost:8080/rest/ManagersWorkingWithTo/1998-07-08/to/1998-07-20
+    public List<Manager> getAllManagersWorkingWithTo(@PathVariable String dataWith, @PathVariable String dataTo) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDateTime dateTimeWith = LocalDate.parse(dataWith, formatter).atStartOfDay();
         LocalDateTime dateTimeTo = LocalDate.parse(dataTo, formatter).atStartOfDay();
@@ -104,4 +120,11 @@ public class ManagerController {
         Manager managerdb = managerService.getManagersByFIO(manager);
         return managerdb;
     }
+
+//    @GetMapping("getAllClientsByManagerId/{id}")
+////    http://localhost:8080/rest/getAllClientsByManagerId/1
+//    public List<Client> getAllClientsByManagerId(@PathVariable Long id){
+//        return managerService.findAllClientsByManagerId(id);
+//    }
+
 }
