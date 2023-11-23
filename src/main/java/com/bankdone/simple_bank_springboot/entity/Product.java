@@ -1,7 +1,8 @@
 package com.bankdone.simple_bank_springboot.entity;
 
 
-import com.bankdone.simple_bank_springboot.entity.enums.ClientStatus;
+import com.bankdone.simple_bank_springboot.entity.enums.CurrencyCode;
+import com.bankdone.simple_bank_springboot.entity.enums.ProductStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,9 +10,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-
-import static javax.persistence.CascadeType.*;
-
 
 /**
  * Класс  ManagerEntity
@@ -35,43 +33,37 @@ import static javax.persistence.CascadeType.*;
  *
  * @автор  Hardy
  * @версия 1.0
- * @от   2023-11-19
+ * @от   2023-11-21
  */
 
-
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
 @Entity
-@Table (name = "client", schema = "public")
-public class Client {
+@Table(name = "product", schema = "public")
+public class Product {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name ="id")
     private Long id;
 
-    @Column(name="status")
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "status")
     @Enumerated(EnumType.STRING)
-    private ClientStatus status;
+    private ProductStatus status;
 
-    @Column(name="tax_code")
-    private String taxCode ;
+    @Column(name="currency_code")
+    @Enumerated(EnumType.STRING)
+    private CurrencyCode currencyCode;
 
-    @Column(name = "first_name")
-    private String firstName;
+    @Column(name="interest_rate")
+    private double interestRate;
 
-    @Column(name="last_name")
-    private String lastName;
-
-    @Column(name="email")
-    private String email;
-
-    @Column(name="address")
-    private String address;
-
-    @Column(name="phone")
-    private String phone;
+    @Column(name="product_limit")
+    private int productLimit;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -80,24 +72,8 @@ public class Client {
     private LocalDateTime updatedAt;
 
     @ManyToOne
-    @JoinColumn(name = "manager_id", referencedColumnName = "id")
+    @JoinColumn(name="manager_id" , referencedColumnName = "id")
     private Manager manager;
-
-    public Client toClient(){
-        Client clientEntity = new Client();
-        clientEntity.setId(id);
-        clientEntity.setFirstName(firstName);
-        clientEntity.setLastName(lastName);
-        clientEntity.setEmail(email);
-        clientEntity.setAddress(address);
-        clientEntity.setPhone(phone);
-        clientEntity.setCreatedAt(createdAt);
-        clientEntity.setUpdatedAt(updatedAt);
-        clientEntity.setManager(manager);
-        return clientEntity;
-    }
-
-
 
 
 }

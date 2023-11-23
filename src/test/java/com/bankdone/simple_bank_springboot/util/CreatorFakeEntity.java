@@ -6,8 +6,8 @@ import com.bankdone.simple_bank_springboot.entity.enums.ManagerStatus;
 import java.time.LocalDateTime;
 
 public class CreatorFakeEntity {
-    public static Manager getFakeManager(int id){
-        int i = id;
+    public static Manager getFakeManager(Long id){
+        Long i = id;
         Manager fakeManager = new Manager().builder()
                 .id(i)
                 .firstName("NameF" + i)

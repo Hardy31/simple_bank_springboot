@@ -16,7 +16,7 @@ package com.bankdone.simple_bank_springboot.entity.enums;
  * @автор  Hardy
  * @версия 1.0
  * @от   2023-11-09
- */
+ **/
 
 public enum ManagerStatus {
     ACTIVE,
