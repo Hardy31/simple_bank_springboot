@@ -15,27 +15,28 @@ public class AccountService {
 
     @Autowired
     private AccountRepository accountRepository;
-    public List<Account> getAll(){
+
+    public List<Account> getAll() {
         return (List<Account>) accountRepository.findAll();
     }
 
-    public Account getBiId(Long id){
+    public Account getBiId(Long id) {
         return accountRepository.findById(id).get();
     }
-    public Account getBiID(Long id){
+
+    public Account getBiID(Long id) {
         return accountRepository.findByID(id).get();
     }
 
-    public Account create(Account account){
-        System.out.println(account);
-        return  accountRepository.save(account);
-    }
-
-    public Account edit(Account account){
+    public Account create(Account account) {
         return accountRepository.save(account);
     }
 
-    public void delite(Long id){
+    public Account edit(Account account) {
+        return accountRepository.save(account);
+    }
+
+    public void delite(Long id) {
         accountRepository.deleteById(id);
     }
 

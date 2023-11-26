@@ -10,6 +10,26 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+
+/**
+ * Класс  Agreement (Cjukfitybt)Entity
+ * Данный клас является представлением обекта в БД.
+ *
+ * id               - идентификатор БД
+ * interestRate     - процентная ставка (ниже ставки рефинансирования)
+ * status           - статус как всегда  подробности AccountStatus (активный, не активный, в разработке, отладке ... )
+ * sum              - сумма  по соглашению (не совсем понятна логика!)
+ *  createdAt       - Локальная дата создания.
+ *  updatedAt       - Локальная дата  изменения
+ *  product         = продукт
+ *  account         - счет
+ *
+ * @автор  Hardy
+ * @версия 1.0
+ * @от   2023-11-27
+ */
+
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

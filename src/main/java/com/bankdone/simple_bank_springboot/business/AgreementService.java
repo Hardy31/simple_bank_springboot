@@ -15,6 +15,7 @@ public class AgreementService {
 
     @Autowired
     AgreementRepository agreementRepository;
+
     public Agreement getById(long id) {
         return agreementRepository.findById(id).get();
     }

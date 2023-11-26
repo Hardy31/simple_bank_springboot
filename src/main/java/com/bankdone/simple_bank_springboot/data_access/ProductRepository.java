@@ -28,10 +28,4 @@ public interface ProductRepository extends CrudRepository <Product, Long>{
             @Param("rate")double interestRate
     ) ;
 
-//    @Query("SELECT p.id, p.name, p. m.FROM Product  AS p WHERE p.status = :status AND p.currencyCode = :code AND p.interestRate = :rate")
-//    List<Product> findAllByStatusWhereManagerHasStatus
-//            @Param("status") ProductStatus status,
-//            @Param("code")CurrencyCode currencyCode,
-//            @Param("rate")double interestRate
-//    ) ;
 }
