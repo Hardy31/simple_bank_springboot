@@ -51,8 +51,4 @@ public interface ManagerRepository extends  JpaRepository<Manager, Long> {
     List<Manager> findAllByCreatedAtIsBetween (LocalDateTime dateTimeWith, LocalDateTime dateTimeTo );
 
     Manager findByFirstNameAndLastName(String firstName, String lastName);
-
-//        @Query(value = "SELECT c FROM Client c INNER JOIN c.manager m ORDER BY m.id = :id")
-//    List<Client> findAllClientsByManagerId(@Param("id") Long id ) ;
-
 }

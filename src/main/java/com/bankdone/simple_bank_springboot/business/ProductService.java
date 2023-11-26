@@ -13,6 +13,7 @@ import java.util.List;
 @Service
 @Transactional
 public class ProductService {
+
     @Autowired
     private ProductRepository productRepository;
 
@@ -23,6 +24,7 @@ public class ProductService {
     public List<Product> getAll(){
        return (List<Product>) productRepository.findAll();
     }
+
     public Product edit(Long id, Product product){
         productRepository.save(product);
 //        Long productId = product.getId();

@@ -41,11 +41,14 @@ import java.util.Optional;
 
 @Repository
 public interface ClientRepository extends CrudRepository<Client, Long>  {
+
     List<Client> findAllByManager_Id(Long id);
+
     Optional<Client> findClientByPhone(String phone);
+
     List<Client> findClientByAddress(String address);
+
     List<Client> findClientByStatus(ClientStatus status);
 
     List<Client> findClientByCreatedAtIsBetween (LocalDateTime dateTimeWith, LocalDateTime dateTimeTo );
-
 }

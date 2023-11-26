@@ -6,5 +6,5 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 //@Repository
-public interface AgreementRepository extends JpaRepository<Agreement, Long>, CrudRepository<Agreement, Long> {
+public interface AgreementRepository extends JpaRepository<Agreement, Long> {
 }

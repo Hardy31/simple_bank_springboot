@@ -9,7 +9,6 @@ import org.springframework.cache.annotation.EnableCaching;
 public class SimpleBankSpringbootApplication {
 
     public static void main(String[] args) {
-
         SpringApplication.run(SimpleBankSpringbootApplication.class, args);
     }
 

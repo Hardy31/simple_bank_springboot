@@ -16,33 +16,28 @@ public class AccountsController {
     AccountService accountService;
 
     @GetMapping("accounts")
-    public List<Account> getAll(){
+    public List<Account> getAll() {
         return accountService.getAll();
     }
 
     @GetMapping("accounts/{id}")
     public Account getById(@PathVariable Long id) {
-        System.out.println(" ID __________________________________________________" + id);
         return accountService.getBiId(id);
     }
 
     @PostMapping("accounts")
-    public Account cteate(@RequestBody Account account){
-        return  accountService.create(account);
+    public Account cteate(@RequestBody Account account) {
+        return accountService.create(account);
     }
 
     @PutMapping("accounts")
-    public Account editAccount(@RequestBody Account account){
+    public Account editAccount(@RequestBody Account account) {
         return accountService.edit(account);
     }
 
     @DeleteMapping("accounts/{id}")
-    public void delete(@PathVariable Long id){
+    public void delete(@PathVariable Long id) {
         accountService.delite(id);
     }
-
-
-
-
 
 }

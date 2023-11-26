@@ -11,6 +11,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/rest")
 public class AccountController {
+
     @Autowired
     AccountService accountService;
 
@@ -20,23 +21,23 @@ public class AccountController {
     }
 
     @GetMapping("accounts/all")
-    public List<Account> getAll(){
+    public List<Account> getAll() {
         return accountService.getAll();
     }
 
     @PostMapping("creatAccounts")
-    public Account cteate(@RequestBody Account account){
-        return  accountService.create(account);
+    public Account cteate(@RequestBody Account account) {
+        return accountService.create(account);
     }
 
 
     @PutMapping("editAccount")
-    public Account editAccount(@RequestBody Account account){
+    public Account editAccount(@RequestBody Account account) {
         return accountService.edit(account);
     }
 
     @DeleteMapping("deleteAccount/{id}")
-    public void delete(@PathVariable Long id){
+    public void delete(@PathVariable Long id) {
         accountService.delite(id);
     }
 }

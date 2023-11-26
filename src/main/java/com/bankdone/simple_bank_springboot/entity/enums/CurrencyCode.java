@@ -6,8 +6,8 @@ package com.bankdone.simple_bank_springboot.entity.enums;
  * определения валюты счета.
  * <b>Примечание:
  *     RUB   - рубли РФ,
- *     USD   -Доллары США,
- *     EUR   -Евро
+ *     USD   - Доллары США,
+ *     EUR   - Евро
  *
  * @автор Hardy
  * @версия 1.0
