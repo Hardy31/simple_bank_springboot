@@ -1,11 +1,11 @@
 package com.bankdone.simple_bank_springboot.presentation;
 
 import com.bankdone.simple_bank_springboot.business.ManagerService;
-import com.bankdone.simple_bank_springboot.entity.Client;
 import com.bankdone.simple_bank_springboot.entity.Manager;
 import com.bankdone.simple_bank_springboot.entity.enums.ManagerStatus;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -42,6 +42,7 @@ import java.util.Optional;
  * @от 2023-11-09
  */
 
+@Slf4j
 @RestController
 @RequestMapping("/rest")
 @RequiredArgsConstructor
@@ -52,6 +53,7 @@ public class ManagerController {
     @GetMapping("managers/all")
     //    http://localhost:8080/rest/managers/all
     public List<Manager> getAllManagers() {
+        log.info("ManagerService /rest/managers/all ");
         return managerService.getAllManagers();
     }
 
@@ -68,6 +70,7 @@ public class ManagerController {
 
     //    http://localhost:8080/rest/manager/5
     public Optional<Manager> getManagerById(@PathVariable Long id) {
+        log.info("AgreementController//rest/agreement/{id} : " + id);
         return managerService.getManagerById(id);
     }
 
@@ -75,18 +78,21 @@ public class ManagerController {
     @DeleteMapping("deleteManager/{id}")
     //    http://localhost:8080/rest/deleteManager/id?id=30
     public void delete(Long id) {
+        log.info("ManagerService /rest/deleteManager/{id} : " + id);
         managerService.deleteById(id);
     }
 
     @PostMapping("createManager")
     //    http://localhost:8080/rest/deleteManager
     public Manager save(@RequestBody Manager manager) {
+        log.info("ManagerService /rest/createManager : " + manager);
         return managerService.create(manager);
     }
 
     @PutMapping("editManager/{id}")
     //    http://localhost:8080/rest/editManager/5
     public Manager edit(@PathVariable Long id, @RequestBody Manager manager) {
+        log.info("ManagerService /rest/editManager/{id} + Manager : " + id + " + " + manager);
         return managerService.editManager(id, manager);
     }
 

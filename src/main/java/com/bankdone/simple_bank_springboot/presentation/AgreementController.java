@@ -3,11 +3,10 @@ package com.bankdone.simple_bank_springboot.presentation;
 import com.bankdone.simple_bank_springboot.business.AgreementService;
 import com.bankdone.simple_bank_springboot.entity.Agreement;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -18,7 +17,6 @@ public class AgreementController {
 
     @GetMapping("agreement/{id}")
     public Agreement getBYId(@PathVariable long id) {
-        System.out.println("id - ------------" + id);
         return agreementService.getById(id);
     }
 
@@ -40,6 +38,5 @@ public class AgreementController {
     public Agreement editAgreement(@RequestBody Agreement agreement) {
         return agreementService.edit(agreement);
     }
-
 
 }
