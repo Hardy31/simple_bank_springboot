@@ -40,8 +40,6 @@ import org.springframework.data.repository.query.Param;
  */
 
 
-
-
 public interface ManagerRepository extends  JpaRepository<Manager, Long> {
 
     List<Manager> findAllByStatus(ManagerStatus status);

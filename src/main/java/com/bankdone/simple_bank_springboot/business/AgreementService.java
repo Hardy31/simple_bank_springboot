@@ -2,6 +2,7 @@ package com.bankdone.simple_bank_springboot.business;
 
 import com.bankdone.simple_bank_springboot.data_access.AgreementRepository;
 import com.bankdone.simple_bank_springboot.entity.Agreement;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,10 +12,10 @@ import java.util.Optional;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class AgreementService {
 
-    @Autowired
-    AgreementRepository agreementRepository;
+    private final AgreementRepository agreementRepository;
 
     public Agreement getById(long id) {
         return agreementRepository.findById(id).get();

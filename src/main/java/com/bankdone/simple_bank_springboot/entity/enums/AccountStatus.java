@@ -1,7 +1,5 @@
 package com.bankdone.simple_bank_springboot.entity.enums;
 
-<<<<<<< HEAD
-=======
 
 /**
  * <h1> Варианты состояния Счета</h1>
@@ -15,7 +13,7 @@ package com.bankdone.simple_bank_springboot.entity.enums;
  * @версия 1.0
  * @от 2023-11-26
  */
->>>>>>> account
+
 public enum AccountStatus {
     ACTIVE,
     NOT_ACTIVE

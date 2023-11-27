@@ -2,6 +2,7 @@ package com.bankdone.simple_bank_springboot.presentation;
 
 import com.bankdone.simple_bank_springboot.business.AccountService;
 import com.bankdone.simple_bank_springboot.entity.Account;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,11 +10,11 @@ import javax.persistence.GeneratedValue;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/rest")
 public class AccountController {
 
-    @Autowired
-    AccountService accountService;
+    private final AccountService accountService;
 
     @GetMapping("account/{id}")
     public Account getById(@PathVariable Long id) {
@@ -21,7 +22,7 @@ public class AccountController {
     }
 
     @GetMapping("accounts/all")
-    public List<Account> getAll(){
+    public List<Account> getAll() {
         return accountService.getAll();
     }
 

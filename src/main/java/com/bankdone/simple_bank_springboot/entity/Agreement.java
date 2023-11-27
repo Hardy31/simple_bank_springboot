@@ -14,19 +14,19 @@ import java.time.LocalDateTime;
 /**
  * Класс  Agreement (Cjukfitybt)Entity
  * Данный клас является представлением обекта в БД.
- *
+ * <p>
  * id               - идентификатор БД
  * interestRate     - процентная ставка (ниже ставки рефинансирования)
  * status           - статус как всегда  подробности AccountStatus (активный, не активный, в разработке, отладке ... )
  * sum              - сумма  по соглашению (не совсем понятна логика!)
- *  createdAt       - Локальная дата создания.
- *  updatedAt       - Локальная дата  изменения
- *  product         = продукт
- *  account         - счет
+ * createdAt       - Локальная дата создания.
+ * updatedAt       - Локальная дата  изменения
+ * product         = продукт
+ * account         - счет
  *
- * @автор  Hardy
+ * @автор Hardy
  * @версия 1.0
- * @от   2023-11-27
+ * @от 2023-11-27
  */
 
 
@@ -35,21 +35,21 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table (name = "agreement", schema = "public")
+@Table(name = "agreement", schema = "public")
 public class Agreement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    @Column(name="interest_rate")
+    @Column(name = "interest_rate")
     private double interestRate;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private AgreementStatus status;
 
-    @Column(name="sum")
+    @Column(name = "sum")
     private double sum;
 
     @Column(name = "created_at")
@@ -58,8 +58,8 @@ public class Agreement {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-   @ManyToOne(fetch = FetchType.LAZY)
-   @JoinColumn(name = "product_id", referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", referencedColumnName = "id")
     private Product product;
 
     @ManyToOne(fetch = FetchType.LAZY)

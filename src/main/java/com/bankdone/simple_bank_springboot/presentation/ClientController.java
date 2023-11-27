@@ -5,6 +5,7 @@ import com.bankdone.simple_bank_springboot.business.ManagerService;
 import com.bankdone.simple_bank_springboot.entity.Client;
 import com.bankdone.simple_bank_springboot.entity.Manager;
 import com.bankdone.simple_bank_springboot.entity.enums.ClientStatus;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +18,7 @@ import java.util.stream.Collectors;
 /**
  * Класс  ManagerController
  * Данный клас является обработчиком запросов которые будут поступать от dispatcher Servlet.
- *
+ * <p>
  * public List<Client> geAllClients()  - Возвращаетсписок Всех Клиентов.
  * public Client getById(@PathVariable Long id) - Возвращает Клиента по Id
  * public List<Client> getClientService(@PathVariable Long id) - возвращает Всех клиентов  по Id Mенеджера.
@@ -28,7 +29,6 @@ import java.util.stream.Collectors;
  * public Client editClient(@RequestBody Client client) редактирование Клиента.
  * public void getClientById(@PathVariable Long id) возвращает Клиента по Id.
  *
- *
  * @RestController (@ Controller + @ ResponsBody) указывает, что этот класс является контроллером,
  * обрабатывающим HTTP-запросы.
  * @RequestMapping("/rest") - указывает базовый путь URL-адреса для всех конечных точек в этом контроллере. который будет "/rest".
@@ -37,19 +37,17 @@ import java.util.stream.Collectors;
  * @GetMapping("managers") используется для сопоставления HTTP-запросов GET с определенными методами в классе контроллера.
  * Он указывает URL-путь для конечной точки и определяет логику обработки запроса GET и генерации ответа.
  * Metod public List<ManagerEntity> getManagerEntitys()  возвращает список всех ManagerEntity в JSON формате
- *
- *
- *
- * @автор  Hardy
+ * @автор Hardy
  * @версия 1.0
  * @от 2023-11-09
  */
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/rest")
 public class ClientController {
-    @Autowired
-    private ClientService clientService;
+
+    private final ClientService clientService;
 
     @GetMapping("clients/all")
     //    http://localhost:8080/rest/clients/all
@@ -71,19 +69,19 @@ public class ClientController {
 
     @GetMapping("getClientByPhone/{phone}")
     //    http://localhost:8080/rest/getClientByPhone/+7(321) 123-45-69
-    public Client geClientByPhone(@PathVariable String phone){
+    public Client geClientByPhone(@PathVariable String phone) {
         return clientService.getClientByPhone(phone).get();
     }
 
     @PostMapping("getClientByAddress")
     //    http://localhost:8080/rest/getClientByAddress
-    public List<Client> geClientByAddress(@RequestBody Client client){
+    public List<Client> geClientByAddress(@RequestBody Client client) {
         return clientService.getClientsByAddress(client.getAddress());
     }
 
     @PostMapping("getClientByStatus")
     //    http://localhost:8080/rest/getClientByStatus
-    public List<Client> getAllClientStatus(@RequestBody Client client){
+    public List<Client> getAllClientStatus(@RequestBody Client client) {
         ClientStatus requestClientStatus = client.getStatus();
         return clientService.getAllClientsByStatus(requestClientStatus);
     }
@@ -99,19 +97,19 @@ public class ClientController {
 
     @PostMapping("createClient")
     //    http://localhost:8080/rest/createClient
-    public  Client create(@RequestBody Client client){
+    public Client create(@RequestBody Client client) {
         return clientService.create(client);
     }
 
     @PutMapping("editClient/")
     //    http://localhost:8080/rest/editClient
-    public Client editClient(@RequestBody Client client){
-        return clientService.editClieny( client);
+    public Client editClient(@RequestBody Client client) {
+        return clientService.editClieny(client);
     }
 
     @DeleteMapping("deleteClient/{id}")
     //    http://localhost:8080/rest/deleteClient/6
-    public void getClientById(@PathVariable Long id){
+    public void getClientById(@PathVariable Long id) {
         clientService.delite(id);
     }
 

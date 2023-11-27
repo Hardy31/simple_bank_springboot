@@ -17,7 +17,7 @@ import java.util.Optional;
 /**
  * Класс  ManagerController
  * Данный клас является обработчиком запросов которые будут поступать от dispatcher Servlet.
- *
+ * <p>
  * public List<Manager> getAllManagers() - Возвращаетсписок Всех Менеджеров.
  * public List<Manager> getAllManagersByStatus(@PathVariable String status) - возвращает список всех Менеджеров с выбранным статусом.
  * public Optional<Manager> getManagerById(@PathVariable Long id) возвращает менеджера по Id.
@@ -26,9 +26,8 @@ import java.util.Optional;
  * public Manager edit(@PathVariable Long id, @RequestBody Manager manager)  внесение изменений в уже существующего Менеджера.
  * public List<Manager> getAllManagersWorkingWith(@PathVariable String data)  возвращает всех Менеджеров работающих с Даты.
  * public List<Manager> getAllManagersWorkingWith(@PathVariable String dataWith, @PathVariable String dataTo)
- *       возвращает список Всех Менеджеров работающих с по даты.
+ * возвращает список Всех Менеджеров работающих с по даты.
  * public Manager getManagerByNameSurname(@RequestBody Manager manager) поиск менеджера в БД по Имени.
- *
  *
  * @RestController (@ Controller + @ ResponsBody) указывает, что этот класс является контроллером,
  * обрабатывающим HTTP-запросы.
@@ -38,10 +37,7 @@ import java.util.Optional;
  * @GetMapping("managers") используется для сопоставления HTTP-запросов GET с определенными методами в классе контроллера.
  * Он указывает URL-путь для конечной точки и определяет логику обработки запроса GET и генерации ответа.
  * Metod public List<ManagerEntity> getManagerEntitys()  возвращает список всех ManagerEntity в JSON формате
- *
- *
- *
- * @автор  Hardy
+ * @автор Hardy
  * @версия 1.0
  * @от 2023-11-09
  */
@@ -51,8 +47,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ManagerController {
 
-    @Autowired
-    private ManagerService managerService;
+    private final ManagerService managerService;
 
     @GetMapping("managers/all")
     //    http://localhost:8080/rest/managers/all
@@ -75,7 +70,6 @@ public class ManagerController {
     public Optional<Manager> getManagerById(@PathVariable Long id) {
         return managerService.getManagerById(id);
     }
-
 
 
     @DeleteMapping("deleteManager/{id}")
@@ -116,15 +110,9 @@ public class ManagerController {
 
     @PostMapping("getManagerFIO")
     //    http://localhost:8080/rest/getManagerFIO
-    public Manager getManagerByNameSurname(@RequestBody Manager manager){
+    public Manager getManagerByNameSurname(@RequestBody Manager manager) {
         Manager managerdb = managerService.getManagersByFIO(manager);
         return managerdb;
     }
-
-//    @GetMapping("getAllClientsByManagerId/{id}")
-////    http://localhost:8080/rest/getAllClientsByManagerId/1
-//    public List<Client> getAllClientsByManagerId(@PathVariable Long id){
-//        return managerService.findAllClientsByManagerId(id);
-//    }
 
 }

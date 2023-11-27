@@ -9,8 +9,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-@Repository
-
 public interface AccountRepository extends JpaRepository<Account, Long> {
 
     @Query("SELECT a FROM Account  AS a WHERE a.id = :id")

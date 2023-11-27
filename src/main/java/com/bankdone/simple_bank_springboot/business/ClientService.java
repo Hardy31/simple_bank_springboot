@@ -5,6 +5,7 @@ import com.bankdone.simple_bank_springboot.data_access.ManagerRepository;
 import com.bankdone.simple_bank_springboot.entity.Client;
 import com.bankdone.simple_bank_springboot.entity.Manager;
 import com.bankdone.simple_bank_springboot.entity.enums.ClientStatus;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -17,77 +18,77 @@ import java.util.Optional;
 
 /**
  * Класс  ClientService
+ *
  * @Service
- * @Transactional
- *
- * List<Client> findAllByManager_Id(Long id); использован построитель запросов по имени метода.
+ * @Transactional List<Client> findAllByManager_Id(Long id); использован построитель запросов по имени метода.
  * Поиск клиента по Id
- *
+ * <p>
  * Optional<Client> findClientByPhone(String phone); использован построитель запросов по имени метода.
  * Поиск клиента по телефону
- *
- *   List<Client> findClientByAddress(String address); использован построитель запросов по имени метода.
+ * <p>
+ * List<Client> findClientByAddress(String address); использован построитель запросов по имени метода.
  * Поиск клиентов по адресу
- *
+ * <p>
  * List<Client> findClientByStatus(ClientStatus status); использован построитель запросов по имени метода.
  * Поиск клиентов по статусуадресу
- *
+ * <p>
  * List<Client> findClientByCreatedAtIsBetween (LocalDateTime dateTimeWith, LocalDateTime dateTimeTo );
  * использован построитель запросов по имени метода.
  * Возвращает список клиентов которые были созданы в промежутке переданных дат ( с по).
- *
- *
- * @автор  Hardy
+ * @автор Hardy
  * @версия 1.0
- * @от   2023-11-19
+ * @от 2023-11-19
  */
 
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class ClientService {
 
-    @Autowired
-    private ClientRepository clientRepository;
+    private final ClientRepository clientRepository;
 
     @Cacheable("Manager")
     public List<Client> getAllClients() {
         return (List<Client>) clientRepository.findAll();
     }
 
-    public Optional<Client> getClientById(Long id){ return clientRepository.findById(id);}
+    public Optional<Client> getClientById(Long id) {
+        return clientRepository.findById(id);
+    }
 
-    public Client create(Client client){
-//        clientRepository.save(client);
+    public Client create(Client client) {
         return clientRepository.save(client);
     }
 
-    public Client editClieny(Client client){
+    public Client editClieny(Client client) {
         clientRepository.save(client);
         Long clientid = client.getId();
         Client updateClient = clientRepository.findById(clientid).get();
-       return updateClient;
+        return updateClient;
     }
-    public void  delite(@PathVariable long id){
+
+    public void delite(@PathVariable long id) {
         clientRepository.deleteById(id);
     }
 
-    public List<Client> getAllClientsByManager_id(Long id){
+    public List<Client> getAllClientsByManager_id(Long id) {
         return clientRepository.findAllByManager_Id(id);
     }
 
-    public  Optional<Client> getClientByPhone(String phone){
+    public Optional<Client> getClientByPhone(String phone) {
         return clientRepository.findClientByPhone(phone);
     }
-    public  List<Client> getClientsByAddress(String address){
+
+    public List<Client> getClientsByAddress(String address) {
         return clientRepository.findClientByAddress(address);
     }
 
-    public  List<Client> getAllClientsByStatus(ClientStatus status){
+    public List<Client> getAllClientsByStatus(ClientStatus status) {
         return clientRepository.findClientByStatus(status);
     }
 
-    public List<Client> getAllClientsCreatedBetween(LocalDateTime dateTimeWith, LocalDateTime dateTimeTo){
+    public List<Client> getAllClientsCreatedBetween(LocalDateTime dateTimeWith, LocalDateTime dateTimeTo) {
         return clientRepository.findClientByCreatedAtIsBetween(dateTimeWith, dateTimeTo);
     }
 }
