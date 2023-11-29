@@ -7,6 +7,7 @@ import com.bankdone.simple_bank_springboot.entity.Manager;
 import com.bankdone.simple_bank_springboot.entity.enums.ManagerStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +24,7 @@ public class ManagerService {
 
     private final ManagerRepository managerRepository;
 
-    @Cacheable("Manager")
+    @Cacheable("Managers")
     public List<Manager> getAllManagers() {
         return managerRepository.findAll();
     }
@@ -36,6 +37,7 @@ public class ManagerService {
         return managerRepository.findById(id);
     }
 
+    @CacheEvict("Managers")
     public void deleteById(Long id) {
         managerRepository.deleteById(id);
     }
@@ -48,10 +50,12 @@ public class ManagerService {
         return managerRepository.findAllByCreatedAtIsBetween(dateTimeWith, dateTimeTo);
     }
 
+    @CacheEvict("Managers")
     public Manager create(Manager manager) {
         return managerRepository.save(manager);
     }
 
+    @CacheEvict("Managers")
     public Manager editManager(Long id, Manager manager) {
         managerRepository.save(manager);
         Manager updateManager = managerRepository.findById(id).get();

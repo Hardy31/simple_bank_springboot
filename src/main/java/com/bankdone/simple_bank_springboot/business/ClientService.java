@@ -7,6 +7,7 @@ import com.bankdone.simple_bank_springboot.entity.Manager;
 import com.bankdone.simple_bank_springboot.entity.enums.ClientStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,7 +49,7 @@ public class ClientService {
 
     private final ClientRepository clientRepository;
 
-    @Cacheable("Manager")
+    @Cacheable("Clients")
     public List<Client> getAllClients() {
         return (List<Client>) clientRepository.findAll();
     }
@@ -57,10 +58,12 @@ public class ClientService {
         return clientRepository.findById(id);
     }
 
+    @CacheEvict("Clients")
     public Client create(Client client) {
         return clientRepository.save(client);
     }
 
+    @CacheEvict("Clients")
     public Client editClieny(Client client) {
         clientRepository.save(client);
         Long clientid = client.getId();
@@ -68,6 +71,7 @@ public class ClientService {
         return updateClient;
     }
 
+    @CacheEvict("Clients")
     public void delite(@PathVariable long id) {
         clientRepository.deleteById(id);
     }
