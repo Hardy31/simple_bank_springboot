@@ -80,18 +80,40 @@ public class ClientService {
         return clientRepository.findAllByManager_Id(id);
     }
 
+    /**
+     * Возвращает Клиента по номеру телефона
+     * (желательно реализовать проверку по маске)
+     * @param  phone Стринг - номер телефона
+     * @return Optional<Client>
+     */
     public Optional<Client> getClientByPhone(String phone) {
         return clientRepository.findClientByPhone(phone);
     }
 
+    /**
+     * Возвращает список Клиентов (общий длоя членов семьи)
+     * @param  address Стринговая  - адрес проживание клиента
+     * @return List<Client> Список клиентов
+     */
     public List<Client> getClientsByAddress(String address) {
         return clientRepository.findClientByAddress(address);
     }
 
+    /**
+     * Возвращает список Клиентов повыбранному статусу
+     * @param  status Энум ClientStatus
+     * @return List<Client> Список Клиентов
+     */
     public List<Client> getAllClientsByStatus(ClientStatus status) {
         return clientRepository.findClientByStatus(status);
     }
 
+    /**
+     * Возвращает список Клиентов созданных с по
+     * @param  dateTimeWith  с какой даты в формате LocalDateTime
+     * @param  dateTimeTo   по какую дату в формате
+     * @return List<Client>
+     */
     public List<Client> getAllClientsCreatedBetween(LocalDateTime dateTimeWith, LocalDateTime dateTimeTo) {
         return clientRepository.findClientByCreatedAtIsBetween(dateTimeWith, dateTimeTo);
     }

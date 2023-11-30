@@ -5,7 +5,6 @@ import com.bankdone.simple_bank_springboot.entity.Product;
 import com.bankdone.simple_bank_springboot.entity.enums.CurrencyCode;
 import com.bankdone.simple_bank_springboot.entity.enums.ProductStatus;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -48,13 +47,13 @@ public class ProductService {
         return productRepository.findAllByStatus(productStatus);
     }
 
-    public List<Product> getAllByStatusAndCarrencyCode(String status, String CaCode) {
+    public List<Product> getAllByStatusAndCurrencyCode(String status, String CaCode) {
         ProductStatus productStatus = ProductStatus.valueOf(status);
         CurrencyCode currencyCode = CurrencyCode.valueOf(CaCode);
         return productRepository.findAllByStatusAndCurrencyCode(productStatus, currencyCode);
     }
 
-    public List<Product> getAllByStatusAndCarrencyCodeAndRate(String status, String caCode, Double rate) {
+    public List<Product> getAllByStatusAndCurrencyCodeAndRate(String status, String caCode, Double rate) {
         ProductStatus productStatus = ProductStatus.valueOf(status);
         CurrencyCode currencyCode = CurrencyCode.valueOf(caCode);
         return productRepository.findAllByStatusAndCurrencyCodeAnfRate(productStatus, currencyCode, rate);

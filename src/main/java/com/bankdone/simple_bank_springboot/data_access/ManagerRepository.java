@@ -18,7 +18,7 @@ import org.springframework.data.repository.query.Param;
 /**
  * Класс  ManagerRepository наследуется от JpaRepository<Manager, Integer>!
  * поэтому Аннотация @Repository не нужна.
- *
+ * <br/>
  * List<Manager> findAllByStatus(ManagerStatus status); использован построитель запросов по имени метода.
  * Возвращает список менеджеров у которых статус соответствует переданномку в метод статусу.
  *
