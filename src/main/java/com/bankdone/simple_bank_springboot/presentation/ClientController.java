@@ -6,6 +6,7 @@ import com.bankdone.simple_bank_springboot.entity.Client;
 import com.bankdone.simple_bank_springboot.entity.Manager;
 import com.bankdone.simple_bank_springboot.entity.enums.ClientStatus;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,6 +43,7 @@ import java.util.stream.Collectors;
  * @от 2023-11-09
  */
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/rest")
@@ -52,36 +54,42 @@ public class ClientController {
     @GetMapping("clients/all")
     //    http://localhost:8080/rest/clients/all
     public List<Client> geAllClients() {
+        log.info("ClientController//rest/clients/all" );
         return clientService.getAllClients().stream().map(Client::toClient).collect(Collectors.toList());
     }
 
     @GetMapping("client/{id}")
     //    http://localhost:8080/rest/client/5
     public Client getById(@PathVariable Long id) {
+        log.info("ClientController//rest/client/id = {}", id );
         return clientService.getClientById(id).get();
     }
 
     @GetMapping("getAllClientsByManager_id/{id}")
     //    http://localhost:8080/rest/getAllClientsByManager_id/2
     public List<Client> getClientService(@PathVariable Long id) {
+        log.info("ClientController//rest/getAllClientsByManager_id/id = {}", id );
         return clientService.getAllClientsByManager_id(id);
     }
 
     @GetMapping("getClientByPhone/{phone}")
     //    http://localhost:8080/rest/getClientByPhone/+7(321) 123-45-69
     public Client geClientByPhone(@PathVariable String phone) {
+        log.info("ClientController//rest/getClientByPhone/phone = {}", phone );
         return clientService.getClientByPhone(phone).get();
     }
 
     @PostMapping("getClientByAddress")
     //    http://localhost:8080/rest/getClientByAddress
     public List<Client> geClientByAddress(@RequestBody Client client) {
+        log.info("ClientController//rest/getClientByAddress/address = {}", client.getAddress() );
         return clientService.getClientsByAddress(client.getAddress());
     }
 
     @PostMapping("getClientByStatus")
     //    http://localhost:8080/rest/getClientByStatus
     public List<Client> getAllClientStatus(@RequestBody Client client) {
+        log.info("ClientController//rest/getClientByStatus/status = {}", client.getStatus().name() );
         ClientStatus requestClientStatus = client.getStatus();
         return clientService.getAllClientsByStatus(requestClientStatus);
     }
@@ -89,6 +97,7 @@ public class ClientController {
     @GetMapping("AllClientsCreatedWith/{dataWith}/to/{dataTo}")
     //    http://localhost:8080/rest/AllClientsCreatedWith/2023-11-14/to/2023-11-16
     public List<Client> getAllClientsCreatedWithTo(@PathVariable String dataWith, @PathVariable String dataTo) {
+        log.info("ClientController//rest/AllClientsCreatedWith/{}/to/{}", dataWith, dataTo );
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDateTime dateTimeWith = LocalDate.parse(dataWith, formatter).atStartOfDay();
         LocalDateTime dateTimeTo = LocalDate.parse(dataTo, formatter).atStartOfDay();
@@ -98,18 +107,21 @@ public class ClientController {
     @PostMapping("createClient")
     //    http://localhost:8080/rest/createClient
     public Client create(@RequestBody Client client) {
+        log.info("ClientController//rest/createClient  Client = {}", client);
         return clientService.create(client);
     }
 
     @PutMapping("editClient/")
     //    http://localhost:8080/rest/editClient
     public Client editClient(@RequestBody Client client) {
+        log.info("ClientController//rest/editClient  Client = {}", client);
         return clientService.editClieny(client);
     }
 
     @DeleteMapping("deleteClient/{id}")
     //    http://localhost:8080/rest/deleteClient/6
     public void getClientById(@PathVariable Long id) {
+        log.info("ClientController//rest/deleteClient/id = {}", id);
         clientService.delite(id);
     }
 

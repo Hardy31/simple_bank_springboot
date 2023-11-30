@@ -53,7 +53,7 @@ public class ManagerController {
     @GetMapping("managers/all")
     //    http://localhost:8080/rest/managers/all
     public List<Manager> getAllManagers() {
-        log.info("ManagerService /rest/managers/all ");
+        log.info("ManagerController /rest/managers/all ");
         return managerService.getAllManagers();
     }
 
@@ -70,7 +70,7 @@ public class ManagerController {
 
     //    http://localhost:8080/rest/manager/5
     public Optional<Manager> getManagerById(@PathVariable Long id) {
-        log.info("AgreementController//rest/agreement/{id} : " + id);
+        log.info("ManagerController//rest/agreement/{id} : " + id);
         return managerService.getManagerById(id);
     }
 
@@ -78,14 +78,14 @@ public class ManagerController {
     @DeleteMapping("deleteManager/{id}")
     //    http://localhost:8080/rest/deleteManager/id?id=30
     public void delete(Long id) {
-        log.info("ManagerService /rest/deleteManager/{id} : " + id);
+        log.info("ManagerController /rest/deleteManager/{id} : " + id);
         managerService.deleteById(id);
     }
 
     @PostMapping("createManager")
     //    http://localhost:8080/rest/deleteManager
     public Manager save(@RequestBody Manager manager) {
-        log.info("ManagerService /rest/createManager : " + manager);
+        log.info("ManagerController /rest/createManager : " + manager);
         return managerService.create(manager);
     }
 
