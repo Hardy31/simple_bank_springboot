@@ -1,11 +1,14 @@
 package com.bankdone.simple_bank_springboot.presentation;
 
+import com.bankdone.simple_bank_springboot.DTO.PeriodDTO;
 import com.bankdone.simple_bank_springboot.business.ClientService;
 import com.bankdone.simple_bank_springboot.business.ManagerService;
 import com.bankdone.simple_bank_springboot.entity.Client;
 import com.bankdone.simple_bank_springboot.entity.Manager;
 import com.bankdone.simple_bank_springboot.entity.enums.ClientStatus;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,10 +30,10 @@ import java.util.stream.Collectors;
  * @версия 1.0
  * @от 2023-11-09
  */
-
+@Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/rest")
+@RequestMapping("/rest/clients")
 public class ClientController {
 
     /**
@@ -41,106 +44,123 @@ public class ClientController {
     /**
      * При отправке Get запроса на  URN rest/clients/all
      * возвращает список всех клиентов <br>
-     * http://localhost:8080/rest/clients/all
+     * http://localhost:8080/rest/clients
      */
-    @GetMapping("clients/all")
+    @GetMapping("")
     public List<Client> geAllClients() {
-        return clientService.getAllClients().stream().map(Client::toClient).collect(Collectors.toList());
+        log.info("ClientController geAllClients");
+        return clientService
+                .getAllClients()
+                .stream()
+                .map(Client::toClient)
+                .collect(Collectors
+                        .toList()
+                );
     }
 
     /**
-     * При отправке Get запроса на URN rest/client/{id}
+     * При отправке Get запроса на URN rest/clients/{id}
      * возвращает клиента по переданному id <br>
-     * http://localhost:8080/rest/client/5
+     * http://localhost:8080/rest/clients/5
      */
-    @GetMapping("client/{id}")
+    @GetMapping("/{id}")
     public Client getById(@PathVariable Long id) {
+        log.info("ClientController getById = {}", id);
         return clientService.getClientById(id).get();
     }
 
     /**
-     * При отправке Get запроса на  URN rest/getAllClientsByManager_id/{id}
+     * При отправке Get запроса на  URN rest/clients/by-manager/{id}
      * возвращает клиента по переданному id <br>
-     * http://localhost:8080/rest/getAllClientsByManager_id/2
+     * http://localhost:8080/rest/clients/by-manager/2
      */
-    @GetMapping("getAllClientsByManager_id/{id}")
-    public List<Client> getClientService(@PathVariable Long id) {
+    @GetMapping("/by-manager/{id}")
+    public List<Client> getClientByManagerId(@PathVariable Long id) {
+        log.info("ClientController getClientsByManagerId = {}", id);
         return clientService.getAllClientsByManager_id(id);
     }
 
     /**
-     * При отправке Get запроса на  URN rest/getClientByPhone/{phone}
+     * При отправке Get запроса на  URN rest/clients/by-phone/{phone}
      * возвращает клиента по переданному номеру телефона <br>
-     * http://localhost:8080/rest/getClientByPhone/+7(321) 123-45-69
+     * http://localhost:8080/rest/clients by-phone/+7(321) 123-45-69
      */
-    @GetMapping("getClientByPhone/{phone}")
+    @GetMapping("/by-phone/{phone}")
     public Client geClientByPhone(@PathVariable String phone) {
+        log.info("ClientController getClientByPhone = {}", phone);
         return clientService.getClientByPhone(phone).get();
     }
 
     /**
-     * При отправке Post запроса на  URN rest/getClientByAddress
+     * При отправке Post запроса на  URN rest/clients/by-address
      *  возвращает список клиентов  по переданному в теле метода адресу <br>
-     *  http://localhost:8080/rest/getClientByAddress
+     *  http://localhost:8080/rest/clients/by-address
      */
-    @PostMapping("getClientByAddress")
+    @PostMapping("/by-address")
     public List<Client> geClientByAddress(@RequestBody Client client) {
+        log.info("ClientController getClientsByAddress = {}", client.getAddress());
         return clientService.getClientsByAddress(client.getAddress());
     }
 
     /**
-     * При отправке Post запроса на  URN rest/getClientByStatus
+     * При отправке Post запроса на  URN rest/clients/by-status
      *  возвращает список клиентов  по переданному в теле метода статусу <br>
-     *  http://localhost:8080/rest/getClientByStatus
+     *  http://localhost:8080/rest/clients/by-status
      */
-    @PostMapping("getClientByStatus")
-    public List<Client> getAllClientStatus(@RequestBody Client client) {
+    @PostMapping("/by-status")
+    public List<Client> getAllClientByStatus(@RequestBody Client client) {
         ClientStatus requestClientStatus = client.getStatus();
+        log.info("ClientController getAllClientsByStatus = {}", requestClientStatus);
         return clientService.getAllClientsByStatus(requestClientStatus);
     }
 
     /**
-     * При отправке Get запроса на  URN rest/AllClientsCreatedWith/{dataWith}/to/{dataTo}
+     * При отправке Get запроса на  URN rest/clients/by-period
      *  возвращает список клиентов  c с периодом создания  с - по  <br>
-     *  http://localhost:8080/rest/AllClientsCreatedWith/2023-11-14/to/2023-11-16
+     *  http://localhost:8080/rest/clients/by-period
      */
-    @GetMapping("AllClientsCreatedWith/{dataWith}/to/{dataTo}")
-    public List<Client> getAllClientsCreatedWithTo(@PathVariable String dataWith, @PathVariable String dataTo) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDateTime dateTimeWith = LocalDate.parse(dataWith, formatter).atStartOfDay();
-        LocalDateTime dateTimeTo = LocalDate.parse(dataTo, formatter).atStartOfDay();
-        return clientService.getAllClientsCreatedBetween(dateTimeWith, dateTimeTo);
+    @PostMapping("/by-period")
+    public List<Client> getAllClientsCreatedWithTo(@RequestBody PeriodDTO periodDTO) {
+        log.info("ClientController getAllClientsCreatedWithTo fromDate = {} befoDate = {} ",
+                periodDTO.getFromDate(),
+                periodDTO.getBeforeDate()
+        );
+        return clientService.getAllClientsCreatedBetween(
+                periodDTO.getFromDate().toLocalDateTime(),
+                periodDTO.getBeforeDate().atStartOfDay()
+        );
     }
 
     /**
-     * При отправке Post запроса на  URN rest/createClient
+     * При отправке Post запроса на  URN rest/clients
      *  сохраняет в БД и возвращает созданного Клиента <br>
-     *  http://localhost:8080/rest/createClient
+     *  http://localhost:8080/rest/clients
      */
-    @PostMapping("createClient")
+    @PostMapping("")
     public Client create(@RequestBody Client client) {
+        log.info("ClientController create  = {}", client);
         return clientService.create(client);
     }
 
     /**
-     * При отправке Put запроса на  URN rest/editClient
+     * При отправке Put запроса на  URN rest/clients
      * редактирует  найденного по id  в БД и возвращает новый <br>
-     * http://localhost:8080/rest/editClient
+     * http://localhost:8080/rest/clients
      */
-    @PutMapping("editClient/")
+    @PutMapping("")
     public Client editClient(@RequestBody Client client) {
+        log.info("ClientController editClient  = {}", client);
         return clientService.editClieny(client);
     }
 
     /**
-     * При отправке delete запроса на  URN rest/deleteClient/{id}
+     * При отправке delete запроса на  URN rest/clients/{id}
      * удаляет из Бд  по id <br>
-     * http://localhost:8080/rest/deleteClient/6
+     * http://localhost:8080/rest/clients/6
      */
-    @DeleteMapping("deleteClient/{id}")
-    public void getClientById(@PathVariable Long id) {
+    @DeleteMapping("/{id}")
+    public void deleteClientById(@PathVariable Long id) {
+        log.info("ClientController deleteClientById = {}", id);
         clientService.delite(id);
     }
-
-
 }

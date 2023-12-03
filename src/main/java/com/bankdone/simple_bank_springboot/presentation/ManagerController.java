@@ -84,7 +84,7 @@ public class ManagerController {
      */
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
-        log.info("ManagerService delete : {}", id);
+        log.info("ManagerController delete : {}", id);
         managerService.deleteById(id);
     }
 
@@ -96,7 +96,7 @@ public class ManagerController {
      */
     @PostMapping("")
     public Manager create(@RequestBody Manager manager) {
-        log.info("ManagerService create : {}", manager);
+        log.info("ManagerController create : {}", manager);
         return managerService.create(manager);
     }
 
@@ -107,7 +107,7 @@ public class ManagerController {
      */
     @PutMapping("/{id}")
     public Manager edit(@PathVariable Long id, @RequestBody Manager manager) {
-        log.info("ManagerService edit(@PathVariable Long id = {} , @RequestBody Manager manager = {}) : ", id, manager);
+        log.info("ManagerController edit(@PathVariable Long id = {} , @RequestBody Manager manager = {}) : ", id, manager);
         return managerService.editManager(id, manager);
     }
 
@@ -120,7 +120,7 @@ public class ManagerController {
     public List<Manager> getAllManagersWorkingWith(
             @PathVariable(value = "data")
             @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime data) {
-        log.info("ManagerService getAllManagersWorkingWith = {}", data);
+        log.info("ManagerController getAllManagersWorkingWith = {}", data);
         return managerService.getAllManagersWorkingWith(data);
     }
 
@@ -142,7 +142,7 @@ public class ManagerController {
             @PathVariable (value = "dateTo")
             @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime dateTo
             ) {
-        log.info("ManagerService getAllManagersWorkingWith = {} to = {}", dateWith, dateTo);
+        log.info("ManagerController getAllManagersWorkingWith = {} to = {}", dateWith, dateTo);
         return managerService.getAllManagersWorkingWithTo(dateWith, dateTo);
     }
 
@@ -154,6 +154,7 @@ public class ManagerController {
     @PostMapping("/by-FIO")
     public Manager getManagerByNameSurname(@RequestBody Manager manager) {
         Manager managerdb = managerService.getManagersByFIO(manager);
+        log.info("ManagerController getManagerByNameSurname = {} ", manager);
         return managerdb;
     }
 
@@ -171,7 +172,7 @@ public class ManagerController {
     @PostMapping("/by-period")
     public List<Manager> getAllManagersByPeriod(@RequestBody PeriodDTO periodDTO)
     {
-        log.info("ManagerService getAllManagersByPeriod fromDate = {} befoDate = {} ",
+        log.info("ManagerController getAllManagersByPeriod fromDate = {} befoDate = {} ",
                 periodDTO.getFromDate(),
                 periodDTO.getBeforeDate()
         );
