@@ -1,20 +1,13 @@
 package com.bankdone.simple_bank_springboot.presentation;
 
-import com.bankdone.simple_bank_springboot.DTO.PeriodDTO;
+import com.bankdone.simple_bank_springboot.dto.PeriodDTO;
 import com.bankdone.simple_bank_springboot.business.ClientService;
-import com.bankdone.simple_bank_springboot.business.ManagerService;
 import com.bankdone.simple_bank_springboot.entity.Client;
-import com.bankdone.simple_bank_springboot.entity.Manager;
 import com.bankdone.simple_bank_springboot.entity.enums.ClientStatus;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,7 +35,7 @@ public class ClientController {
     private final ClientService clientService;
 
     /**
-     * При отправке Get запроса на  URN rest/clients/all
+     * При отправке Get запроса на  URN rest/clients
      * возвращает список всех клиентов <br>
      * http://localhost:8080/rest/clients
      */
@@ -83,7 +76,7 @@ public class ClientController {
     /**
      * При отправке Get запроса на  URN rest/clients/by-phone/{phone}
      * возвращает клиента по переданному номеру телефона <br>
-     * http://localhost:8080/rest/clients by-phone/+7(321) 123-45-69
+     * http://localhost:8080/rest/clients/by-phone/+7(321) 123-45-69
      */
     @GetMapping("/by-phone/{phone}")
     public Client geClientByPhone(@PathVariable String phone) {

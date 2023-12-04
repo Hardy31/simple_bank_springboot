@@ -3,6 +3,7 @@ package com.bankdone.simple_bank_springboot.presentation;
 import com.bankdone.simple_bank_springboot.business.AccountService;
 import com.bankdone.simple_bank_springboot.entity.Account;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,9 +22,10 @@ import java.util.List;
  * @от 2023-11-09
  */
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/accounts")
 public class AccountsController {
 
     /**
@@ -32,48 +34,52 @@ public class AccountsController {
     private final AccountService accountService;
 
     /**
-     * При отправке Get запроса на  URN rest/accounts/all
+     * При отправке Get запроса на  URN rest/accounts
      * возвращает список всех клиентов
      */
-    @GetMapping("accounts")
+    @GetMapping("")
     public List<Account> getAll() {
+        log.info("AccountsController getAll()");
         return accountService.getAll();
     }
 
     /**
-     * При отправке Get запроса на  URN rest/account/{id}
+     * При отправке Get запроса на  URN rest/accounts/{id}
      * возвращает список всех клиентов
      */
-    @GetMapping("accounts/{id}")
+    @GetMapping("/{id}")
     public Account getById(@PathVariable Long id) {
+        log.info("AccountsController getById(@PathVariable Long id) : {}", id);
         return accountService.getBiId(id);
     }
 
     /**
-     * При отправке Post запроса на  URN rest/creatAccounts
+     * При отправке Post запроса на  URN rest/accounts
      *  сохраняет в БД и возвращает созданный Счет
      */
-    @PostMapping("accounts")
+    @PostMapping("")
     public Account cteate(@RequestBody Account account) {
+        log.info("AccountsController cteate(@RequestBody Account account) : {}", account);
         return accountService.create(account);
     }
 
     /**
-     * При отправке Put запроса на  URN rest/creatAccounts
+     * При отправке Put запроса на  URN rest/accounts
      *  редактирует  в БД и возвращает измененный Счет
      */
-    @PutMapping("accounts")
+    @PutMapping("")
     public Account editAccount(@RequestBody Account account) {
-
+        log.info("AccountsController editAccount(@RequestBody Account account) : {}", account);
         return accountService.edit(account);
     }
 
     /**
-     * При отправке Delite запроса на  URN rest/deleteAccount/{id}
+     * При отправке Delite запроса на  URN rest/accounts/{id}
      *  удаляет их БД Счет по id
      */
-    @DeleteMapping("accounts/{id}")
+    @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
+        log.info("AccountsController delete(@PathVariable Long id) : {}", id);
         accountService.delite(id);
     }
 

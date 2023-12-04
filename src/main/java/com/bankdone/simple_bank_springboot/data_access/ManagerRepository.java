@@ -11,13 +11,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
-//Аннотация @Repository не нужна так как интерфейс наследуется от JpaRepository<Manager, Integer>!
-// где Manager это entity с которым будет работать данный репозиторий и Integer это PrimaryKey нашей таблици Long!
-//@Repository
+
 
 /**
  * Класс  ManagerRepository наследуется от JpaRepository<Manager, Integer>!
- * поэтому Аннотация @Repository не нужна.
+ * поэтому Аннотация @Repository не используется (не обязательна).
  * <br/>
  * List<Manager> findAllByStatus(ManagerStatus status); использован построитель запросов по имени метода.
  * Возвращает список менеджеров у которых статус соответствует переданномку в метод статусу.

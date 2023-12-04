@@ -1,18 +1,15 @@
 package com.bankdone.simple_bank_springboot.presentation;
 
-import com.bankdone.simple_bank_springboot.DTO.PeriodDTO;
+import com.bankdone.simple_bank_springboot.dto.PeriodDTO;
 import com.bankdone.simple_bank_springboot.business.ManagerService;
 import com.bankdone.simple_bank_springboot.entity.Manager;
 import com.bankdone.simple_bank_springboot.entity.enums.ManagerStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,7 +39,7 @@ public class ManagerController {
     private final ManagerService managerService;
 
     /**
-     * При отправке Get запроса на  URN rest/managers/all
+     * При отправке Get запроса на  URN rest/managers
      * возвращает список всех менеджеров <br>
      * http://localhost:8080/rest/managers
      */
@@ -53,7 +50,7 @@ public class ManagerController {
     }
 
     /**
-     * При отправке Get запроса на  URN rest/managerStatus/{status}
+     * При отправке Get запроса на  URN rest/manager/{status}
      * возвращает список всех менеджеров со статусом переданным в поле статус
      *
      * @return List<Manager> <br>
@@ -62,42 +59,42 @@ public class ManagerController {
      */
     @GetMapping("/status/{status}")
     public List<Manager> getAllManagersByStatus(@PathVariable String status) {
-        log.info("ManagerController getAllManagersByStatus : {}", status);
+        log.info("ManagerController getAllManagersByStatus(@PathVariable String status) : {}", status);
         return managerService.getAllManagersByStatus(ManagerStatus.valueOf(status));
     }
 
     /**
-     * При отправке Get запроса на  URN rest/manager/{id}
+     * При отправке Get запроса на  URN rest/managers/{id}
      * возвращает менеджара с соответствующим ID <br>
      * http://localhost:8080/rest/managers/5
      */
     @GetMapping("/{id}")
     public Optional<Manager> getManagerById(@PathVariable Long id) {
-        log.info("ManagerController getManagerById : {} ", id);
+        log.info("ManagerController getManagerById(@PathVariable Long id) : {} ", id);
         return managerService.getManagerById(id);
     }
 
     /**
-     * При отправке Delete запроса на  URN rest/deleteManager/{id}
+     * При отправке Delete запроса на  URN rest/managers/{id}
      * возвращает менеджара с соответствующим ID <br>
      * http://localhost:8080/rest/managers/43
      */
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
-        log.info("ManagerController delete : {}", id);
-        managerService.deleteById(id);
+        log.info("ManagerController delete(@PathVariable Long id) : {}", id);
+        managerService.deleteManagerById(id);
     }
 
 
     /**
-     * При отправке Post запроса на  URN rest/createManager
+     * При отправке Post запроса на  URN rest/managers
      * возвращает созданный объект Manager <br>
      * http://localhost:8080/rest/managers
      */
     @PostMapping("")
     public Manager create(@RequestBody Manager manager) {
-        log.info("ManagerController create : {}", manager);
-        return managerService.create(manager);
+        log.info("ManagerController create(@RequestBody Manager manager) : {}", manager);
+        return managerService.createManager(manager);
     }
 
     /**
@@ -107,13 +104,18 @@ public class ManagerController {
      */
     @PutMapping("/{id}")
     public Manager edit(@PathVariable Long id, @RequestBody Manager manager) {
-        log.info("ManagerController edit(@PathVariable Long id = {} , @RequestBody Manager manager = {}) : ", id, manager);
+        log.info("ManagerController edit(" +
+                "@PathVariable Long id = {} , " +
+                "@RequestBody Manager manager = {}) : ",
+                id,
+                manager
+        );
         return managerService.editManager(id, manager);
     }
 
     /**
      * При отправке get запроса на  URN rest/ManagersWorkingWith/{data}
-     * возвращает список менеджеров , работающих с <br>
+     * возвращает список менеджеров , работающих с даты <br>
      * http://localhost:8080/rest/managers/with/2023-07-27T00:00
      */
     @GetMapping("/with/{data}")
@@ -124,44 +126,22 @@ public class ManagerController {
         return managerService.getAllManagersWorkingWith(data);
     }
 
-
-
     /**
-     * При отправке get запроса на  URN rest/managers/with/{dataWith}/to/{dataTo}
-     * возвращает список менеджеров , работающих с по (LocalDateTime) <br>
-     * http://localhost:8080/rest/mabagers/with/1998-06-08T00:00/to/1998-07-21T00:00<br>
-     *
-     * Эквивалентный метод :
-     * @PostMapping("/by-period")
-     * public List<Manager> getAllManagersByPeriod(@RequestBody PeriodDTO periodDTO)
-     */
-    @GetMapping("with/{dateWith}/to/{dateTo}")
-    public List<Manager> getAllManagersWorkingWithTo(
-            @PathVariable (value = "dateWith")
-            @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime dateWith,
-            @PathVariable (value = "dateTo")
-            @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime dateTo
-            ) {
-        log.info("ManagerController getAllManagersWorkingWith = {} to = {}", dateWith, dateTo);
-        return managerService.getAllManagersWorkingWithTo(dateWith, dateTo);
-    }
-
-    /**
-     * При отправке Post запроса на  URN rest/getManagerFIO
+     * При отправке Post запроса на  URN rest/managers/by-FIO
      * возвращает  Manager , поиск  по ФИО <br>
-     * http://localhost:8080/rest/getManagerFIO
+     * http://localhost:8080/rest/managers/by-FIO
      */
     @PostMapping("/by-FIO")
-    public Manager getManagerByNameSurname(@RequestBody Manager manager) {
-        Manager managerdb = managerService.getManagersByFIO(manager);
-        log.info("ManagerController getManagerByNameSurname = {} ", manager);
-        return managerdb;
+    public String getManagerByNameSurname(@RequestBody Manager manager) {
+
+        log.info("ManagerController getManagerByNameSurname(@RequestBody Manager manager) : {} ", manager);
+        return managerService.getManagersByFIO(manager);
     }
 
 
     /**
      * При отправке post запроса на  URN rest/managers/by-period
-     * возвращает список менеджеров , работающих с по (LocalDateTime) <br>
+     * возвращает список менеджеров , были приняты на работу  с по (LocalDateTime) <br>
      * добавлен конструктор (LocalDate) <br>
      * http://localhost:8080/rest/mabagers//by-period<br>
      *
@@ -172,7 +152,8 @@ public class ManagerController {
     @PostMapping("/by-period")
     public List<Manager> getAllManagersByPeriod(@RequestBody PeriodDTO periodDTO)
     {
-        log.info("ManagerController getAllManagersByPeriod fromDate = {} befoDate = {} ",
+        log.info("ManagerController etAllManagersByPeriod(@RequestBody PeriodDTO periodDTO) " +
+                "fromDate = {} befoDate = {} ",
                 periodDTO.getFromDate(),
                 periodDTO.getBeforeDate()
         );
@@ -180,5 +161,25 @@ public class ManagerController {
                 periodDTO.getFromDate().toLocalDateTime(),
                 periodDTO.getBeforeDate().atStartOfDay()
         );
+    }
+
+    /**
+     * При отправке get запроса на  URN rest/managers/with/{dataWith}/to/{dataTo}
+     * возвращает список менеджеров , были приняты на работу с по (LocalDateTime) <br>
+     * http://localhost:8080/rest/mabagers/with/1998-06-08T00:00/to/1998-07-21T00:00<br>
+     *
+     * Эквивалентный метод :
+     * @PostMapping("/by-period")
+     * public List<Manager> getAllManagersByPeriod(@RequestBody PeriodDTO periodDTO)
+     */
+    @GetMapping("with/{dateWith}/to/{dateTo}")
+    public List<Manager> getAllManagersCreatAtWithTo(
+            @PathVariable (value = "dateWith")
+            @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime dateWith,
+            @PathVariable (value = "dateTo")
+            @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime dateTo
+    ) {
+        log.info("ManagerController getAllManagersWorkingWith = {} to = {}", dateWith, dateTo);
+        return managerService.getAllManagersWorkingWithTo(dateWith, dateTo);
     }
 }

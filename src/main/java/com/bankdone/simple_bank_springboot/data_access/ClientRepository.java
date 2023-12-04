@@ -13,7 +13,7 @@ import java.util.Optional;
 
 /**
  * Класс  ClientRepository наследуется от JpaRepository<Client, Integer>!
- * поэтому Аннотация @Repository не нужна.
+ * поэтому Аннотация @Repository не используется (не обязательна).
  *
  * List<Client> findAllByManager_Id(Long id); использован построитель запросов по имени метода.
  * Поиск клиента по Id
@@ -25,7 +25,7 @@ import java.util.Optional;
  * Поиск клиентов по адресу
  *
  * List<Client> findClientByStatus(ClientStatus status); использован построитель запросов по имени метода.
- *  * Поиск клиентов по статусуадресу
+ *  * Поиск клиентов по статусу
  *
  *
  * List<Client> findClientByCreatedAtIsBetween (LocalDateTime dateTimeWith, LocalDateTime dateTimeTo );

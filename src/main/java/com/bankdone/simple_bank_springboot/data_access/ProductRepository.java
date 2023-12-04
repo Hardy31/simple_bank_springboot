@@ -9,6 +9,33 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
+/**
+ * Класс  ProductRepository наследуется от CrudRepository <Product, Long>!
+ * поэтому Аннотация @Repository не используется (не обязательна).
+ *
+ * List<Product> findAllByStatus(@Param("status") ProductStatus status);
+ * запрос сформирован вручную. Поиск всех продуктов  по статусу
+ *
+ * List<Product> findAllByStatusAndCurrencyCode(
+ *         @Param("status") ProductStatus status,
+ *         @Param("code")CurrencyCode currencyCode
+ * ) ;
+ * запрос сформирован вручную. Поиск всех продуктов  по статусу и коду валюты
+ *
+ * List<Product> findAllByStatusAndCurrencyCodeAnfRate(
+ *         @Param("status") ProductStatus status,
+ *         @Param("code")CurrencyCode currencyCode,
+ *         @Param("rate")double interestRate
+ * ) ;
+ * запрос сформирован вручную. Поиск всех продуктов при совподении статуса, коду валюты и процентной ставки
+ *
+ *
+ * Все остальные методы используют автоматическую генерацию запроса по имени
+ *
+ * @автор  Hardy
+ * @версия 1.0
+ * @от   2023-12-04
+ */
 
 public interface ProductRepository extends CrudRepository <Product, Long>{
 

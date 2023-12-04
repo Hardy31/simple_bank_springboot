@@ -1,17 +1,13 @@
-package com.bankdone.simple_bank_springboot.DTO;
+package com.bankdone.simple_bank_springboot.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 /**
  * @пакет: simple_bank_springboot
