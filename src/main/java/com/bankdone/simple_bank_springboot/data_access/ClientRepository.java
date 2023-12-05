@@ -25,7 +25,7 @@ import java.util.Optional;
  * Поиск клиентов по адресу
  *
  * List<Client> findClientByStatus(ClientStatus status); использован построитель запросов по имени метода.
- *  * Поиск клиентов по статусу
+ *  * Поиск клиентов по статусуDa
  *
  *
  * List<Client> findClientByCreatedAtIsBetween (LocalDateTime dateTimeWith, LocalDateTime dateTimeTo );

@@ -12,36 +12,17 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-@Service
-@Transactional
-@RequiredArgsConstructor
-public class AgreementService {
 
-    private final AgreementRepository agreementRepository;
+public interface AgreementService {
+    Agreement getById(long id);
 
-    public Agreement getById(long id) {
-        return agreementRepository.findById(id).get();
-    }
+    List<Agreement> getAll();
 
-    @Cacheable("Agreements")
-    public List<Agreement> getAll() {
-        return (List<Agreement>) agreementRepository.findAll();
-    }
+    Agreement create(Agreement agreement);
 
-    @CacheEvict("Agreements")
-    public Agreement create(Agreement agreement) {
-        return agreementRepository.save(agreement);
-    }
+    void delete(Long id);
 
-    @CacheEvict("Agreements")
-    public void delete(Long id) {
-        agreementRepository.deleteById(id);
-    }
-
-    @CacheEvict("Agreements")
-    public Agreement edit(Agreement agreement) {
-        return agreementRepository.save(agreement);
-    }
+    Agreement edit(Agreement agreement);
 }
 
 
