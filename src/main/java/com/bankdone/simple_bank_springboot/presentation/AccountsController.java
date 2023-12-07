@@ -50,7 +50,7 @@ public class AccountsController {
     @GetMapping("/{id}")
     public Account getById(@PathVariable Long id) {
         log.info("AccountsController getById(@PathVariable Long id) : {}", id);
-        return accountService.getBiId(id);
+        return accountService.getById(id);
     }
 
     /**

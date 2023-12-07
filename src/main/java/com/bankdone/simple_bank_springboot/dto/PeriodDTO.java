@@ -10,7 +10,11 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 
 /**
- * @пакет: simple_bank_springboot
+ * Обект слоя DTO
+ * преднозначен для передачи данных выбранного периода
+ *      с даты
+ *      по дату
+ *
  * @автор: alex
  * @от :    01.12.2023
  */

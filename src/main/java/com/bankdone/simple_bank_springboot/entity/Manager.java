@@ -23,11 +23,7 @@ import static javax.persistence.CascadeType.*;
  * и автоматически генерируют метод получения. и методы установки полей в классе.
  * `@NoArgsConstructor`: Эта аннотация создает для класса конструктор без аргументов.
  * `@AllArgsConstructor`: эта аннотация создает конструктор с параметрами для всех полей в классе.
- *
- * Применяя ниже перечисленные аннотации к классу, вы определяете его как объект JPA, который отображается
- * в таблицу «счета» в базе данных. Сгенерированные методы получения и установки обеспечивают доступ к полям сущности.
- * и конструкторы позволяют создавать экземпляры сущности с аргументами или без них.
- *
+ * *
  * @Id: эта аннотация используется для обозначения поля как первичного ключа сущности.
  * @GeneratedValue(strategy = GenerationType.IDENTITY)
  * Эта аннотация настраивает стратегию генерации поля первичного ключа.
@@ -72,11 +68,4 @@ public class Manager {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-
-
-//    @OneToMany(mappedBy = "manager", cascade = {MERGE, PERSIST, REFRESH}, orphanRemoval = true, fetch = FetchType.LAZY)
-//    @OneToMany(mappedBy = "manager",  orphanRemoval = true, fetch = FetchType.LAZY)
-//    private List<Client> clients;
-
-
 }
