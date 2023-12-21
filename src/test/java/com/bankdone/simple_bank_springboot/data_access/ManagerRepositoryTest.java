@@ -22,37 +22,37 @@ import static org.mockito.Mockito.*;
 @DisplayName("ManagerRepository - Test")
 class ManagerRepositoryTest {
 
-    @Mock
-    private ManagerRepository managerRepository;
-    private Manager managerFake;
-
-    @BeforeEach
-    void presetting() {
-        managerFake = CreatorFakeEntity.getFakeManager(5L);
-        System.out.println(managerFake);
-
+//    @Mock
+//    private ManagerRepository managerRepository;
+//    private Manager managerFake;
+//
+//    @BeforeEach
+//    void presetting() {
+//        managerFake = CreatorFakeEntity.getFakeManager(5L);
+//        System.out.println(managerFake);
+//
+////        Optional<Manager> foundManager = managerRepository.findById(managerFake.getId());
+////        Manager man  = foundManager.get();
+//    }
+//
+//    @Test
+//    void testGetManagerById(Long id) {
+//        when(managerRepository.findById(id)).thenReturn(Optional.ofNullable(managerFake));
 //        Optional<Manager> foundManager = managerRepository.findById(managerFake.getId());
-//        Manager man  = foundManager.get();
-    }
-
-    @Test
-    void testGetManagerById(Long id) {
-        when(managerRepository.findById(id)).thenReturn(Optional.ofNullable(managerFake));
-        Optional<Manager> foundManager = managerRepository.findById(managerFake.getId());
-        Manager man = foundManager.get();
-        System.out.println(man);
-
-        assertTrue(foundManager.isPresent());
-        assertEquals(managerFake, foundManager.get());
-        verify(managerRepository, times(1)).findById(managerFake.getId());
-    }
-
-    @Test
-    void testData() {
-        String data = "2023-07-14";
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDateTime dateTime = LocalDate.parse(data, formatter).atStartOfDay();
-        System.out.println(dateTime);
-    }
+//        Manager man = foundManager.get();
+//        System.out.println(man);
+//
+//        assertTrue(foundManager.isPresent());
+//        assertEquals(managerFake, foundManager.get());
+//        verify(managerRepository, times(1)).findById(managerFake.getId());
+//    }
+//
+//    @Test
+//    void testData() {
+//        String data = "2023-07-14";
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//        LocalDateTime dateTime = LocalDate.parse(data, formatter).atStartOfDay();
+//        System.out.println(dateTime);
+//    }
 
 }

@@ -1,6 +1,8 @@
 package com.bankdone.simple_bank_springboot.business.impl;
 
 import com.bankdone.simple_bank_springboot.business.ClientService;
+import com.bankdone.simple_bank_springboot.business.exeption.ClientNotFoundException;
+import com.bankdone.simple_bank_springboot.business.exeption.ErrorMessage;
 import com.bankdone.simple_bank_springboot.data_access.ClientRepository;
 import com.bankdone.simple_bank_springboot.entity.Client;
 import com.bankdone.simple_bank_springboot.entity.enums.ClientStatus;
@@ -13,7 +15,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Класс  ClientServiceImpl является реализацией интерфейса ClientService.
@@ -61,8 +62,11 @@ public class ClientServiceImpl implements ClientService {
      * @param  id Long - данные в обекте
      * @return Optional<Client>
      */
-    public Optional<Client> getClientById(Long id) {
-        return clientRepository.findById(id);
+    public Client getClientById(Long id) {
+        return clientRepository.findById(id).get();
+//        return clientRepository.findById(id).orElseThrow(
+//                () -> new ClientNotFoundException(ErrorMessage.CLIENT_NOT_FOUND)
+//        );
     }
 
     /**
@@ -107,8 +111,8 @@ public class ClientServiceImpl implements ClientService {
      * @param  phone Стринг - номер телефона
      * @return Optional<Client>
      */
-    public Optional<Client> getClientByPhone(String phone) {
-        return clientRepository.findClientByPhone(phone);
+    public Client getClientByPhone(String phone) {
+        return clientRepository.findClientByPhone(phone).get();
     }
 
     /**

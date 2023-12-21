@@ -59,7 +59,7 @@ public class ClientController {
     @GetMapping("/{id}")
     public Client getById(@PathVariable Long id) {
         log.info("ClientController getById = {}", id);
-        return clientService.getClientById(id).get();
+        return clientService.getClientById(id);
     }
 
     /**
@@ -81,7 +81,7 @@ public class ClientController {
     @GetMapping("/by-phone/{phone}")
     public Client geClientByPhone(@PathVariable String phone) {
         log.info("ClientController getClientByPhone = {}", phone);
-        return clientService.getClientByPhone(phone).get();
+        return clientService.getClientByPhone(phone);
     }
 
     /**
