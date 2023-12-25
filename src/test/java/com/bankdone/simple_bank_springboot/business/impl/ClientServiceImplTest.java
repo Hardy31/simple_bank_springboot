@@ -6,6 +6,7 @@ import com.bankdone.simple_bank_springboot.data_access.ManagerRepository;
 import com.bankdone.simple_bank_springboot.entity.Client;
 import com.bankdone.simple_bank_springboot.entity.Manager;
 import com.bankdone.simple_bank_springboot.util.CreatorFakeEntity;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,9 +18,9 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Test class for ClientServiceImplTest")
@@ -31,24 +32,28 @@ class ClientServiceImplTest {
     private Manager managerTemplate;
     private Client clientTemplate;
     private ClientService clientService ;
+    private List<Client> clientList;
 
+    @BeforeEach
     void setUp(){
         managerTemplate = CreatorFakeEntity.getFakeManager(2l);
         clientTemplate = CreatorFakeEntity.getFakeClient(3l);
         clientService = new ClientServiceImpl(clientRepository);
+        clientList = new ArrayList<>(List.of(clientTemplate));
     }
 
-    @Test
-    void attempt(){
-        clientTemplate = CreatorFakeEntity.getFakeClient(3l);
-        System.out.println(clientTemplate);
-        verify(clientRepository).findById(3l);
-    }
+
+//    @Test
+//    void attempt(){
+////        clientTemplate = CreatorFakeEntity.getFakeClient(3l);
+//        System.out.println(clientTemplate);
+//        verify(clientRepository).findById(3l);
+//    }
 
     @Test
     @DisplayName("Positive test. GetClientById.")
     void testGetClientById() {
-        when(clientRepository.findById(anyLong()).get()).thenReturn(clientTemplate);
+        when(clientRepository.findById(anyLong())).thenReturn(Optional.of(clientTemplate));
 
         Client clientResult = clientService.getClientById(3l);
         verify(clientRepository).findById(3l);
@@ -57,8 +62,13 @@ class ClientServiceImplTest {
 
     @Test
     void testGetAllClients() {
-
+        when(clientRepository.findAll()).thenReturn(clientList);
+        List<Client> resuly = clientService.getAllClients();
+        verify(clientRepository).findAll();
+        assertEquals(clientList,resuly );
     }
+
+
     private void compareClient(Client clientTemplate, Client clientReslt) {
         assertAll(
                 () -> assertEquals(clientTemplate.getId(), clientReslt.getId()),
@@ -76,4 +86,40 @@ class ClientServiceImplTest {
     }
 
 
+    @Test
+    void create() {
+        when(clientRepository.save(any())).thenReturn(clientTemplate);
+        Client assertedClient = CreatorFakeEntity.creatFakeClient(3l);
+        Client resultClient = clientService.create(assertedClient);
+        verify(clientRepository).save(assertedClient);
+        compareClient(clientTemplate, resultClient);
+    }
+
+    @Test
+    void editClieny() {
+        when(clientRepository.findById(anyLong())).thenReturn(Optional.of(clientTemplate));
+        Client resultClient = clientService.editClieny(clientTemplate);
+        verify(clientRepository).save(any());
+        compareClient(clientTemplate, resultClient);
+    }
+
+    @Test
+    void delite() {
+        doNothing().when(clientRepository).deleteById(anyLong());
+        clientService.delite(3l);
+        verify(clientRepository).deleteById(anyLong());
+
+
+    }
+
+    @Test
+    void getClientByPhone() {
+        when(clientRepository.findClientByPhone(any())).thenReturn(Optional.of(clientTemplate));
+        Client resultClient = clientService.getClientByPhone(clientTemplate.getPhone());
+        verify(clientRepository).findClientByPhone(clientTemplate.getPhone());
+        compareClient(resultClient,clientTemplate);
+//        verify(cl)
+
+
+    }
 }
