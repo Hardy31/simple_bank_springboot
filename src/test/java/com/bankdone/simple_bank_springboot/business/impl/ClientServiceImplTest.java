@@ -5,6 +5,7 @@ import com.bankdone.simple_bank_springboot.data_access.ClientRepository;
 import com.bankdone.simple_bank_springboot.data_access.ManagerRepository;
 import com.bankdone.simple_bank_springboot.entity.Client;
 import com.bankdone.simple_bank_springboot.entity.Manager;
+import com.bankdone.simple_bank_springboot.entity.enums.ClientStatus;
 import com.bankdone.simple_bank_springboot.util.CreatorFakeEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -121,5 +123,30 @@ class ClientServiceImplTest {
 //        verify(cl)
 
 
+    }
+
+    @Test
+    void getAllClientsByManager_id() {
+        when(clientRepository.findAllByManager_Id(anyLong())).thenReturn(clientList);
+        List<Client> resultList = clientService.getAllClientsByManager_id(managerTemplate.getId());
+        verify(clientRepository).findAllByManager_Id(managerTemplate.getId());
+        assertEquals(resultList,clientList);
+    }
+
+    @Test
+    void getAllClientsByStatus() {
+        when(clientRepository.findClientByStatus(any(ClientStatus.class))).thenReturn(clientList);
+        List<Client> resultList = clientService.getAllClientsByStatus(clientTemplate.getStatus());
+        verify(clientRepository).findClientByStatus(any(ClientStatus.class));
+        assertArrayEquals(resultList.toArray(), clientList.toArray());
+
+    }
+
+    @Test
+    void getAllClientsCreatedBetween() {
+        when(clientRepository.findClientByCreatedAtIsBetween(any(LocalDateTime.class), any(LocalDateTime.class))).thenReturn(clientList);
+        List<Client> resultList = clientService.getAllClientsCreatedBetween(clientTemplate.getCreatedAt().minusMonths(1l),clientTemplate.getCreatedAt().plusMonths(1l));
+        verify(clientRepository).findClientByCreatedAtIsBetween(any(LocalDateTime.class), any(LocalDateTime.class));
+        assertArrayEquals(resultList.toArray(), clientList.toArray());
     }
 }
