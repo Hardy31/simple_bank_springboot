@@ -40,9 +40,9 @@ class ManagerServiceImplTest {
     @DisplayName("Positive test. Create manager.")
     void testCreateManager() {
         when(managerRepository.save(any())).thenReturn(managerTemplate);  // Стаббинг: определение поведения, Возвращает ФэйкМенеджер с Id
-        Manager acceptedManager = CreatorFakeEntity.createFakeManager();    //ФэйкМенеджер без Id
-        Manager managerResult = managerService.createManager(acceptedManager);
-        verify(managerRepository).save(acceptedManager);    //Проверка что managerRepository.save(acceptedManager) вызывался.
+//        Manager acceptedManager = CreatorFakeEntity.createFakeManager();    //ФэйкМенеджер без Id
+        Manager managerResult = managerService.createManager(managerTemplate);
+        verify(managerRepository).save(managerTemplate);    //Проверка что managerRepository.save(acceptedManager) вызывался.
 //        assertEquals(managerTemplate, managerResult);      //Проверка что результат выполнения
         compareManager(managerTemplate, managerResult);     //проверка вынесена в отдельный метод
     }

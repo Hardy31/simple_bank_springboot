@@ -49,7 +49,7 @@ public interface ProductRepository extends CrudRepository <Product, Long>{
     ) ;
 
     @Query("SELECT p FROM Product  AS p WHERE p.status = :status AND p.currencyCode = :code AND p.interestRate = :rate")
-    List<Product> findAllByStatusAndCurrencyCodeAnfRate(
+    List<Product> findAllByStatusAndCurrencyCodeAndRate(
             @Param("status") ProductStatus status,
             @Param("code")CurrencyCode currencyCode,
             @Param("rate")double interestRate

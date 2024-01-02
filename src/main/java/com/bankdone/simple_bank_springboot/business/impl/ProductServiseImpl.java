@@ -121,6 +121,6 @@ public class ProductServiseImpl implements ProductService {
     public List<Product> getAllByStatusAndCurrencyCodeAndRate(String status, String caCode, Double rate) {
         ProductStatus productStatus = ProductStatus.valueOf(status);
         CurrencyCode currencyCode = CurrencyCode.valueOf(caCode);
-        return productRepository.findAllByStatusAndCurrencyCodeAnfRate(productStatus, currencyCode, rate);
+        return productRepository.findAllByStatusAndCurrencyCodeAndRate(productStatus, currencyCode, rate);
     }
 }
