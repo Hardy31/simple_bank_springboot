@@ -1,6 +1,7 @@
 package com.bankdone.simple_bank_springboot.data_access;
 
 import com.bankdone.simple_bank_springboot.entity.Account;
+import com.bankdone.simple_bank_springboot.entity.Agreement;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -24,6 +25,8 @@ import java.util.Optional;
  */
 public interface AccountRepository extends JpaRepository<Account, Long> {
 
-    @Query("SELECT a FROM Account  AS a WHERE a.id = :id")
-    public Optional<Account> findByID(@Param("id") Long id);
+//    @Query("SELECT a FROM Account  AS a WHERE a.id = :id")
+//    public Optional<Account> findByID(@Param("id") Long id);
+// с одноименным запросом  тест AccountRepository.findByID(anyLong() - тест не проходит
 }
+

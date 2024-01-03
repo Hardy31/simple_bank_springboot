@@ -35,7 +35,7 @@ import java.util.List;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class AgrimentServiceImpl implements AgreementService {
+public class AgreementServiceImpl implements AgreementService {
 
     /**
      * AgreementRepository используется для получения доступа к данным  Соглашений

@@ -3,6 +3,7 @@ package com.bankdone.simple_bank_springboot.business.impl;
 import com.bankdone.simple_bank_springboot.business.AccountService;
 import com.bankdone.simple_bank_springboot.data_access.AccountRepository;
 import com.bankdone.simple_bank_springboot.entity.Account;
+import com.bankdone.simple_bank_springboot.entity.Agreement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -61,6 +62,7 @@ public class AccountServiceImpl implements AccountService {
      */
     public Account getById(Long id) {
         return accountRepository.findById(id).get();
+
     }
 
     /**

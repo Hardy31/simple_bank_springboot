@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class CreatorFakeEntity {
-    private Product fakeProduct;
 
     public static Manager createFakeManager(){
         Manager fakeManager = new Manager().builder()
@@ -72,7 +71,7 @@ public class CreatorFakeEntity {
             .sum(150000.00d)
             .updatedAt(getFixedLocalDateTime())
             .product(getFakeProduct(3L))
-            .account(getFakeAccount(3L))
+//            .account(getFakeAccount(3L))
             .build();
         return  agreement;
     }
@@ -103,8 +102,6 @@ public class CreatorFakeEntity {
 
 
     public static Transaction createFakeTransaction(){
-//        debetAccountTemplate = CreatorFakeEntity.getFakeAccount(9L);
-//        credetAccountTemplate = CreatorFakeEntity.getFakeAccount(8L);
         Transaction transaction = Transaction.builder()
                 .type(TransactionType.DEPOSIT)
                 .amount(100000d)
