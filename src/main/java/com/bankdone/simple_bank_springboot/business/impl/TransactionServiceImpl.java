@@ -10,6 +10,7 @@ import com.bankdone.simple_bank_springboot.dto.CreateTransactionDTO;
 import com.bankdone.simple_bank_springboot.entity.Account;
 import com.bankdone.simple_bank_springboot.entity.Transaction;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;

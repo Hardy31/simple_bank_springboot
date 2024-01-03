@@ -1,12 +1,7 @@
 package com.bankdone.simple_bank_springboot.util;
 
-import com.bankdone.simple_bank_springboot.entity.Client;
-import com.bankdone.simple_bank_springboot.entity.Manager;
-import com.bankdone.simple_bank_springboot.entity.Product;
-import com.bankdone.simple_bank_springboot.entity.enums.ClientStatus;
-import com.bankdone.simple_bank_springboot.entity.enums.CurrencyCode;
-import com.bankdone.simple_bank_springboot.entity.enums.ManagerStatus;
-import com.bankdone.simple_bank_springboot.entity.enums.ProductStatus;
+import com.bankdone.simple_bank_springboot.entity.*;
+import com.bankdone.simple_bank_springboot.entity.enums.*;
 import org.checkerframework.checker.units.qual.C;
 
 import java.time.LocalDate;
@@ -68,6 +63,63 @@ public class CreatorFakeEntity {
         Product fakeProduct = creatFakeProduct();
         fakeProduct.setId(fakeProductId);
         return fakeProduct;
+    }
+
+    public static Agreement createFakeAgreement(){
+        Agreement agreement = Agreement.builder()
+            .interestRate(17.25)
+            .status(AgreementStatus.ACTIVE)
+            .sum(150000.00d)
+            .updatedAt(getFixedLocalDateTime())
+            .product(getFakeProduct(3L))
+            .account(getFakeAccount(3L))
+            .build();
+        return  agreement;
+    }
+
+    public static Agreement getFakeAgreement(){
+        Agreement agreement = createFakeAgreement();
+        agreement.setId(3L);
+        return agreement;
+    }
+
+    public static Account createFakeAccount(){
+        Account account = Account.builder()
+                .name("number")
+                .type(AccountType.ESCROW)
+                .status(AccountStatus.ACTIVE)
+                .balance(1000000.00)
+                .code(CurrencyCode.RUB)
+                .createdAt(getFixedLocalDateTime())
+                .build();
+        return account;
+    }
+    public static Account getFakeAccount(Long id){
+        Account account = createFakeAccount();
+        account.setId(id);
+        account.setName(account.getName() + id);
+        return account;
+    }
+
+
+    public static Transaction createFakeTransaction(){
+//        debetAccountTemplate = CreatorFakeEntity.getFakeAccount(9L);
+//        credetAccountTemplate = CreatorFakeEntity.getFakeAccount(8L);
+        Transaction transaction = Transaction.builder()
+                .type(TransactionType.DEPOSIT)
+                .amount(100000d)
+                .description("Описание")
+                .debitAccount(getFakeAccount(9L))
+                .creditAccount(getFakeAccount(8L))
+                .createdAt(getFixedLocalDateTime())
+                .build();
+        return transaction;
+    }
+
+    public static  Transaction getFakeTrensaction(Long id){
+        Transaction transaction = createFakeTransaction();
+        transaction.setId(id);
+        return transaction;
     }
 
     public static LocalDateTime getFixedLocalDateTime(){
