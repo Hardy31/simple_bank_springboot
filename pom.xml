@@ -65,8 +65,26 @@
         </dependency>
 
 
+        <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-bootstrap -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-bootstrap</artifactId>
+            <version>3.1.4</version>
+        </dependency>
 
-<!--&lt;!&ndash;        для тестирования         &ndash;&gt;-->
+<!--        &lt;!&ndash; https://mvnrepository.com/artifact/io.github.embeddedkafka/embedded-kafka &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>io.github.embeddedkafka</groupId>-->
+<!--            <artifactId>embedded-kafka_3</artifactId>-->
+<!--            <version>3.6.0</version>-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
+
+
+
+
+
+        <!--&lt;!&ndash;        для тестирования         &ndash;&gt;-->
 <!--        <dependency>-->
 <!--            <groupId>org.springframework.boot</groupId>-->
 <!--            <artifactId>spring-boot-starter-test</artifactId>-->
