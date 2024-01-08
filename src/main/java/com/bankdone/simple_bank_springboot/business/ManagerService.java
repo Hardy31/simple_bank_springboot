@@ -13,7 +13,7 @@ public interface ManagerService {
 
     List<Manager> getAllManagersByStatus(ManagerStatus manStatus);
 
-    Optional<Manager> getManagerById(Long id);
+    Manager getManagerById(Long id);
 
     void deleteManagerById(Long id);
 

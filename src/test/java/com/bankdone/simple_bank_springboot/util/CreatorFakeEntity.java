@@ -15,7 +15,7 @@ public class CreatorFakeEntity {
                 .firstName("NameF" )
                 .lastName("SurnameF")
                 .status(ManagerStatus.valueOf("ACTIVE"))
-                .createdAt(LocalDateTime.now())
+//                .createdAt(LocalDateTime.now())
                 .build();
         return fakeManager;
     }

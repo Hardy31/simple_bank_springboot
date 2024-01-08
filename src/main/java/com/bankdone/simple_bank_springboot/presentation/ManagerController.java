@@ -69,7 +69,7 @@ public class ManagerController {
      * http://localhost:8080/rest/managers/5
      */
     @GetMapping("/{id}")
-    public Optional<Manager> getManagerById(@PathVariable Long id) {
+    public Manager getManagerById(@PathVariable Long id) {
         log.info("ManagerController getManagerById(@PathVariable Long id) : {} ", id);
         return managerService.getManagerById(id);
     }

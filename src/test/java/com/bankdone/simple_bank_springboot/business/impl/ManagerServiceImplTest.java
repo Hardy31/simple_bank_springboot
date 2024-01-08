@@ -51,7 +51,7 @@ class ManagerServiceImplTest {
     @DisplayName("Positive test. Get manager by Id.")
     void testGetManagerById() {
         when(managerRepository.findById(2l)).thenReturn(Optional.of(managerTemplate)); // Стаббинг: определение поведения, Возвращает ФэйкМенеджер с Id
-        Manager managerResult = managerService.getManagerById(2l).get();
+        Manager managerResult = managerService.getManagerById(2l);
         verify(managerRepository).findById(2l);             //Проверка что managerRepository.getManagerById(Long l) вызывался.
         compareManager(managerTemplate, managerResult);     //проверка вынесена в отдельный метод
     }

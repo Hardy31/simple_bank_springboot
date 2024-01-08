@@ -80,8 +80,8 @@ public class ManagerServiceImpl implements ManagerService {
      * @return Optional<Manager>
      */
     @Override
-    public Optional<Manager> getManagerById(Long id) {
-        return managerRepository.findById(id);
+    public Manager getManagerById(Long id) {
+        return managerRepository.findById(id).get();
     }
 
     /**
