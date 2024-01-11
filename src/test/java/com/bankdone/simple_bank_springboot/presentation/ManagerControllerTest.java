@@ -3,6 +3,10 @@ package com.bankdone.simple_bank_springboot.presentation;
 import com.bankdone.simple_bank_springboot.business.impl.ManagerServiceImpl;
 import com.bankdone.simple_bank_springboot.entity.Manager;
 import com.bankdone.simple_bank_springboot.util.CreatorFakeEntity;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.jayway.jsonpath.JsonPath;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,6 +25,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 
 import java.lang.reflect.Array;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
@@ -52,27 +57,44 @@ class ManagerControllerTest {
     @InjectMocks
     private ManagerController managerController;
 
-    @Autowired
+
+
     private ObjectMapper objectMapper;
 
-    @Autowired
+
     private MockMvc mockMvc;
     Manager managerTemplate;
     List<Manager> managerListTemplate;
 
+//    @JsonSerialize(using = LocalDateTimeSerializer.class)
+//    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    LocalDateTime createAt;
+
+//    @JsonSerialize(using = LocalDateTimeSerializer.class)
+//    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    LocalDateTime UpdatedAt;
+
     @BeforeEach
     void setUp() {
         managerTemplate = CreatorFakeEntity.getFakeManager(1L);
-        managerListTemplate = List.of(managerTemplate);
+        managerListTemplate = List.of(managerTemplate, CreatorFakeEntity.getFakeManager(2L));
         mockMvc = MockMvcBuilders.standaloneSetup(managerController).build();
+
+        LocalDateTime createdAt = managerTemplate.getCreatedAt();
+        LocalDateTime UpdatedAt = managerTemplate.getUpdatedAt();
+
     }
 
     @Test
+//    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     void createTest() throws Exception {
         when(managerService.createManager(any(Manager.class))).thenReturn(managerTemplate);
 
-        String json = new ObjectMapper().writeValueAsString(CreatorFakeEntity.createFakeManager());
-        log.info("ManagerControllerTest->createTest() postRequestJson : {} ", json);
+        Manager fakManager = CreatorFakeEntity.createFakeManager();
+        String json = new ObjectMapper().writeValueAsString(fakManager);
+//        log.info("ManagerControllerTest->createTest() postRequestJson : json {}", json);
+
+
 
         RequestBuilder request = MockMvcRequestBuilders
                 .post("/rest/managers")
@@ -87,7 +109,8 @@ class ManagerControllerTest {
                 .andExpect(jsonPath("$.firstName").value(managerTemplate.getFirstName()))
                 .andExpect(jsonPath("$.lastName").value(managerTemplate.getLastName()))
                 .andExpect(jsonPath("$.status").value(managerTemplate.getStatus().toString()))
-//                .andExpect( jsonPath("$.createdAt").value(managerTemplate.getCreatedAt().toString()))     //как протестировать дату
+
+                .andExpect( jsonPath("$.createdAt").value(createAt))     //как протестировать дату
                 .andExpect(jsonPath("$.updatedAt").value(managerTemplate.getUpdatedAt()))
                 .andReturn();
     }
@@ -97,16 +120,22 @@ class ManagerControllerTest {
     @Test
     void getAllManagersTest() throws Exception {
 
-//        RequestBuilder request = MockMvcRequestBuilders
-//                .get("/rest/managers")
-//                .contentType(MediaType.APPLICATION_JSON);
-//
-//        when(managerService.getAllManagers()).thenReturn(managerListTemplate);
-//
+        String json = new ObjectMapper().writeValueAsString(managerListTemplate);
+        System.out.println(json);
+
+
+        RequestBuilder request = MockMvcRequestBuilders
+                .get("/rest/managers")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json);
+
+
+        when(managerService.getAllManagers()).thenReturn(managerListTemplate);
+
 //        List<Manager> resultList = managerService.getAllManagers();
-//        verify(managerService, times(1)).getAllManagers();
-//
-//        MvcResult result = mockMvc.perform(get("/rest/managers")).andExpect(status().isOk()).andReturn();
+
+
+        MvcResult result = mockMvc.perform(get("/rest/managers")).andExpect(status().isOk()).andReturn();
 //
 //                // Выполнение запроса get и проверка результатов
 //        mockMvc.perform(get("/rest/managers")
@@ -116,7 +145,7 @@ class ManagerControllerTest {
 //                .andExpect((ResultMatcher) jsonPath("$[0].id").value(managerListTemplate.get(0).getId())); // здесь и далее проверяем фактические данные
 
 
-        MvcResult result = mockMvc.perform(get("/rest/managers")).andExpect(status().isOk()).andReturn();
+
         log.info("ManagerControllerTest -> getAllManagersTest() Status - {} Формат ответа - {} ", result.getResponse().getStatus(), result.getResponse().getContentType());
 
 //            mockMvc.perform(get("/rest/managers")).andExpect(status().isOk(), content().json());

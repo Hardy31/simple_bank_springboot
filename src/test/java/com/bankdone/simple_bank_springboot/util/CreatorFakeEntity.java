@@ -2,26 +2,39 @@ package com.bankdone.simple_bank_springboot.util;
 
 import com.bankdone.simple_bank_springboot.entity.*;
 import com.bankdone.simple_bank_springboot.entity.enums.*;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import lombok.extern.slf4j.Slf4j;
 import org.checkerframework.checker.units.qual.C;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+@Slf4j
+//@JsonSerialize(using = LocalDateTimeSerializer.class)
+//@JsonDeserialize(using = LocalDateTimeDeserializer.class)
 public class CreatorFakeEntity {
 
     public static Manager createFakeManager(){
+
+        LocalDateTime createdAt = LocalDateTime.now();
+        log.info("LocalDateTime createdAt : {}", createdAt );
+
         Manager fakeManager = new Manager().builder()
                 .firstName("NameF" )
                 .lastName("SurnameF")
                 .status(ManagerStatus.valueOf("ACTIVE"))
-//                .createdAt(LocalDateTime.now())
+                .createdAt(createdAt)
                 .build();
         return fakeManager;
     }
     public static Manager getFakeManager(Long id){
         Manager fakeManager = createFakeManager();
         fakeManager.setId(id);
+        log.info("Manager getFakeManager(Long id) : {}", fakeManager);
         return fakeManager;
     }
 
@@ -37,6 +50,7 @@ public class CreatorFakeEntity {
                 .createdAt(LocalDateTime.now())
                 .manager(getFakeManager(fakeManagerId))
                 .build();
+
         return  fakeClient;
     }
     public static Client getFakeClient(Long fakeClientId){
