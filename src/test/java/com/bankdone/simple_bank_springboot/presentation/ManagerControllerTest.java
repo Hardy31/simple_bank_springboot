@@ -101,6 +101,7 @@ class ManagerControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json);
 
+        createAt = managerTemplate.getCreatedAt();
         mockMvc.perform(request)
                 .andDo(print())
                 .andExpect(status().isOk())
