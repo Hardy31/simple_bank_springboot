@@ -1,0 +1,11 @@
+com.bankdone.simple_bank_springboot
+com.bankdone.simple_bank_springboot.business
+com.bankdone.simple_bank_springboot.business.exeption
+com.bankdone.simple_bank_springboot.business.impl
+com.bankdone.simple_bank_springboot.data_access
+com.bankdone.simple_bank_springboot.dto
+com.bankdone.simple_bank_springboot.entity
+com.bankdone.simple_bank_springboot.entity.enums
+com.bankdone.simple_bank_springboot.functional
+com.bankdone.simple_bank_springboot.presentation
+com.bankdone.simple_bank_springboot.util
