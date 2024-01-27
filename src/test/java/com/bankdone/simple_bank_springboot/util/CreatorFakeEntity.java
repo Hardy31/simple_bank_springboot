@@ -18,9 +18,10 @@ import java.time.format.DateTimeFormatter;
 //@JsonDeserialize(using = LocalDateTimeDeserializer.class)
 public class CreatorFakeEntity {
 
+
     public static Manager createFakeManager(){
 
-        LocalDateTime createdAt = LocalDateTime.now();
+        LocalDateTime createdAt = CreaterFakeDTO.now;
         log.info("LocalDateTime createdAt : {}", createdAt );
 
         Manager fakeManager = new Manager().builder()
@@ -29,11 +30,14 @@ public class CreatorFakeEntity {
                 .status(ManagerStatus.valueOf("ACTIVE"))
                 .createdAt(createdAt)
                 .build();
+        log.info("Manager createFakeManager(Long id) : {}", fakeManager);
         return fakeManager;
     }
     public static Manager getFakeManager(Long id){
+        LocalDateTime createdAt = CreaterFakeDTO.now;
         Manager fakeManager = createFakeManager();
         fakeManager.setId(id);
+//        fakeManager.setCreatedAt(createdAt);
         log.info("Manager getFakeManager(Long id) : {}", fakeManager);
         return fakeManager;
     }

@@ -1,5 +1,7 @@
 package com.bankdone.simple_bank_springboot.business;
 
+import com.bankdone.simple_bank_springboot.dto.ManagerCreatDTO;
+import com.bankdone.simple_bank_springboot.dto.ManagerDTO;
 import com.bankdone.simple_bank_springboot.entity.Manager;
 import com.bankdone.simple_bank_springboot.entity.enums.ManagerStatus;
 
@@ -21,7 +23,7 @@ public interface ManagerService {
 
     List<Manager> getAllManagersWorkingWithTo(LocalDateTime dateTimeWith, LocalDateTime dateTimeTo);
 
-    Manager createManager(Manager manager);
+    ManagerDTO createManager(ManagerCreatDTO manager);
 
     Manager editManager(Long id, Manager manager);
 

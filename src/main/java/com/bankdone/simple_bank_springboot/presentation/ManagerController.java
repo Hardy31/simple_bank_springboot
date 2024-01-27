@@ -1,5 +1,7 @@
 package com.bankdone.simple_bank_springboot.presentation;
 
+import com.bankdone.simple_bank_springboot.dto.ManagerCreatDTO;
+import com.bankdone.simple_bank_springboot.dto.ManagerDTO;
 import com.bankdone.simple_bank_springboot.dto.PeriodDTO;
 import com.bankdone.simple_bank_springboot.business.ManagerService;
 import com.bankdone.simple_bank_springboot.entity.Manager;
@@ -92,9 +94,11 @@ public class ManagerController {
      * http://localhost:8080/rest/managers
      */
     @PostMapping("")
-    public Manager create(@RequestBody Manager manager) {
-        log.info("ManagerController create(@RequestBody Manager manager) : {}", manager);
-        return managerService.createManager(manager);
+    public ManagerDTO create(@RequestBody ManagerCreatDTO manager) {
+        log.info("ManagerController create(@RequestBody Manager manager!!!!!) : {}", manager);
+        ManagerDTO responsManager = managerService.createManager(manager);
+        log.info("ManagerController create(@RequestBody Manager !!!!!!!!!!!!manager!!!!!) : {}", responsManager);
+        return responsManager;
     }
 
     /**

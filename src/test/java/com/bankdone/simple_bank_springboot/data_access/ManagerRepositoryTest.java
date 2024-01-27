@@ -46,6 +46,7 @@ class ManagerRepositoryTest {
         Manager createdManager = CreatorFakeEntity.createFakeManager();
         Manager savedManager = managerRepository.save(createdManager);
         Iterable allManagers = managerRepository.findAll();
+        log.info("________________________managerRepository.findAll() {}",allManagers );
         assertThat(allManagers).hasSizeBetween(10, 50);     //При создании БД гениротся 9 записей Manager
     }
 

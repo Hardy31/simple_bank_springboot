@@ -1,0 +1,33 @@
+
+Неизменяемые DTO… А это осмысленно?
+Цель DTO - передача данных между процессами. Объект инициализируется, а затем его состояние не должно меняться.
+Либо он будет сериализован в JSON, либо будет использоваться клиентом.
+Это делает неизменность естественной. Неизменяемый DTO будет передавать данные между процессами с гарантией.
+
+Примечание: начиная с Java 16, существует более краткий способ создания неизменяемых классов через записи.
+
+https://dzen.ru/a/YWyXRP_e8HpK0tjq?experiment=948512
+
+
+
+
+
+Преобразование Post в PostDto с помощью ModelMapper
+Собственно преобразование тут в двух строках.
+
+Преобразование User в UserDto:
+
+modelMapper.map(user, UserDto.class);
+И Post в PostDto:
+
+PostDto postDto = modelMapper.map(post, PostDto.class);
+ModelMapper сопоставляет те поля User и Post,
+которые есть в  UserDto и PostDto, остальные — игнорирует.
+Вложенный объект автоматически не сопоставляется.
+
+https://sysout.ru/preobrazovanie-entity-v-dto-s-pomoshhyu-modelmapper/
+
+Библиотеки:
+https://github.com/FasterXML/jackson
+https://github.com/google/gson
+https://github.com/square/moshi

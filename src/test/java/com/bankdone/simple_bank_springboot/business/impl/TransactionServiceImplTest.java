@@ -45,15 +45,15 @@ class TransactionServiceImplTest {
     CreateTransactionDTO createFakeTransactionDTO;
     TransactionService transactionService;
 
-    @BeforeEach
-    void setUp(){
-        createFakeTransactionDTO =  CreaterFakeDTO.CreateFakeTransactionDTO();
-        transactionTemplate = CreatorFakeEntity.getFakeTrensaction(3L);
-        debetAccountTemplate = CreatorFakeEntity.getFakeAccount(9L);
-        credetAccountTemplate = CreatorFakeEntity.getFakeAccount(8L);
-        transactionService = new TransactionServiceImpl(transactionRepository, accountService);
-        transactionTemplairtList = new ArrayList<>(List.of(transactionTemplate));
-    }
+//    @BeforeEach
+//    void setUp(){
+//        createFakeTransactionDTO =  CreaterFakeDTO.CreateFakeTransactionDTO();
+//        transactionTemplate = CreatorFakeEntity.getFakeTrensaction(3L);
+//        debetAccountTemplate = CreatorFakeEntity.getFakeAccount(9L);
+//        credetAccountTemplate = CreatorFakeEntity.getFakeAccount(8L);
+//        transactionService = new TransactionServiceImpl(transactionRepository, accountService);
+//        transactionTemplairtList = new ArrayList<>(List.of(transactionTemplate));
+//    }
     @Test
     void createTransaction() {
         when(transactionRepository.save(any())).thenReturn(transactionTemplate);

@@ -1,7 +1,10 @@
 package com.bankdone.simple_bank_springboot.presentation;
 
 import com.bankdone.simple_bank_springboot.business.impl.ManagerServiceImpl;
+import com.bankdone.simple_bank_springboot.dto.ManagerCreatDTO;
+import com.bankdone.simple_bank_springboot.dto.ManagerDTO;
 import com.bankdone.simple_bank_springboot.entity.Manager;
+import com.bankdone.simple_bank_springboot.util.CreaterFakeDTO;
 import com.bankdone.simple_bank_springboot.util.CreatorFakeEntity;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -24,6 +27,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 
+import java.io.OutputStream;
 import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -73,6 +77,8 @@ class ManagerControllerTest {
 //    @JsonSerialize(using = LocalDateTimeSerializer.class)
 //    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     LocalDateTime UpdatedAt;
+    ManagerCreatDTO managerCreatFackDTO;
+    ManagerDTO managerFackDTO;
 
     @BeforeEach
     void setUp() {
@@ -82,17 +88,19 @@ class ManagerControllerTest {
 
         LocalDateTime createdAt = managerTemplate.getCreatedAt();
         LocalDateTime UpdatedAt = managerTemplate.getUpdatedAt();
+        managerCreatFackDTO = CreaterFakeDTO.getManagerToCreate();
+        managerFackDTO = CreaterFakeDTO.getManagerDTO(1l);
 
     }
 
     @Test
 //    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     void createTest() throws Exception {
-        when(managerService.createManager(any(Manager.class))).thenReturn(managerTemplate);
+        when(managerService.createManager(any(ManagerCreatDTO.class))).thenReturn(managerFackDTO);
 
         Manager fakManager = CreatorFakeEntity.createFakeManager();
         String json = new ObjectMapper().writeValueAsString(fakManager);
-//        log.info("ManagerControllerTest->createTest() postRequestJson : json {}", json);
+        log.info("ManagerControllerTest->createTest() postRequestJson : json________ {}", json);
 
 
 
@@ -101,7 +109,8 @@ class ManagerControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json);
 
-        createAt = managerTemplate.getCreatedAt();
+        createAt = CreaterFakeDTO.now;
+        System.out.println(createAt);
         mockMvc.perform(request)
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -111,7 +120,7 @@ class ManagerControllerTest {
                 .andExpect(jsonPath("$.lastName").value(managerTemplate.getLastName()))
                 .andExpect(jsonPath("$.status").value(managerTemplate.getStatus().toString()))
 
-                .andExpect( jsonPath("$.createdAt").value(createAt))     //как протестировать дату
+                .andExpect( jsonPath("$.createdAt").value(managerTemplate.getCreatedAt()))     //как протестировать дату
                 .andExpect(jsonPath("$.updatedAt").value(managerTemplate.getUpdatedAt()))
                 .andReturn();
     }

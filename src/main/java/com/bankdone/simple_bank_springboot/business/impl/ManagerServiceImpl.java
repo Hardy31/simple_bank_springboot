@@ -2,8 +2,11 @@ package com.bankdone.simple_bank_springboot.business.impl;
 
 import com.bankdone.simple_bank_springboot.business.ManagerService;
 import com.bankdone.simple_bank_springboot.data_access.ManagerRepository;
+import com.bankdone.simple_bank_springboot.dto.ManagerCreatDTO;
+import com.bankdone.simple_bank_springboot.dto.ManagerDTO;
 import com.bankdone.simple_bank_springboot.entity.Manager;
 import com.bankdone.simple_bank_springboot.entity.enums.ManagerStatus;
+import com.bankdone.simple_bank_springboot.mapper.ManagerMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
@@ -52,6 +55,7 @@ public class ManagerServiceImpl implements ManagerService {
      * * ManagerRepository : это поле используется для доступа к данным менеджера в базе данных.
      */
     private final ManagerRepository managerRepository;
+    private final ManagerMapper managerMapper;
 
     /**
      * getAllManagers(): Этот метод возвращает список всех менеджеров.
@@ -125,8 +129,18 @@ public class ManagerServiceImpl implements ManagerService {
      */
     @Override
     @CacheEvict("Managers")
-    public Manager createManager(Manager manager) {
-        return managerRepository.save(manager);
+    public ManagerDTO createManager(ManagerCreatDTO manager) {
+        log.info("ManagerServiceImpl createManager(ManagerCreatDTO manager) 133: {}", manager);
+
+        Manager toEntity = managerMapper.createToEntity(manager);
+        toEntity.setCreatedAt(LocalDateTime.now());
+//        toEntity.setCreatedAt(LocalDateTime.now());
+        log.info("ManagerServiceImpl createManager(ManagerCreatDTO manager) 135: {}", toEntity);
+        Manager save = managerRepository.save(toEntity);
+        log.info("ManagerServiceImpl createManager(ManagerCreatDTO manager) 137: {}", save);
+        ManagerDTO requestDto = managerMapper.convertToDTO(save);
+        log.info("___________________________________REQUEST DTO 141: {}", requestDto);
+        return requestDto;
     }
 
     /**
@@ -150,6 +164,7 @@ public class ManagerServiceImpl implements ManagerService {
      * TODO: Manager manager, необходимо меределать на DataManagerDTO(еще подумать над именем класса) dataManagerDTO . <br>
      * @param manager Manager
      * @return String - метод вызывается при принятии на работу. DISMISSED- статус увольнения по статье.
+     *
      */
     @Override
     public String getManagersByFIO(Manager manager) {
@@ -164,7 +179,17 @@ public class ManagerServiceImpl implements ManagerService {
         if (managerfromDB == null) {
             manager.setStatus(ManagerStatus.ACTIVE);
             manager.setCreatedAt(LocalDateTime.now());
-            manager = createManager(manager);
+
+
+
+
+
+
+
+//            manager = createManager(manager.);
+
+
+
             return result.append(" Добро пожаловать в наш коллектив!").toString();
         } else if (managerfromDB.getStatus().equals(ManagerStatus.DISMISSED)) {
             manager = managerfromDB;
