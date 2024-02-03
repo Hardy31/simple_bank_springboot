@@ -37,7 +37,9 @@ class ManagerServiceImplTest {
     private Manager managerTemplate;
     private List<Manager> managerList;
     private ManagerDTO fackeManagerDTO;
+    private List<ManagerDTO> managerDTOList;
     private ManagerCreatDTO createFackeManagerDTO;
+
 
     @BeforeEach
     void setUp() {
@@ -46,7 +48,9 @@ class ManagerServiceImplTest {
         managerTemplate = CreatorFakeEntity.getFakeManager(2L);
         managerList = new ArrayList<>(List.of(managerTemplate));
         fackeManagerDTO = CreaterFakeDTO.getManagerDTO(2l);
+        managerDTOList = List.of(fackeManagerDTO);
         createFackeManagerDTO = CreaterFakeDTO.getManagerToCreate();
+
         log.info("ManagerServiceImplTest setUp() ___48_____: {}", createFackeManagerDTO);
 
     }
@@ -80,7 +84,9 @@ class ManagerServiceImplTest {
     @DisplayName("Positive test. Get all managers.")
     void testGetAllManagers() {
         when(managerRepository.findAll()).thenReturn(managerList);  // Стаббинг: определение поведения
-        List<Manager> result = managerService.getAllManagers();
+
+        List<ManagerDTO> result = managerService.getAllManagers();
+
         verify(managerRepository).findAll();    //Проверка что managerRepository.findAll() вызывался.
         assertEquals(managerList, result);      //Проверка что результат выполнения
     }

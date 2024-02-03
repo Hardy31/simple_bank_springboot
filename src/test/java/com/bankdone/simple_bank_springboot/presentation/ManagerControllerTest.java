@@ -3,6 +3,7 @@ package com.bankdone.simple_bank_springboot.presentation;
 import com.bankdone.simple_bank_springboot.business.impl.ManagerServiceImpl;
 import com.bankdone.simple_bank_springboot.dto.ManagerCreatDTO;
 import com.bankdone.simple_bank_springboot.dto.ManagerDTO;
+import com.bankdone.simple_bank_springboot.dto.ManagerListDTO;
 import com.bankdone.simple_bank_springboot.entity.Manager;
 import com.bankdone.simple_bank_springboot.util.CreaterFakeDTO;
 import com.bankdone.simple_bank_springboot.util.CreatorFakeEntity;
@@ -30,6 +31,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.io.OutputStream;
 import java.lang.reflect.Array;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
@@ -63,6 +65,7 @@ class ManagerControllerTest {
 
 
 
+@Autowired
     private ObjectMapper objectMapper;
 
 
@@ -78,7 +81,9 @@ class ManagerControllerTest {
 //    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     LocalDateTime UpdatedAt;
     ManagerCreatDTO managerCreatFackDTO;
-    ManagerDTO managerFackDTO;
+    ManagerDTO managerDTO;
+    private List<ManagerDTO> managerDTOList;
+    private ManagerListDTO managerListDTO;
 
     @BeforeEach
     void setUp() {
@@ -89,18 +94,22 @@ class ManagerControllerTest {
         LocalDateTime createdAt = managerTemplate.getCreatedAt();
         LocalDateTime UpdatedAt = managerTemplate.getUpdatedAt();
         managerCreatFackDTO = CreaterFakeDTO.getManagerToCreate();
-        managerFackDTO = CreaterFakeDTO.getManagerDTO(1l);
+        managerDTO = CreaterFakeDTO.getManagerDTO(1l);
+
+        managerDTOList = new ArrayList<>(List.of(managerDTO));
+        managerListDTO = new ManagerListDTO(managerDTOList);
 
     }
 
     @Test
 //    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     void createTest() throws Exception {
-        when(managerService.createManager(any(ManagerCreatDTO.class))).thenReturn(managerFackDTO);
+        when(managerService.createManager(any(ManagerCreatDTO.class))).thenReturn(managerDTO);
 
         Manager fakManager = CreatorFakeEntity.createFakeManager();
         String json = new ObjectMapper().writeValueAsString(fakManager);
         log.info("ManagerControllerTest->createTest() postRequestJson : json________ {}", json);
+        log.info("ManagerControllerTest->createTest() postRequestJson : managerTemplate.getCreatedAt()!!!!!!!! {}", managerTemplate.getCreatedAt());
 
 
 
@@ -110,6 +119,7 @@ class ManagerControllerTest {
                 .content(json);
 
         createAt = CreaterFakeDTO.now;
+        log.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!createAt!!!!!!!! {}", createAt);
         System.out.println(createAt);
         mockMvc.perform(request)
                 .andDo(print())
@@ -140,7 +150,7 @@ class ManagerControllerTest {
                 .content(json);
 
 
-        when(managerService.getAllManagers()).thenReturn(managerListTemplate);
+        when(managerService.getAllManagers()).thenReturn(managerDTOList);
 
 //        List<Manager> resultList = managerService.getAllManagers();
 
@@ -182,7 +192,7 @@ class ManagerControllerTest {
     @Test
     void getManagerById() throws Exception {
 
-        when(managerService.getManagerById(any())).thenReturn(managerTemplate);
+        when(managerService.getManagerById(any())).thenReturn(managerDTO);
 
         RequestBuilder request = MockMvcRequestBuilders
                 .get("/rest/managers/{id}", 6L)
@@ -195,12 +205,12 @@ class ManagerControllerTest {
 
 //                  import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 //                  для корректной работы  jsonPath("$.id").
-                .andExpect(jsonPath("$.id").value(managerTemplate.getId()))
-                .andExpect(jsonPath("$.firstName").value(managerTemplate.getFirstName()))
-                .andExpect(jsonPath("$.lastName").value(managerTemplate.getLastName()))
-                .andExpect(jsonPath("$.status").value(managerTemplate.getStatus().toString()))
+                .andExpect(jsonPath("$.id").value(managerDTO.getId()))
+                .andExpect(jsonPath("$.firstName").value(managerDTO.getFirstName()))
+                .andExpect(jsonPath("$.lastName").value(managerDTO.getLastName()))
+                .andExpect(jsonPath("$.status").value(managerDTO.getStatus().toString()))
 //                .andExpect( jsonPath("$.createdAt").value(managerTemplate.getCreatedAt().toString()))     //как протестировать дату
-                .andExpect(jsonPath("$.updatedAt").value(managerTemplate.getUpdatedAt()));
+                .andExpect(jsonPath("$.updatedAt").value(managerDTO.getUpdatedAt()));
 
 
         verify(managerService, times(1)).getManagerById(anyLong());

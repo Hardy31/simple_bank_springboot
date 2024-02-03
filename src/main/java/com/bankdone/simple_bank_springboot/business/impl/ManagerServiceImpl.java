@@ -1,9 +1,12 @@
 package com.bankdone.simple_bank_springboot.business.impl;
 
 import com.bankdone.simple_bank_springboot.business.ManagerService;
+import com.bankdone.simple_bank_springboot.business.exeption.ErrorMessage;
+import com.bankdone.simple_bank_springboot.business.exeption.ManagerNotFoundException;
 import com.bankdone.simple_bank_springboot.data_access.ManagerRepository;
 import com.bankdone.simple_bank_springboot.dto.ManagerCreatDTO;
 import com.bankdone.simple_bank_springboot.dto.ManagerDTO;
+import com.bankdone.simple_bank_springboot.dto.ManagerListDTO;
 import com.bankdone.simple_bank_springboot.entity.Manager;
 import com.bankdone.simple_bank_springboot.entity.enums.ManagerStatus;
 import com.bankdone.simple_bank_springboot.mapper.ManagerMapper;
@@ -59,33 +62,37 @@ public class ManagerServiceImpl implements ManagerService {
 
     /**
      * getAllManagers(): Этот метод возвращает список всех менеджеров.
-     * @return List<Manager>
+     * @return List<ManagerDTO>
      */
     @Override
     @Cacheable("Managers")
-    public List<Manager> getAllManagers() {
-        return managerRepository.findAll();
+    public List<ManagerDTO> getAllManagers() {
+        List<ManagerDTO> managerDTOLise  = new ManagerListDTO(managerMapper.convertToManageDTOList(managerRepository.findAll())).getManagerDTOList();
+        return managerDTOLise;
     }
 
     /**
      * getAllManagersByStatus(ManagerStatus status): этот метод извлекает всех менеджеров с выбранным статусом .
      * @param status Энум ManagerStatus
-     * @return List<Manager>
+     * @return List<ManagerDTO>
      */
     @Override
-    public List<Manager> getAllManagersByStatus(ManagerStatus status) {
-        return managerRepository.findAllByStatus(status);
+    public List<ManagerDTO> getAllManagersByStatus(ManagerStatus status) {
+        List<ManagerDTO> managerDTOList = new ManagerListDTO(managerMapper.convertToManageDTOList(managerRepository.findAllByStatus(status))).getManagerDTOList();
+        return managerDTOList;
     }
 
     /**
      * getManagerById(Long id): этот метод извлекает менеджера по его уникальному идентификатору («id»).<p>
      *  TODO: Он выдает исключение ManagerNotFoundException, если не найден ни один менеджер с указанным идентификатором.
      * @param id Long
-     * @return Optional<Manager>
+     * @return ManagerDTO
      */
     @Override
-    public Manager getManagerById(Long id) {
-        return managerRepository.findById(id).get();
+    public ManagerDTO getManagerById(Long id) {
+        Manager manager = managerRepository.findById(id).get();
+        ManagerDTO managerDTO = managerMapper.convertToDTO(manager);
+        return managerDTO;
     }
 
     /**
@@ -96,17 +103,22 @@ public class ManagerServiceImpl implements ManagerService {
     @Override
     @CacheEvict("Managers")
     public void deleteManagerById(Long id) {
-        managerRepository.deleteById(id);
+
+        Optional<Manager> manager = managerRepository.findById(id);
+        if (manager.isPresent())
+            managerRepository.deleteById(id);
+        else throw new ManagerNotFoundException(ErrorMessage.Manager_NOT_FOUND);
     }
 
     /**
      * getAllManagersWorkingWith LocalDateTime dateTime) -этот метод возвращает список менеджеров принятых на работу после
      * @param dateTime  LocalDateTime дата после которой
-     * @return List<Manager>
+     * @return List<ManagerDTO>
      */
     @Override
-    public List<Manager> getAllManagersWorkingWith(LocalDateTime dateTime) {
-        return managerRepository.findAllByCreatedAtAfter(dateTime);
+    public List<ManagerDTO> getAllManagersWorkingWith(LocalDateTime dateTime) {
+        List<ManagerDTO> managerDTOList = new ManagerListDTO(managerMapper.convertToManageDTOList(managerRepository.findAllByCreatedAtAfter(dateTime))).getManagerDTOList();
+        return managerDTOList;
     }
 
     /**
@@ -117,29 +129,26 @@ public class ManagerServiceImpl implements ManagerService {
      * @return
      */
     @Override
-    public List<Manager> getAllManagersWorkingWithTo(LocalDateTime dateTimeWith, LocalDateTime dateTimeTo) {
-        return managerRepository.findAllByCreatedAtIsBetween(dateTimeWith, dateTimeTo);
+    public List<ManagerDTO> getAllManagersWorkingWithTo(LocalDateTime dateTimeWith, LocalDateTime dateTimeTo) {
+
+        List<ManagerDTO> managerDTOList = new ManagerListDTO(managerMapper.convertToManageDTOList(managerRepository.findAllByCreatedAtIsBetween(dateTimeWith, dateTimeTo))).getManagerDTOList();
+        return managerDTOList;
     }
 
     /**
      * create(Manager manager): этот метод создает новый менеджер на основе предоставленного. <p>
      * TODO: Manager manager, необходимо меределать на CreateManagerDTO createManagerDTO. <br>
-     * @param manager
-     * @return Manager
+     * @param managerDTO
+     * @return ManagerDTO
      */
     @Override
     @CacheEvict("Managers")
-    public ManagerDTO createManager(ManagerCreatDTO manager) {
-        log.info("ManagerServiceImpl createManager(ManagerCreatDTO manager) 133: {}", manager);
-
-        Manager toEntity = managerMapper.createToEntity(manager);
+    public ManagerDTO createManager(ManagerCreatDTO managerDTO) {
+        log.info("ManagerServiceImpl createManager(ManagerCreatDTO managerDTO) {}", managerDTO);
+        Manager toEntity = managerMapper.createToEntity(managerDTO);
         toEntity.setCreatedAt(LocalDateTime.now());
-//        toEntity.setCreatedAt(LocalDateTime.now());
-        log.info("ManagerServiceImpl createManager(ManagerCreatDTO manager) 135: {}", toEntity);
         Manager save = managerRepository.save(toEntity);
-        log.info("ManagerServiceImpl createManager(ManagerCreatDTO manager) 137: {}", save);
         ManagerDTO requestDto = managerMapper.convertToDTO(save);
-        log.info("___________________________________REQUEST DTO 141: {}", requestDto);
         return requestDto;
     }
 
@@ -148,26 +157,38 @@ public class ManagerServiceImpl implements ManagerService {
      *  используя информацию, предоставленную в переданном manager. <p>
      *  TODO: Он выдает исключение ManagerNotFoundException, если не найден ни один менеджер с указанным идентификатором. <br>
      * @param id
-     * @param manager
-     * @return Manager
+     * @param managerDTO
+     * @return ManagerDTO
      */
     @Override
+    @Transactional
     @CacheEvict("Managers")
-    public Manager editManager(Long id, Manager manager) {
-        managerRepository.save(manager);
-        Manager updateManager = managerRepository.findById(id).get();
-        return updateManager;
+    public ManagerDTO editManager(Long id, ManagerDTO managerDTO) {
+        log.info("Edit manager {}", id);
+        Manager manager = managerRepository.findById(id).orElseThrow(
+                () -> new ManagerNotFoundException(ErrorMessage.Manager_NOT_FOUND));
+        log.info("Id manager: " + manager.getId());
+        log.info("Firstname: " + managerDTO.getFirstName());
+        manager.setFirstName(managerDTO.getFirstName());
+        manager.setLastName(managerDTO.getLastName());
+        manager.setStatus(ManagerStatus.valueOf(managerDTO.getStatus()));
+        manager.setCreatedAt(managerDTO.getCreatedAt());
+        manager.setUpdatedAt(managerDTO.getUpdatedAt());
+        Manager updateManager = managerRepository.save(manager);
+        ManagerDTO result = managerMapper.convertToDTO(updateManager);
+        return result;
     }
 
     /**
      * getManagersByFIO(Manager manager)  этот метод возвращает рекомендации по приему на работу . <p>
      * TODO: Manager manager, необходимо меределать на DataManagerDTO(еще подумать над именем класса) dataManagerDTO . <br>
-     * @param manager Manager
+     * @param managerDTO ManagerDTO
      * @return String - метод вызывается при принятии на работу. DISMISSED- статус увольнения по статье.
      *
      */
     @Override
-    public String getManagersByFIO(Manager manager) {
+    public String getManagersByFIO(ManagerDTO managerDTO) {
+        Manager manager = managerMapper.convertToEntity(managerDTO);
         String firstName = manager.getFirstName();
         String lastName = manager.getLastName();
         StringBuilder result = new StringBuilder();
@@ -179,17 +200,6 @@ public class ManagerServiceImpl implements ManagerService {
         if (managerfromDB == null) {
             manager.setStatus(ManagerStatus.ACTIVE);
             manager.setCreatedAt(LocalDateTime.now());
-
-
-
-
-
-
-
-//            manager = createManager(manager.);
-
-
-
             return result.append(" Добро пожаловать в наш коллектив!").toString();
         } else if (managerfromDB.getStatus().equals(ManagerStatus.DISMISSED)) {
             manager = managerfromDB;

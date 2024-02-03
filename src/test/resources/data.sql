@@ -1,13 +1,13 @@
 INSERT INTO public.manager(
     first_name, last_name, status, created_at, updated_at)
 VALUES ('Aron', 'Galpern', 'ACTIVE', '1998-07-07', null),
-       ('Haim', 'Mizrahim', 'ACTIVE', '1998-07-07', '2023-11-10'),
-       ('Samuil', 'Levi', 'ACTIVE', '1998-07-07', '2023-10-27'),
-       ('Tavia', 'Vaiser', 'PENSION', '1998-07-07', null),
-       ('Zavul', 'Izrail', 'BUSINESS_TRIP', '1998-07-07', '2023-10-27'),
-       ('Abransam', 'Messolam', 'BUSINESS_TRIP', '1998-07-07', null),
-       ('Larik', 'Valser', 'NOT_ACTIVE', '1998-07-07', '2023-10-27'),
-       ('Lisak', 'dahan', 'ACTIVE', '1998-07-07', '2023-10-27'),
+       ('Haim', 'Mizrahim', 'ACTIVE', '1998-07-08', '2023-11-10'),
+       ('Samuil', 'Levi', 'ACTIVE', '1998-07-09', '2023-10-27'),
+       ('Tavia', 'Vaiser', 'PENSION', '1998-07-10', null),
+       ('Zavul', 'Izrail', 'BUSINESS_TRIP', '1998-07-11', '2023-10-27'),
+       ('Abransam', 'Messolam', 'BUSINESS_TRIP', '1998-07-12', null),
+       ('Larik', 'Valser', 'NOT_ACTIVE', '1998-07-13', '2023-10-27'),
+       ('Lisak', 'dahan', 'ACTIVE', '1998-07-14', '2023-10-27'),
        ('Samuil', 'Izrail', 'PENSION', '1998-07-07', null);
 
 INSERT INTO public.client(

@@ -44,7 +44,7 @@ public interface ManagerMapper {
     ManagerDTO convertToDTO(Manager manager);
     Manager convertToEntity(ManagerDTO managerDTO);
 
-    List<ManagerDTO> convertToManageDTOList(List<Manager> managerList);
+     List<ManagerDTO> convertToManageDTOList(List<Manager> managerList);
 
     @Mapping(target = "createdAt", expression = "java(LocalDateTime.now())")
     Manager createToEntity(ManagerCreatDTO managerCreatDTO);

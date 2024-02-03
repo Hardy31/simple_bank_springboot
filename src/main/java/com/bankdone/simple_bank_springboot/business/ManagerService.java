@@ -11,22 +11,22 @@ import java.util.Optional;
 
 public interface ManagerService {
 
-    List<Manager> getAllManagers();
+    List<ManagerDTO> getAllManagers();
 
-    List<Manager> getAllManagersByStatus(ManagerStatus manStatus);
+    List<ManagerDTO> getAllManagersByStatus(ManagerStatus manStatus);
 
-    Manager getManagerById(Long id);
+    ManagerDTO getManagerById(Long id);
 
     void deleteManagerById(Long id);
 
-    List<Manager> getAllManagersWorkingWith(LocalDateTime dateTime);
+    List<ManagerDTO> getAllManagersWorkingWith(LocalDateTime dateTime);
 
-    List<Manager> getAllManagersWorkingWithTo(LocalDateTime dateTimeWith, LocalDateTime dateTimeTo);
+    List<ManagerDTO> getAllManagersWorkingWithTo(LocalDateTime dateTimeWith, LocalDateTime dateTimeTo);
 
-    ManagerDTO createManager(ManagerCreatDTO manager);
+    ManagerDTO createManager(ManagerCreatDTO managerDTO);
 
-    Manager editManager(Long id, Manager manager);
+    ManagerDTO editManager(Long id, ManagerDTO managerDTO);
 
-    String getManagersByFIO(Manager manager);
+    String getManagersByFIO(ManagerDTO ManagerDTO);
 
 }

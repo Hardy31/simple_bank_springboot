@@ -2,6 +2,7 @@ package com.bankdone.simple_bank_springboot.presentation;
 
 import com.bankdone.simple_bank_springboot.dto.ManagerCreatDTO;
 import com.bankdone.simple_bank_springboot.dto.ManagerDTO;
+import com.bankdone.simple_bank_springboot.dto.ManagerListDTO;
 import com.bankdone.simple_bank_springboot.dto.PeriodDTO;
 import com.bankdone.simple_bank_springboot.business.ManagerService;
 import com.bankdone.simple_bank_springboot.entity.Manager;
@@ -46,7 +47,7 @@ public class ManagerController {
      * http://localhost:8080/rest/managers
      */
     @GetMapping("")
-    public List<Manager> getAllManagers() {
+    public List<ManagerDTO> getAllManagers() {
         log.info("ManagerController - getAllManagers() ");
         return managerService.getAllManagers();
     }
@@ -60,7 +61,7 @@ public class ManagerController {
      * http://localhost:8080/rest/managers/status/BUSINESS_TRIP
      */
     @GetMapping("/status/{status}")
-    public List<Manager> getAllManagersByStatus(@PathVariable String status) {
+    public List<ManagerDTO> getAllManagersByStatus(@PathVariable String status) {
         log.info("ManagerController getAllManagersByStatus(@PathVariable String status) : {}", status);
         return managerService.getAllManagersByStatus(ManagerStatus.valueOf(status));
     }
@@ -71,7 +72,7 @@ public class ManagerController {
      * http://localhost:8080/rest/managers/5
      */
     @GetMapping("/{id}")
-    public Manager getManagerById(@PathVariable Long id) {
+    public ManagerDTO getManagerById(@PathVariable Long id) {
         log.info("ManagerController getManagerById(@PathVariable Long id) : {} ", id);
         return managerService.getManagerById(id);
     }
@@ -94,11 +95,11 @@ public class ManagerController {
      * http://localhost:8080/rest/managers
      */
     @PostMapping("")
-    public ManagerDTO create(@RequestBody ManagerCreatDTO manager) {
-        log.info("ManagerController create(@RequestBody Manager manager!!!!!) : {}", manager);
-        ManagerDTO responsManager = managerService.createManager(manager);
-        log.info("ManagerController create(@RequestBody Manager !!!!!!!!!!!!manager!!!!!) : {}", responsManager);
-        return responsManager;
+    public ManagerDTO create(@RequestBody ManagerCreatDTO managerDTO) {
+        log.info("ManagerController create(@RequestBody Manager manager!!!!!) : {}", managerDTO);
+        ManagerDTO responsManagerDTO = managerService.createManager(managerDTO);
+        log.info("ManagerController create(@RequestBody Manager !!!!!!!!!!!!manager!!!!!) : {}", responsManagerDTO);
+        return responsManagerDTO;
     }
 
     /**
@@ -107,14 +108,14 @@ public class ManagerController {
      * http://localhost:8080/rest/managers/43
      */
     @PutMapping("/{id}")
-    public Manager edit(@PathVariable Long id, @RequestBody Manager manager) {
+    public ManagerDTO edit(@PathVariable Long id, @RequestBody ManagerDTO managerDTO) {
         log.info("ManagerController edit(" +
                 "@PathVariable Long id = {} , " +
                 "@RequestBody Manager manager = {}) : ",
                 id,
-                manager
+                managerDTO
         );
-        return managerService.editManager(id, manager);
+        return managerService.editManager(id, managerDTO);
     }
 
     /**
@@ -123,7 +124,7 @@ public class ManagerController {
      * http://localhost:8080/rest/managers/with/2023-07-27T00:00
      */
     @GetMapping("/with/{data}")
-    public List<Manager> getAllManagersWorkingWith(
+    public List<ManagerDTO> getAllManagersWorkingWith(
             @PathVariable(value = "data")
             @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime data) {
         log.info("ManagerController getAllManagersWorkingWith = {}", data);
@@ -136,10 +137,10 @@ public class ManagerController {
      * http://localhost:8080/rest/managers/by-FIO
      */
     @PostMapping("/by-FIO")
-    public String getManagerByNameSurname(@RequestBody Manager manager) {
+    public String getManagerByNameSurname(@RequestBody ManagerDTO managerDTO) {
 
-        log.info("ManagerController getManagerByNameSurname(@RequestBody Manager manager) : {} ", manager);
-        return managerService.getManagersByFIO(manager);
+        log.info("ManagerController getManagerByNameSurname(@RequestBody Manager manager) : {} ", managerDTO);
+        return managerService.getManagersByFIO(managerDTO);
     }
 
 
@@ -154,7 +155,7 @@ public class ManagerController {
      *     public List<Manager> getAllManagersWorkingWithTo(
      */
     @PostMapping("/by-period")
-    public List<Manager> getAllManagersByPeriod(@RequestBody PeriodDTO periodDTO)
+    public List<ManagerDTO> getAllManagersByPeriod(@RequestBody PeriodDTO periodDTO)
     {
         log.info("ManagerController etAllManagersByPeriod(@RequestBody PeriodDTO periodDTO) " +
                 "fromDate = {} befoDate = {} ",
@@ -177,13 +178,14 @@ public class ManagerController {
      * public List<Manager> getAllManagersByPeriod(@RequestBody PeriodDTO periodDTO)
      */
     @GetMapping("with/{dateWith}/to/{dateTo}")
-    public List<Manager> getAllManagersCreatAtWithTo(
+    public List<ManagerDTO> getAllManagersCreatAtWithTo(
             @PathVariable (value = "dateWith")
             @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime dateWith,
             @PathVariable (value = "dateTo")
             @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime dateTo
     ) {
         log.info("ManagerController getAllManagersWorkingWith = {} to = {}", dateWith, dateTo);
+
         return managerService.getAllManagersWorkingWithTo(dateWith, dateTo);
     }
 }
