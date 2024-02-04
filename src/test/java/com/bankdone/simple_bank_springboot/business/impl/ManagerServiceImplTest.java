@@ -1,6 +1,7 @@
 package com.bankdone.simple_bank_springboot.business.impl;
 
 import com.bankdone.simple_bank_springboot.business.ManagerService;
+import com.bankdone.simple_bank_springboot.business.exeption.ManagerNotFoundException;
 import com.bankdone.simple_bank_springboot.data_access.ManagerRepository;
 import com.bankdone.simple_bank_springboot.dto.ManagerCreatDTO;
 import com.bankdone.simple_bank_springboot.dto.ManagerDTO;
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +33,6 @@ class ManagerServiceImplTest {
 
     @Mock
     private ManagerRepository managerRepository;
-
     private ManagerService managerService;
     private ManagerMapper managerMapper;
     private Manager managerTemplate;
@@ -41,10 +42,12 @@ class ManagerServiceImplTest {
     private ManagerCreatDTO createFackeManagerDTO;
 
 
+
     @BeforeEach
     void setUp() {
-        managerService = new ManagerServiceImpl(managerRepository,managerMapper);
         managerMapper = new ManagerMapperImpl();
+        managerService = new ManagerServiceImpl(managerRepository,managerMapper);
+
         managerTemplate = CreatorFakeEntity.getFakeManager(2L);
         managerList = new ArrayList<>(List.of(managerTemplate));
         fackeManagerDTO = CreaterFakeDTO.getManagerDTO(2l);
@@ -60,24 +63,23 @@ class ManagerServiceImplTest {
     void testCreateManager() {
         when(managerRepository.save(any())).thenReturn(managerTemplate);  // Стаббинг: определение поведения, Возвращает ФэйкМенеджер с Id
 //        Manager acceptedManager = CreatorFakeEntity.createFakeManager();    //ФэйкМенеджер без Id
-        log.info("ManagerServiceImplTest testCreateManager() ___56: {}", managerTemplate);
-        log.info("ManagerServiceImplTest testCreateManager() ___57: {}", createFackeManagerDTO);
 //        ManagerDTO managerDTOResult = managerService.createManager(createFackeManagerDTO);
+        ManagerCreatDTO createFackeManagerDTO1 = createFackeManagerDTO;
         ManagerDTO managerDTOResult = managerService.createManager(createFackeManagerDTO);
-        log.info("ManagerServiceImplTest testCreateManager() ___59: {}", managerDTOResult);
-        verify(managerRepository).save(managerTemplate);    //Проверка что managerRepository.save(acceptedManager) вызывался.
-//        assertEquals(managerTemplate, managerResult);      //Проверка что результат выполнения
+
+        verify(managerRepository).save(any(Manager.class));    //Проверка что managerRepository.save(acceptedManager) вызывался.
+        assertEquals(fackeManagerDTO, managerDTOResult);      //Проверка что результат выполнения
         compareManager(fackeManagerDTO, managerDTOResult);     //проверка вынесена в отдельный метод
     }
 
-//    @Test
-//    @DisplayName("Positive test. Get manager by Id.")
-//    void testGetManagerById() {
-//        when(managerRepository.findById(2l)).thenReturn(Optional.of(managerTemplate)); // Стаббинг: определение поведения, Возвращает ФэйкМенеджер с Id
-//        Manager managerResult = managerService.getManagerById(2l);
-//        verify(managerRepository).findById(2l);             //Проверка что managerRepository.getManagerById(Long l) вызывался.
-//        compareManager(managerTemplate, managerResult);     //проверка вынесена в отдельный метод
-//    }
+    @Test
+    @DisplayName("Positive test. Get manager by Id.")
+    void testGetManagerById() {
+        when(managerRepository.findById(2l)).thenReturn(Optional.of(managerTemplate)); // Стаббинг: определение поведения, Возвращает ФэйкМенеджер с Id
+        ManagerDTO managerDTOResult = managerService.getManagerById(2l);
+        verify(managerRepository).findById(2l);             //Проверка что managerRepository.getManagerById(Long l) вызывался.
+        compareManager(fackeManagerDTO, managerDTOResult);     //проверка вынесена в отдельный метод
+    }
 
 
     @Test
@@ -88,15 +90,15 @@ class ManagerServiceImplTest {
         List<ManagerDTO> result = managerService.getAllManagers();
 
         verify(managerRepository).findAll();    //Проверка что managerRepository.findAll() вызывался.
-        assertEquals(managerList, result);      //Проверка что результат выполнения
+        assertEquals(managerDTOList, result);      //Проверка что результат выполнения
     }
 
     @Test
     @DisplayName("Positive test. Delete manager by Id.")
     void testDeleteManagerById() {
-        doNothing().when(managerRepository).deleteById(anyLong());  // Стаббинг с использованием doReturn-when
-        managerService.deleteManagerById(2L);
-        verify(managerRepository).deleteById(anyLong()); //Проверка что метод deleteById(Long 2L) вызывался.
+        when(managerRepository.findById(anyLong())).thenReturn(Optional.empty());
+        assertThrows(ManagerNotFoundException.class, () -> managerService.deleteManagerById(100l));
+        verify(managerRepository, times(1)).findById(anyLong());
     }
 
     private void compareManager(ManagerDTO managerTemplate, ManagerDTO managerResult) {
