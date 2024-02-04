@@ -51,7 +51,6 @@ import static org.mockito.Mockito.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
-
 //https://www.youtube.com/watch?v=QTrNqhzniws
 
 @ExtendWith(MockitoExtension.class)
@@ -59,26 +58,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 class ManagerControllerTest {
     @Mock
     private ManagerServiceImpl managerService;
-
     @InjectMocks
     private ManagerController managerController;
-
-
-
-@Autowired
     private ObjectMapper objectMapper;
-
-
     private MockMvc mockMvc;
     Manager managerTemplate;
     List<Manager> managerListTemplate;
-
-//    @JsonSerialize(using = LocalDateTimeSerializer.class)
-//    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     LocalDateTime createAt;
-
-//    @JsonSerialize(using = LocalDateTimeSerializer.class)
-//    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     LocalDateTime UpdatedAt;
     ManagerCreatDTO managerCreatFackDTO;
     ManagerDTO managerDTO;
@@ -98,20 +84,14 @@ class ManagerControllerTest {
 
         managerDTOList = new ArrayList<>(List.of(managerDTO));
         managerListDTO = new ManagerListDTO(managerDTOList);
-
     }
 
     @Test
-//    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     void createTest() throws Exception {
         when(managerService.createManager(any(ManagerCreatDTO.class))).thenReturn(managerDTO);
 
         Manager fakManager = CreatorFakeEntity.createFakeManager();
         String json = new ObjectMapper().writeValueAsString(fakManager);
-        log.info("ManagerControllerTest->createTest() postRequestJson : json________ {}", json);
-        log.info("ManagerControllerTest->createTest() postRequestJson : managerTemplate.getCreatedAt()!!!!!!!! {}", managerTemplate.getCreatedAt());
-
-
 
         RequestBuilder request = MockMvcRequestBuilders
                 .post("/rest/managers")
@@ -119,8 +99,7 @@ class ManagerControllerTest {
                 .content(json);
 
         createAt = CreaterFakeDTO.now;
-        log.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!createAt!!!!!!!! {}", createAt);
-        System.out.println(createAt);
+
         mockMvc.perform(request)
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -129,63 +108,26 @@ class ManagerControllerTest {
                 .andExpect(jsonPath("$.firstName").value(managerTemplate.getFirstName()))
                 .andExpect(jsonPath("$.lastName").value(managerTemplate.getLastName()))
                 .andExpect(jsonPath("$.status").value(managerTemplate.getStatus().toString()))
-
-                .andExpect( jsonPath("$.createdAt").value(managerTemplate.getCreatedAt()))     //как протестировать дату
+                .andExpect(jsonPath("$.createdAt").value(managerTemplate.getCreatedAt().toString()))     //как протестировать дату
                 .andExpect(jsonPath("$.updatedAt").value(managerTemplate.getUpdatedAt()))
                 .andReturn();
     }
-
-
 
     @Test
     void getAllManagersTest() throws Exception {
 
         String json = new ObjectMapper().writeValueAsString(managerListTemplate);
-        System.out.println(json);
-
 
         RequestBuilder request = MockMvcRequestBuilders
                 .get("/rest/managers")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json);
 
-
         when(managerService.getAllManagers()).thenReturn(managerDTOList);
 
-//        List<Manager> resultList = managerService.getAllManagers();
-
-
         MvcResult result = mockMvc.perform(get("/rest/managers")).andExpect(status().isOk()).andReturn();
-//
-//                // Выполнение запроса get и проверка результатов
-//        mockMvc.perform(get("/rest/managers")
-//                        .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk()) // ожидается статус 200 ОК но выдает 404
-////                .andExpect((ResultMatcher) jsonPath("$",  hasSize(2))) // ожидается, что будет список с тем же размером
-//                .andExpect((ResultMatcher) jsonPath("$[0].id").value(managerListTemplate.get(0).getId())); // здесь и далее проверяем фактические данные
-
-
-
-        log.info("ManagerControllerTest -> getAllManagersTest() Status - {} Формат ответа - {} ", result.getResponse().getStatus(), result.getResponse().getContentType());
-
-//            mockMvc.perform(get("/rest/managers")).andExpect(status().isOk(), content().json());
-//        List<Manager> resultList = ObjectMapper.readValue(result.getResponse().getContentAsString(), List<Manager>.class);
 
         verify(managerService, times(1)).getAllManagers();
-
-
-//        // Конфигурируем поведение: при вызове getAllManagers, мок вернет созданный список
-//        Mockito.when(managerService.getAllManagers()).thenReturn(managerListTemplate);
-//
-//        // Выполнение запроса get и проверка результатов
-//        mockMvc.perform(get("/rest/managers")
-//                        .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk()) // ожидается статус 200 ОК но выдает 404
-////                .andExpect((ResultMatcher) jsonPath("$",  hasSize(2))) // ожидается, что будет список с тем же размером
-//                .andExpect((ResultMatcher) jsonPath("$[0].id").value(managerListTemplate.get(0).getId())); // здесь и далее проверяем фактические данные
-//        verify(managerService, times(1)).getAllManagers();
-
-
     }
 
 
@@ -202,16 +144,12 @@ class ManagerControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-
-//                  import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-//                  для корректной работы  jsonPath("$.id").
                 .andExpect(jsonPath("$.id").value(managerDTO.getId()))
                 .andExpect(jsonPath("$.firstName").value(managerDTO.getFirstName()))
                 .andExpect(jsonPath("$.lastName").value(managerDTO.getLastName()))
                 .andExpect(jsonPath("$.status").value(managerDTO.getStatus().toString()))
-//                .andExpect( jsonPath("$.createdAt").value(managerTemplate.getCreatedAt().toString()))     //как протестировать дату
+                .andExpect( jsonPath("$.createdAt").value(managerTemplate.getCreatedAt().toString()))     //как протестировать дату
                 .andExpect(jsonPath("$.updatedAt").value(managerDTO.getUpdatedAt()));
-
 
         verify(managerService, times(1)).getManagerById(anyLong());
     }
