@@ -1,6 +1,9 @@
 package com.bankdone.simple_bank_springboot.business;
 
 import com.bankdone.simple_bank_springboot.data_access.ClientRepository;
+import com.bankdone.simple_bank_springboot.dto.ClientCreatDTO;
+import com.bankdone.simple_bank_springboot.dto.ClientDTO;
+import com.bankdone.simple_bank_springboot.dto.ClientListDTO;
 import com.bankdone.simple_bank_springboot.entity.Client;
 import com.bankdone.simple_bank_springboot.entity.enums.ClientStatus;
 import org.springframework.data.repository.CrudRepository;
@@ -12,25 +15,25 @@ import java.util.Optional;
 
 
 public interface ClientService {
-    List<Client> getAllClients();
+    List<ClientDTO> getAllClients();
 
-    Client getClientById(Long id);
+    ClientDTO getClientById(Long id);
 
-    Client create(Client client);
+    ClientDTO create(ClientCreatDTO clientCreatDTO);
 
-    Client editClieny(Client client);
+    ClientDTO editClieny(ClientDTO clientDTO);
 
     void delite(@PathVariable long id);
 
-    List<Client> getAllClientsByManager_id(Long id);
+    List<ClientDTO> getAllClientsByManager_id(Long id);
 
-    Client getClientByPhone(String phone);
+    ClientDTO getClientByPhone(String phone);
 
-    List<Client> getClientsByAddress(String address);
+    List<ClientDTO> getClientsByAddress(String address);
 
-    List<Client> getAllClientsByStatus(ClientStatus status);
+    List<ClientDTO> getAllClientsByStatus(ClientStatus status);
 
-    List<Client> getAllClientsCreatedBetween(LocalDateTime dateTimeWith, LocalDateTime dateTimeTo);
+    List<ClientDTO> getAllClientsCreatedBetween(LocalDateTime dateTimeWith, LocalDateTime dateTimeTo);
 
 
 }

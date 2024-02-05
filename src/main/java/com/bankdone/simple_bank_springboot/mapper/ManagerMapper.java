@@ -38,7 +38,7 @@ import java.util.List;
  * выражение сопоставления, определенное аннотацией `@Mapping`.
  */
 
-@Mapper(componentModel = "spring", /*uses = UuidMapper.class,*/ imports = LocalDateTime.class)
+@Mapper(componentModel = "spring",  imports = LocalDateTime.class)
 
 public interface ManagerMapper {
     ManagerDTO convertToDTO(Manager manager);

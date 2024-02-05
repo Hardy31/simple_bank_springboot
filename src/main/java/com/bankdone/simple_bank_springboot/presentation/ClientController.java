@@ -1,5 +1,8 @@
 package com.bankdone.simple_bank_springboot.presentation;
 
+import com.bankdone.simple_bank_springboot.business.ManagerService;
+import com.bankdone.simple_bank_springboot.dto.ClientCreatDTO;
+import com.bankdone.simple_bank_springboot.dto.ClientDTO;
 import com.bankdone.simple_bank_springboot.dto.PeriodDTO;
 import com.bankdone.simple_bank_springboot.business.ClientService;
 import com.bankdone.simple_bank_springboot.entity.Client;
@@ -40,15 +43,9 @@ public class ClientController {
      * http://localhost:8080/rest/clients
      */
     @GetMapping("")
-    public List<Client> geAllClients() {
+    public List<ClientDTO> geAllClients() {
         log.info("ClientController geAllClients");
-        return clientService
-                .getAllClients()
-                .stream()
-                .map(Client::toClient)
-                .collect(Collectors
-                        .toList()
-                );
+        return clientService.getAllClients();
     }
 
     /**
@@ -57,7 +54,7 @@ public class ClientController {
      * http://localhost:8080/rest/clients/5
      */
     @GetMapping("/{id}")
-    public Client getById(@PathVariable Long id) {
+    public ClientDTO getById(@PathVariable Long id) {
         log.info("ClientController getById = {}", id);
         return clientService.getClientById(id);
     }
@@ -68,7 +65,7 @@ public class ClientController {
      * http://localhost:8080/rest/clients/by-manager/2
      */
     @GetMapping("/by-manager/{id}")
-    public List<Client> getClientByManagerId(@PathVariable Long id) {
+    public List<ClientDTO> getClientByManagerId(@PathVariable Long id) {
         log.info("ClientController getClientsByManagerId = {}", id);
         return clientService.getAllClientsByManager_id(id);
     }
@@ -79,7 +76,7 @@ public class ClientController {
      * http://localhost:8080/rest/clients/by-phone/+7(321) 123-45-69
      */
     @GetMapping("/by-phone/{phone}")
-    public Client geClientByPhone(@PathVariable String phone) {
+    public ClientDTO geClientByPhone(@PathVariable String phone) {
         log.info("ClientController getClientByPhone = {}", phone);
         return clientService.getClientByPhone(phone);
     }
@@ -90,9 +87,9 @@ public class ClientController {
      *  http://localhost:8080/rest/clients/by-address
      */
     @PostMapping("/by-address")
-    public List<Client> geClientByAddress(@RequestBody Client client) {
-        log.info("ClientController getClientsByAddress = {}", client.getAddress());
-        return clientService.getClientsByAddress(client.getAddress());
+    public List<ClientDTO> geClientByAddress(@RequestBody ClientDTO clientDTO) {
+        log.info("ClientController getClientsByAddress = {}", clientDTO.getAddress());
+        return clientService.getClientsByAddress(clientDTO.getAddress());
     }
 
     /**
@@ -101,8 +98,8 @@ public class ClientController {
      *  http://localhost:8080/rest/clients/by-status
      */
     @PostMapping("/by-status")
-    public List<Client> getAllClientByStatus(@RequestBody Client client) {
-        ClientStatus requestClientStatus = client.getStatus();
+    public List<ClientDTO> getAllClientByStatus(@RequestBody ClientDTO clientDTO) {
+        ClientStatus requestClientStatus = ClientStatus.valueOf(clientDTO.getStatus());
         log.info("ClientController getAllClientsByStatus = {}", requestClientStatus);
         return clientService.getAllClientsByStatus(requestClientStatus);
     }
@@ -113,7 +110,7 @@ public class ClientController {
      *  http://localhost:8080/rest/clients/by-period
      */
     @PostMapping("/by-period")
-    public List<Client> getAllClientsCreatedWithTo(@RequestBody PeriodDTO periodDTO) {
+    public List<ClientDTO> getAllClientsCreatedWithTo(@RequestBody PeriodDTO periodDTO) {
         log.info("ClientController getAllClientsCreatedWithTo fromDate = {} befoDate = {} ",
                 periodDTO.getFromDate(),
                 periodDTO.getBeforeDate()
@@ -130,9 +127,9 @@ public class ClientController {
      *  http://localhost:8080/rest/clients
      */
     @PostMapping("")
-    public Client create(@RequestBody Client client) {
-        log.info("ClientController create  = {}", client);
-        return clientService.create(client);
+    public ClientDTO create(@RequestBody ClientCreatDTO clientCreatDTO) {
+        log.info("ClientController create  = {}", clientCreatDTO);
+        return clientService.create(clientCreatDTO);
     }
 
     /**
@@ -141,9 +138,9 @@ public class ClientController {
      * http://localhost:8080/rest/clients
      */
     @PutMapping("")
-    public Client editClient(@RequestBody Client client) {
-        log.info("ClientController editClient  = {}", client);
-        return clientService.editClieny(client);
+    public ClientDTO editClient(@RequestBody ClientDTO clientDTO) {
+        log.info("ClientController editClient  = {}", clientDTO);
+        return clientService.editClieny(clientDTO);
     }
 
     /**

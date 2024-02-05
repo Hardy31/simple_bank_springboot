@@ -3,6 +3,7 @@ package com.bankdone.simple_bank_springboot.data_access;
 import com.bankdone.simple_bank_springboot.entity.Product;
 import com.bankdone.simple_bank_springboot.entity.enums.CurrencyCode;
 import com.bankdone.simple_bank_springboot.entity.enums.ProductStatus;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -37,7 +38,7 @@ import java.util.List;
  * @от   2023-12-04
  */
 
-public interface ProductRepository extends CrudRepository <Product, Long>{
+public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("SELECT p FROM Product  AS p WHERE p.status = :status")
     List<Product> findAllByStatus(@Param("status") ProductStatus status);
