@@ -10,6 +10,7 @@ import com.bankdone.simple_bank_springboot.entity.enums.ManagerStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -47,6 +48,7 @@ public class ManagerController {
      * http://localhost:8080/rest/managers
      */
     @GetMapping("")
+    @ResponseStatus(HttpStatus.OK)
     public List<ManagerDTO> getAllManagers() {
         log.info("ManagerController - getAllManagers() ");
         return managerService.getAllManagers();
@@ -61,6 +63,7 @@ public class ManagerController {
      * http://localhost:8080/rest/managers/status/BUSINESS_TRIP
      */
     @GetMapping("/status/{status}")
+    @ResponseStatus(HttpStatus.OK)
     public List<ManagerDTO> getAllManagersByStatus(@PathVariable String status) {
         log.info("ManagerController getAllManagersByStatus(@PathVariable String status) : {}", status);
         return managerService.getAllManagersByStatus(ManagerStatus.valueOf(status));
@@ -72,6 +75,7 @@ public class ManagerController {
      * http://localhost:8080/rest/managers/5
      */
     @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
     public ManagerDTO getManagerById(@PathVariable Long id) {
         log.info("ManagerController getManagerById(@PathVariable Long id) : {} ", id);
         return managerService.getManagerById(id);
@@ -163,8 +167,9 @@ public class ManagerController {
                 periodDTO.getBeforeDate()
         );
         return managerService.getAllManagersWorkingWithTo(
-                periodDTO.getFromDate().toLocalDateTime(),
-                periodDTO.getBeforeDate().atStartOfDay()
+//                periodDTO.getFromDate().toLocalDateTime(),
+                periodDTO.getFromDate(),
+                periodDTO.getBeforeDate()
         );
     }
 

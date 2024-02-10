@@ -5,6 +5,7 @@ import com.bankdone.simple_bank_springboot.business.exeption.ClientNotFoundExcep
 import com.bankdone.simple_bank_springboot.business.exeption.ErrorMessage;
 import com.bankdone.simple_bank_springboot.business.exeption.ManagerNotFoundException;
 import com.bankdone.simple_bank_springboot.data_access.ClientRepository;
+import com.bankdone.simple_bank_springboot.data_access.ManagerRepository;
 import com.bankdone.simple_bank_springboot.dto.*;
 import com.bankdone.simple_bank_springboot.entity.Client;
 import com.bankdone.simple_bank_springboot.entity.Manager;
@@ -55,15 +56,19 @@ public class ClientServiceImpl implements ClientService {
      * * ClientRepository: это поле используется для доступа к данным клиентов в базе данных.
      */
     private final ClientRepository clientRepository;
+    private final ManagerRepository managerRepository;
     private  final ClientMapper clientMapper;
 
     /**
      * Возвращает список Всех Клиентов
      * @return List<Client> Список клиентов
      */
-    @Cacheable("Clients")
+    @CacheEvict("Clients")
     public List<ClientDTO> getAllClients() {
-        List<ClientDTO> clientDTOLise  = new ClientListDTO(clientMapper.convertToClientDTOList(clientRepository.findAll())).getClientDTOList();
+        List<Client> clientLise = clientRepository.findAll();
+        log.info("ClientServiceImpl getAllClients() clientList - ", clientLise);
+        List<ClientDTO> clientDTOLise  = new ClientListDTO(clientMapper.convertToClientDTOList(clientLise)).getClientDTOList();
+        log.info("ClientServiceImpl getAllClients() clientDTOList - ", clientDTOLise);
         return clientDTOLise;
     }
 
@@ -72,9 +77,11 @@ public class ClientServiceImpl implements ClientService {
      * @param  id Long - данные в обекте
      * @return Optional<Client>
      */
+    @CacheEvict("Clients")
     public ClientDTO getClientById(Long id) {
-//        Optional<Client> clientDTO = clientRepository.findById(id).get();
-        return clientMapper.convertToDTO(clientRepository.findById(id).get());
+        ClientDTO result = clientMapper.convertToDTO(clientRepository.findById(id).get());
+        log.info("ClientServiceImpl getClientById(Long id) clientDTOLise - ", result);
+        return result;
 
     }
 
@@ -87,9 +94,16 @@ public class ClientServiceImpl implements ClientService {
     public ClientDTO create(ClientCreatDTO clientCreatDTO) {
 
         log.info("ClientServiceImpl create(clientCreatDTO clientCreateDTO) {}", clientCreatDTO);
-        Client toEntity = clientMapper.createToEntity(clientCreatDTO);
+        String managerID = clientCreatDTO.getManagerID();
+        Long managerId = Long.parseLong(managerID);
+        Manager manager = managerRepository.findById(managerId).orElseThrow(
+                ()->new ManagerNotFoundException(ErrorMessage.Manager_NOT_FOUND)
+        );
 
-        toEntity.setCreatedAt(LocalDateTime.now());
+        Client toEntity = clientMapper.createToEntity(clientCreatDTO);
+        toEntity.setManager(manager);
+        log.info("ClientServiceImpl create(clientCreatDTO toEntity) {}", toEntity);
+
         Client save = clientRepository.save(toEntity);
         ClientDTO requestDto = clientMapper.convertToDTO(save);
         return requestDto;
@@ -102,11 +116,15 @@ public class ClientServiceImpl implements ClientService {
      */
     @CacheEvict("Clients")
     public ClientDTO editClieny(ClientDTO clientDTO) {
-        Client client = clientRepository.save(clientMapper.convertToEntity( clientDTO));
-        Long clientid = client.getId();
-        Client updateClient = clientRepository.findById(clientid).get();
-        clientMapper.convertToDTO(updateClient);
-        return  clientMapper.convertToDTO(updateClient);
+        Client client = clientMapper.convertToEntity( clientDTO);
+        client.setCreatedAt(clientRepository.findById(client.getId()).get().getCreatedAt());
+        client.setUpdatedAt(LocalDateTime.now());
+        Client savedClient1 = clientRepository.save(client);
+        Long clientId = savedClient1.getId();
+        Client requestClient = clientRepository.findById(clientId).orElseThrow(
+                ()->new ClientNotFoundException(ErrorMessage.CLIENT_NOT_FOUND)
+        );
+        return  clientMapper.convertToDTO(requestClient);
     }
 
     /**
@@ -123,7 +141,11 @@ public class ClientServiceImpl implements ClientService {
 
     public List<ClientDTO> getAllClientsByManager_id(Long id) {
 
-        List<ClientDTO> clientDTOLise  = new ClientListDTO(clientMapper.convertToClientDTOList(clientRepository.findAllByManager_Id(id))).getClientDTOList();
+        List<ClientDTO> clientDTOLise  = new ClientListDTO(
+                clientMapper.convertToClientDTOList(
+                        clientRepository.findAllByManager_Id(id)
+                )
+        ).getClientDTOList();
         return clientDTOLise;
     }
 
@@ -134,7 +156,11 @@ public class ClientServiceImpl implements ClientService {
      * @return Optional<Client>
      */
     public ClientDTO getClientByPhone(String phone) {
-        return clientMapper.convertToDTO( clientRepository.findClientByPhone(phone).get());
+        ClientDTO clientDTO = clientMapper.convertToDTO(
+                clientRepository.findClientByPhone(phone)
+                        .get()
+        );
+        return clientDTO;
     }
 
     /**
@@ -142,8 +168,12 @@ public class ClientServiceImpl implements ClientService {
      * @param  address Стринговая  - адрес проживание клиента
      * @return List<Client> Список клиентов
      */
-    public List<ClientDTO> getClientsByAddress(String address) {
-        List<ClientDTO> clientDTOLise  = new ClientListDTO(clientMapper.convertToClientDTOList(clientRepository.findClientByAddress(address))).getClientDTOList();
+    public List<ClientDTO> getClientsByAddress(AdressDTO address) {
+        List<ClientDTO> clientDTOLise  = new ClientListDTO(
+                clientMapper.convertToClientDTOList(
+                        clientRepository.findClientByAddress(address.getAdress())
+                )
+        ).getClientDTOList();
 
         return clientDTOLise;
     }
@@ -154,20 +184,27 @@ public class ClientServiceImpl implements ClientService {
      * @return List<Client> Список Клиентов
      */
     public List<ClientDTO> getAllClientsByStatus(ClientStatus status) {
-        List<ClientDTO> clientDTOLise  = new ClientListDTO(clientMapper.convertToClientDTOList(clientRepository.findClientByStatus(status))).getClientDTOList();
-
+        List<ClientDTO> clientDTOLise  = new ClientListDTO(
+                clientMapper.convertToClientDTOList(
+                        clientRepository.findClientByStatus(status)
+                )
+        ).getClientDTOList();
         return clientDTOLise;
     }
 
     /**
      * Возвращает список Клиентов созданных с по
-     * @param  dateTimeWith  с какой даты в формате LocalDateTime
-     * @param  dateTimeTo   по какую дату в формате
+     * @param  periodDTO  имеет  две даты  ( от и до)
      * @return List<Client>
      */
-    public List<ClientDTO> getAllClientsCreatedBetween(LocalDateTime dateTimeWith, LocalDateTime dateTimeTo) {
-        List<ClientDTO> clientDTOLise  = new ClientListDTO(clientMapper.convertToClientDTOList(clientRepository.findClientByCreatedAtIsBetween(dateTimeWith, dateTimeTo))).getClientDTOList();
-
+    public List<ClientDTO> getAllClientsCreatedBetween(PeriodDTO periodDTO) {
+        LocalDateTime  dateTimeWith =  periodDTO.getFromDate();
+        LocalDateTime dateTimeTo = periodDTO.getBeforeDate();
+        List<ClientDTO> clientDTOLise  = new ClientListDTO(
+                clientMapper.convertToClientDTOList(
+                        clientRepository.findClientByCreatedAtIsBetween(dateTimeWith, dateTimeTo)
+                )
+        ).getClientDTOList();
         return clientDTOLise;
     }
 }

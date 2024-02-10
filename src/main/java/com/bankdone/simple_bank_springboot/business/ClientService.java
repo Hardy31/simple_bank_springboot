@@ -1,9 +1,7 @@
 package com.bankdone.simple_bank_springboot.business;
 
 import com.bankdone.simple_bank_springboot.data_access.ClientRepository;
-import com.bankdone.simple_bank_springboot.dto.ClientCreatDTO;
-import com.bankdone.simple_bank_springboot.dto.ClientDTO;
-import com.bankdone.simple_bank_springboot.dto.ClientListDTO;
+import com.bankdone.simple_bank_springboot.dto.*;
 import com.bankdone.simple_bank_springboot.entity.Client;
 import com.bankdone.simple_bank_springboot.entity.enums.ClientStatus;
 import org.springframework.data.repository.CrudRepository;
@@ -29,11 +27,12 @@ public interface ClientService {
 
     ClientDTO getClientByPhone(String phone);
 
-    List<ClientDTO> getClientsByAddress(String address);
+    List<ClientDTO> getClientsByAddress(AdressDTO address);
 
     List<ClientDTO> getAllClientsByStatus(ClientStatus status);
 
-    List<ClientDTO> getAllClientsCreatedBetween(LocalDateTime dateTimeWith, LocalDateTime dateTimeTo);
+    List<ClientDTO> getAllClientsCreatedBetween(PeriodDTO periodDTO);
+//   List<ClientDTO> getAllClientsCreatedBetween(LocalDateTime dateTimeWith, LocalDateTime dateTimeTo);
 
 
 }

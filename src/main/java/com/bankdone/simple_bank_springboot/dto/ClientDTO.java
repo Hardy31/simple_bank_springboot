@@ -29,6 +29,7 @@ public class ClientDTO {
     LocalDateTime createdAt;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
     LocalDateTime updatedAt;
-    String managerID;
+//    String managerId;
+    ManagerDTO managerDTO;
 
 }

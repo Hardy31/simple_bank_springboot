@@ -1,6 +1,7 @@
 package com.bankdone.simple_bank_springboot.presentation;
 
 import com.bankdone.simple_bank_springboot.business.ManagerService;
+import com.bankdone.simple_bank_springboot.dto.AdressDTO;
 import com.bankdone.simple_bank_springboot.dto.ClientCreatDTO;
 import com.bankdone.simple_bank_springboot.dto.ClientDTO;
 import com.bankdone.simple_bank_springboot.dto.PeriodDTO;
@@ -86,10 +87,10 @@ public class ClientController {
      *  возвращает список клиентов  по переданному в теле метода адресу <br>
      *  http://localhost:8080/rest/clients/by-address
      */
-    @PostMapping("/by-address")
-    public List<ClientDTO> geClientByAddress(@RequestBody ClientDTO clientDTO) {
-        log.info("ClientController getClientsByAddress = {}", clientDTO.getAddress());
-        return clientService.getClientsByAddress(clientDTO.getAddress());
+    @PostMapping("/by-address") //данный запрос не соответствует REST Full. , был реализован для пробы реализации
+    public List<ClientDTO> geClientByAddress(@RequestBody AdressDTO adressDTO) {
+        log.info("ClientController getClientsByAddress = {}", adressDTO);
+        return clientService.getClientsByAddress(adressDTO);
     }
 
     /**
@@ -97,7 +98,7 @@ public class ClientController {
      *  возвращает список клиентов  по переданному в теле метода статусу <br>
      *  http://localhost:8080/rest/clients/by-status
      */
-    @PostMapping("/by-status")
+    @PostMapping("/by-status")  //данный запрос не соответствует REST Full. , был реализован для пробы реализации
     public List<ClientDTO> getAllClientByStatus(@RequestBody ClientDTO clientDTO) {
         ClientStatus requestClientStatus = ClientStatus.valueOf(clientDTO.getStatus());
         log.info("ClientController getAllClientsByStatus = {}", requestClientStatus);
@@ -109,16 +110,18 @@ public class ClientController {
      *  возвращает список клиентов  c с периодом создания  с - по  <br>
      *  http://localhost:8080/rest/clients/by-period
      */
-    @PostMapping("/by-period")
+    @PostMapping("/by-period") //данный запрос не соответствует REST Full. , был реализован для пробы реализации
     public List<ClientDTO> getAllClientsCreatedWithTo(@RequestBody PeriodDTO periodDTO) {
-        log.info("ClientController getAllClientsCreatedWithTo fromDate = {} befoDate = {} ",
-                periodDTO.getFromDate(),
-                periodDTO.getBeforeDate()
+        log.info("ClientController getAllClientsCreatedWithTo periodDTO = {}  ",
+                periodDTO
         );
-        return clientService.getAllClientsCreatedBetween(
-                periodDTO.getFromDate().toLocalDateTime(),
-                periodDTO.getBeforeDate().atStartOfDay()
-        );
+//        return clientService.getAllClientsCreatedBetween(
+//                periodDTO.getFromDate(),
+//                periodDTO.getBeforeDate()
+//        );
+
+
+        return clientService.getAllClientsCreatedBetween(periodDTO);
     }
 
     /**
