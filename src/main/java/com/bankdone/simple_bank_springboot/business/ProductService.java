@@ -1,23 +1,25 @@
 package com.bankdone.simple_bank_springboot.business;
 
+import com.bankdone.simple_bank_springboot.dto.ProductCreateDTO;
+import com.bankdone.simple_bank_springboot.dto.ProductDTO;
 import com.bankdone.simple_bank_springboot.entity.Product;
 import java.util.List;
 
 public interface ProductService {
 
-    Product create(Product product);
+    ProductDTO create(ProductCreateDTO productCreateDTO);
 
-    List<Product> getAll();
+    List<ProductDTO> getAll();
 
-    Product edit(Long id, Product product);
+    ProductDTO edit(Long id, ProductDTO productDTO);
 
     void delete(Long id);
 
-    List<Product> getAllByStatus(String status);
+    List<ProductDTO> getAllByStatus(String status);
 
-    List<Product> getAllByStatusAndCurrencyCode(String status, String CaCode);
+    List<ProductDTO> getAllByStatusAndCurrencyCode(String status, String CaCode);
 
-    List<Product> getAllByStatusAndCurrencyCodeAndRate(String status, String caCode, Double rate);
+    List<ProductDTO> getAllByStatusAndCurrencyCodeAndRate(String status, String caCode, Double rate);
 
 
 }

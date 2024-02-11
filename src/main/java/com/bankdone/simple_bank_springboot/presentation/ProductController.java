@@ -1,6 +1,8 @@
 package com.bankdone.simple_bank_springboot.presentation;
 
 import com.bankdone.simple_bank_springboot.business.ProductService;
+import com.bankdone.simple_bank_springboot.dto.ProductCreateDTO;
+import com.bankdone.simple_bank_springboot.dto.ProductDTO;
 import com.bankdone.simple_bank_springboot.entity.Product;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,9 +40,9 @@ public class ProductController {
      * http://localhost:8080/rest/products
      */
     @PostMapping("")
-    public Product create(@RequestBody Product product) {
-        log.info("ProductController create(@RequestBody Product product) {}", product);
-        return productService.create(product);
+    public ProductDTO create(@RequestBody ProductCreateDTO productCreateDTO) {
+        log.info("ProductController create(@RequestBody Product product) {}", productCreateDTO);
+        return productService.create(productCreateDTO);
     }
 
     /**
@@ -49,10 +51,10 @@ public class ProductController {
      * http://localhost:8080/rest/products/7
      */
     @PutMapping("/{id}")
-    public Product edit(@PathVariable Long id, @RequestBody Product product) {
+    public ProductDTO edit(@PathVariable Long id, @RequestBody ProductDTO productDTO) {
         log.info("ProductController edit(@PathVariable Long id, @RequestBody Product product)" +
-                " id = {}, product = {}", id, product);
-        return productService.edit(id, product);
+                " id = {}, product = {}", id, productDTO);
+        return productService.edit(id, productDTO);
     }
 
     /**
@@ -61,7 +63,7 @@ public class ProductController {
      * http://localhost:8080/rest/products
      */
     @GetMapping("")
-    public List<Product> getAll() {
+    public List<ProductDTO> getAll() {
         log.info("ProductController getAll()");
         return productService.getAll();
     }
@@ -85,7 +87,7 @@ public class ProductController {
      * http://localhost:8080/rest/products/by-status/PILOT
      */
     @GetMapping("/by-status/{status}")
-    public List<Product> getAllByStatus(@PathVariable String status) {
+    public List<ProductDTO> getAllByStatus(@PathVariable String status) {
         log.info("ProductController etAllByStatus(@PathVariable String status) status = {}", status);
         return productService.getAllByStatus(status);
     }
@@ -97,7 +99,7 @@ public class ProductController {
      * http://localhost:8080/rest/products/by-status/PILOT/and-code/RUB
      */
     @GetMapping("by-status/{status}/and-code/{code}")
-    public List<Product> getAllByStatusAndCarrencyCode(
+    public List<ProductDTO> getAllByStatusAndCarrencyCode(
             @PathVariable String status,
             @PathVariable String code
     ) {
@@ -112,7 +114,7 @@ public class ProductController {
      * http://localhost:8080/rest/products/status/ACTIVE/code/RUB/interest-rate/10.2500
      */
     @GetMapping("/status/{status}/code/{code}/interest-rate/{rate}")
-    public List<Product> getAllByStatusAndCarrencyCodeAndRate(
+    public List<ProductDTO> getAllByStatusAndCarrencyCodeAndRate(
             @PathVariable String status,
             @PathVariable String code,
             @PathVariable Double rate

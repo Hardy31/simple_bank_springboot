@@ -67,7 +67,8 @@ public class ClientServiceImpl implements ClientService {
     public List<ClientDTO> getAllClients() {
         List<Client> clientLise = clientRepository.findAll();
         log.info("ClientServiceImpl getAllClients() clientList - ", clientLise);
-        List<ClientDTO> clientDTOLise  = new ClientListDTO(clientMapper.convertToClientDTOList(clientLise)).getClientDTOList();
+        List<ClientDTO> clientDTOLise  = new ClientListDTO(
+                clientMapper.convertToClientDTOList(clientLise)).getClientDTOList();
         log.info("ClientServiceImpl getAllClients() clientDTOList - ", clientDTOLise);
         return clientDTOLise;
     }
