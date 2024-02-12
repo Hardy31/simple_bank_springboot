@@ -1,6 +1,8 @@
 package com.bankdone.simple_bank_springboot.presentation;
 
 import com.bankdone.simple_bank_springboot.business.AgreementService;
+import com.bankdone.simple_bank_springboot.dto.AgreementCreateDTO;
+import com.bankdone.simple_bank_springboot.dto.AgreementDTO;
 import com.bankdone.simple_bank_springboot.entity.Agreement;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,33 +22,33 @@ public class AgreementController {
     private final AgreementService agreementService;
 
     /**
+     * При отправке Зщые запроса на  URN rest/agreements
+     *  создаст в БД  и вернет сохраненный Agreement.
+     */
+    @PostMapping("")
+    public AgreementDTO createAgreement(@RequestBody AgreementCreateDTO agreementCreateDTO) {
+        log.info("AgreementController createAgreement(@RequestBody Agreement agreement) : {]", agreementCreateDTO);
+        return agreementService.create(agreementCreateDTO);
+    }
+
+    /**
      * При отправке Get запроса на  URN rest/agreements/{id}
      *  вернет Agreement по id
      */
     @GetMapping("/{id}")
-    public Agreement getBYId(@PathVariable long id) {
+    public AgreementDTO getBYId(@PathVariable long id) {
         log.info("AgreementController getBYId(@PathVariable long id : {}", id);
         return agreementService.getById(id);
     }
 
     /**
-     * При отправке Get запроса на  URN rest/agreements
-     *  вернет список всех Agreement.
+     * При отправке Put запроса на  URN rest/agreements
+     *  изменит его в БД  по id и вернет измененный.
      */
-    @GetMapping("")
-    public List<Agreement> getAll() {
-        log.info("AgreementController getAll()");
-        return agreementService.getAll();
-    }
-
-    /**
-     * При отправке Зщые запроса на  URN rest/agreements
-     *  создаст в БД  и вернет сохраненный Agreement.
-     */
-    @PostMapping("")
-    public Agreement createAgreement(@RequestBody Agreement agreement) {
-        log.info("AgreementController createAgreement(@RequestBody Agreement agreement) : {]", agreement);
-        return agreementService.create(agreement);
+    @PutMapping("")
+    public AgreementDTO editAgreement(@RequestBody AgreementDTO agreementDTO) {
+        log.info("AgreementController editAgreement(@RequestBody Agreement agreement) : {]", agreementDTO);
+        return agreementService.edit(agreementDTO);
     }
 
     /**
@@ -60,13 +62,18 @@ public class AgreementController {
     }
 
     /**
-     * При отправке Put запроса на  URN rest/agreements
-     *  изменит его в БД  по id и вернет измененный.
+     * При отправке Get запроса на  URN rest/agreements
+     *  вернет список всех Agreement.
      */
-    @PutMapping("")
-    public Agreement editAgreement(@RequestBody Agreement agreement) {
-        log.info("AgreementController editAgreement(@RequestBody Agreement agreement) : {]", agreement);
-        return agreementService.edit(agreement);
+    @GetMapping("")
+    public List<AgreementDTO> getAll() {
+        log.info("AgreementController getAll()");
+        return agreementService.getAll();
     }
+
+
+
+
+
 
 }

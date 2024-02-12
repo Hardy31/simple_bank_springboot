@@ -1,12 +1,8 @@
 package com.bankdone.simple_bank_springboot.dto;
 
-import com.bankdone.simple_bank_springboot.entity.Manager;
-import com.bankdone.simple_bank_springboot.entity.enums.ClientStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @AllArgsConstructor

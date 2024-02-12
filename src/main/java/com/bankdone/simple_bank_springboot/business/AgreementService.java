@@ -1,6 +1,8 @@
 package com.bankdone.simple_bank_springboot.business;
 
 import com.bankdone.simple_bank_springboot.data_access.AgreementRepository;
+import com.bankdone.simple_bank_springboot.dto.AgreementCreateDTO;
+import com.bankdone.simple_bank_springboot.dto.AgreementDTO;
 import com.bankdone.simple_bank_springboot.entity.Agreement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,15 +16,15 @@ import java.util.Optional;
 
 
 public interface AgreementService {
-    Agreement getById(long id);
+    AgreementDTO create(AgreementCreateDTO agreementCreateDTO);
+    AgreementDTO getById(long id);
 
-    List<Agreement> getAll();
-
-    Agreement create(Agreement agreement);
+    AgreementDTO edit(AgreementDTO agreementDTO);
 
     void delete(Long id);
 
-    Agreement edit(Agreement agreement);
+    List<AgreementDTO> getAll();
+
 }
 
 
