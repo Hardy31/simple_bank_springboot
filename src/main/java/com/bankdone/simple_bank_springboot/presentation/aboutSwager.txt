@@ -1,0 +1,28 @@
+
+
+https://habr.com/ru/articles/541592/
+
+https://www.youtube.com/watch?v=NWA64jwA7pg
+
+Для работы Swager (OpenAPI 2.0) необходима зависимость:
+
+Spring Web
+
+В моем случае это
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+
+Так как она включает в себя   Spring Web
+
+
+Контроллеры должны быть помчен аннотацией
+    @RestController
+
+
+декларативное описание Контроллера на уровне класса используем аннотацияю:
+@Api (discription = "Пример работы Swager")
+
+ На уровне метода:
+ @ApiOperation (" Описание что делает метод ")
