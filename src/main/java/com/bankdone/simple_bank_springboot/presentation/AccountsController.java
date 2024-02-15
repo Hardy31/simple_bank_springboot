@@ -1,6 +1,9 @@
 package com.bankdone.simple_bank_springboot.presentation;
 
 import com.bankdone.simple_bank_springboot.business.AccountService;
+import com.bankdone.simple_bank_springboot.dto.AccountCreateDTO;
+import com.bankdone.simple_bank_springboot.dto.AccountDTO;
+import com.bankdone.simple_bank_springboot.dto.AccountListDTO;
 import com.bankdone.simple_bank_springboot.entity.Account;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +41,7 @@ public class AccountsController {
      * возвращает список всех клиентов
      */
     @GetMapping("")
-    public List<Account> getAll() {
+    public AccountListDTO getAll() {
         log.info("AccountsController getAll()");
         return accountService.getAll();
     }
@@ -48,7 +51,7 @@ public class AccountsController {
      * возвращает список всех клиентов
      */
     @GetMapping("/{id}")
-    public Account getById(@PathVariable Long id) {
+    public AccountDTO getById(@PathVariable Long id) {
         log.info("AccountsController getById(@PathVariable Long id) : {}", id);
         return accountService.getById(id);
     }
@@ -58,9 +61,9 @@ public class AccountsController {
      *  сохраняет в БД и возвращает созданный Счет
      */
     @PostMapping("")
-    public Account cteate(@RequestBody Account account) {
-        log.info("AccountsController cteate(@RequestBody Account account) : {}", account);
-        return accountService.create(account);
+    public AccountDTO cteate(@RequestBody AccountCreateDTO accountCreateDTO) {
+        log.info("AccountsController cteate(@RequestBody Account account) : {}", accountCreateDTO);
+        return accountService.create(accountCreateDTO);
     }
 
     /**
@@ -68,9 +71,9 @@ public class AccountsController {
      *  редактирует  в БД и возвращает измененный Счет
      */
     @PutMapping("")
-    public Account editAccount(@RequestBody Account account) {
-        log.info("AccountsController editAccount(@RequestBody Account account) : {}", account);
-        return accountService.edit(account);
+    public AccountDTO editAccount(@RequestBody AccountDTO accountDTO) {
+        log.info("AccountsController editAccount(@RequestBody Account account) : {}", accountDTO);
+        return accountService.edit(accountDTO);
     }
 
     /**

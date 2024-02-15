@@ -1,13 +1,12 @@
 package com.bankdone.simple_bank_springboot.presentation;
 
 import com.bankdone.simple_bank_springboot.business.TransactionService;
-import com.bankdone.simple_bank_springboot.dto.CreateTransactionDTO;
-import com.bankdone.simple_bank_springboot.entity.Transaction;
+import com.bankdone.simple_bank_springboot.dto.TransactionCreateDTO;
+import com.bankdone.simple_bank_springboot.dto.TransactionDTO;
+import com.bankdone.simple_bank_springboot.dto.TransactionListDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * <h3>Класс  TransactionController</h3><br>
@@ -38,22 +37,22 @@ public class TransactionController {
      * софподают и достаточно средст для перевода.
      * ! Не использовать если осуществляется снятие или пополнение счета
      * TODO: для снятия и пополнения средст необходимы другие  методы!
-     * @param  createTransactionDTO
-     * @return Transaction
+     * @param  transactionCreateDTO
+     * @return TransactionDTO
      */
     @PostMapping("")
-    public Transaction create(@RequestBody CreateTransactionDTO createTransactionDTO){
+    public TransactionDTO create(@RequestBody TransactionCreateDTO transactionCreateDTO){
         log.info("TransactionService - create(@RequestBody CreateTransactionDTO createTransactionDTO) ");
-        return  transactionService.createTransaction(createTransactionDTO);
+        return  transactionService.createTransaction(transactionCreateDTO);
 
     }
 
     /**
      * Возвращает список  всех транзакций
-     * @return List<Transaction>
+     * @return TransactionListDTO
      */
     @GetMapping("")
-    public List<Transaction> getAll(){
+    public TransactionListDTO getAll(){
         log.info("TransactionService - getAll() ");
         return transactionService.getAllTransaction();
     }
@@ -62,11 +61,11 @@ public class TransactionController {
     /**
      * Возвращает транзакцию по Id
      * @param  id
-     * @return Transaction
+     * @return TransactionDTO
      */
     @GetMapping("/{id}")
-    public Transaction getById(@PathVariable Long id){
+    public TransactionDTO getById(@PathVariable Long id){
         log.info("TransactionService - getById(@PathVariable Long id) : id = {} ", id);
-        return  transactionService.getTransactionById(id).get();
+        return  transactionService.getTransactionById(id);
     }
 }

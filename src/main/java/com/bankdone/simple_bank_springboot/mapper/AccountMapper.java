@@ -2,12 +2,15 @@ package com.bankdone.simple_bank_springboot.mapper;
 
 import com.bankdone.simple_bank_springboot.dto.AccountCreateDTO;
 import com.bankdone.simple_bank_springboot.dto.AccountDTO;
+import com.bankdone.simple_bank_springboot.dto.AgreementDTO;
 import com.bankdone.simple_bank_springboot.entity.Account;
+import com.bankdone.simple_bank_springboot.entity.Agreement;
 import lombok.experimental.FieldDefaults;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Mapper(componentModel = "spring",  imports = LocalDateTime.class)
 public interface AccountMapper {
@@ -18,5 +21,7 @@ public interface AccountMapper {
 
     @Mapping(target = "createdAt", expression = "java(LocalDateTime.now())")
     Account creatToEntity(AccountCreateDTO accountCreateDTO);
+
+    List<AccountDTO> convertToAccountDTOList (List<Account> accountList);
 
 }

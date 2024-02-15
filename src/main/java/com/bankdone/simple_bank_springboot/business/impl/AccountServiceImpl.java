@@ -1,15 +1,26 @@
 package com.bankdone.simple_bank_springboot.business.impl;
 
 import com.bankdone.simple_bank_springboot.business.AccountService;
+import com.bankdone.simple_bank_springboot.business.exeption.AccountNotFoundException;
+import com.bankdone.simple_bank_springboot.business.exeption.ErrorMessage;
+import com.bankdone.simple_bank_springboot.business.exeption.NegativeDataException;
 import com.bankdone.simple_bank_springboot.data_access.AccountRepository;
+import com.bankdone.simple_bank_springboot.dto.AccountCreateDTO;
+import com.bankdone.simple_bank_springboot.dto.AccountDTO;
+import com.bankdone.simple_bank_springboot.dto.AccountListDTO;
 import com.bankdone.simple_bank_springboot.entity.Account;
 import com.bankdone.simple_bank_springboot.entity.Agreement;
+import com.bankdone.simple_bank_springboot.entity.enums.AccountStatus;
+import com.bankdone.simple_bank_springboot.entity.enums.AccountType;
+import com.bankdone.simple_bank_springboot.entity.enums.CurrencyCode;
+import com.bankdone.simple_bank_springboot.mapper.AccountMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -44,46 +55,85 @@ public class AccountServiceImpl implements AccountService {
      * AccountRepository используется для получения данных по счетам из БД
      */
     private final AccountRepository accountRepository;
+    private final AccountMapper accountMapper;
 
     /**
-     * Возвращает список  всех счетов.
-     * @return List<Account>
+     * согдание счета по переданным параментам
+     * @param accountCreateDTO AccountCreateDTO
+     * @return Account с присвоенным id
      */
-    @Override
-    @Cacheable("Accounts")
-    public List<Account> getAll() {
-        return (List<Account>) accountRepository.findAll();
+    @CacheEvict("Accounts")
+    public AccountDTO create(AccountCreateDTO accountCreateDTO) {
+        if (accountCreateDTO.getClientId() == null) {
+            throw new NullPointerException("clientId cannot be null");
+        }
+
+        if (Double.parseDouble(accountCreateDTO.getBalance()) < 0.0) {
+            throw new NegativeDataException(ErrorMessage.NEGATIVE_DATA);
+        }
+
+        Account account = accountRepository.save(accountMapper.creatToEntity(accountCreateDTO));
+        AccountDTO result = accountMapper.convertToDTO(accountRepository.save(account));
+
+        return result;
     }
 
     /**
      * Возвращает счет по id
      * @param id long
-     * @return Account
+     * @return AccountDTO
      */
-    public Account getById(Long id) {
-        return accountRepository.findById(id).get();
+    public AccountDTO getById(Long id) {
+
+        Account account = accountRepository.findById(id).orElseThrow(
+                ()->new AccountNotFoundException(ErrorMessage.ACCOUNT_NOT_FOUND)
+        );
+        AccountDTO result = accountMapper.convertToDTO(account);
+        return result;
 
     }
-
     /**
-     * согдание счета по переданным параментам
-     * @param account Account
-     * @return Account с присвоенным id
+     * Возвращает список  всех счетов.
+     * @return List<AccountDTO>
      */
-    @CacheEvict("Accounts")
-    public Account create(Account account) {
-        return accountRepository.save(account);
+    @Override
+    @Cacheable("Accounts")
+    public AccountListDTO getAll() {
+        List<Account> accountList = accountRepository.findAll();
+        accountMapper.convertToAccountDTOList(accountList);
+        return new AccountListDTO(accountMapper.convertToAccountDTOList(accountList));
     }
+
+
+
+
 
     /**
      * редактирование  счета по переданным параментам
      * TODO: могут ли быть изменения по счету для полей Имя, тип, код валюты?,
-     * @param account Account
-     * @return Account с присвоенным id
+     * @param accountDTO AccountDTO
+     * @return AccountDTO с присвоенным id
      */
     @CacheEvict("Accounts")
-    public Account edit(Account account) {
-        return accountRepository.save(account);
+    public AccountDTO edit(AccountDTO accountDTO) {
+        if (Double.parseDouble(accountDTO.getBalance()) < 0.0) {
+            throw new NegativeDataException(ErrorMessage.NEGATIVE_DATA);
+        }
+
+        Account account = accountRepository.findById(Long.valueOf(accountDTO.getId())).orElseThrow(
+                () -> new AccountNotFoundException(ErrorMessage.ACCOUNT_NOT_FOUND)
+        );
+
+        account.setName(accountDTO.getName());
+        account.setType(AccountType.valueOf(accountDTO.getType()));
+        account.setStatus(AccountStatus.valueOf(accountDTO.getStatus()));
+        account.setBalance(Double.parseDouble(accountDTO.getBalance()));
+        account.setCode(CurrencyCode.valueOf(accountDTO.getCurrencyCode()));
+        account.setUpdatedAt(LocalDateTime.now());
+        account.setClient(account.getClient());
+
+
+        return accountMapper.convertToDTO(accountRepository.save(account));
     }
 
     /**

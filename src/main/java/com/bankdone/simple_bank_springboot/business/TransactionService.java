@@ -1,6 +1,8 @@
 package com.bankdone.simple_bank_springboot.business;
 
-import com.bankdone.simple_bank_springboot.dto.CreateTransactionDTO;
+import com.bankdone.simple_bank_springboot.dto.TransactionCreateDTO;
+import com.bankdone.simple_bank_springboot.dto.TransactionDTO;
+import com.bankdone.simple_bank_springboot.dto.TransactionListDTO;
 import com.bankdone.simple_bank_springboot.entity.Transaction;
 
 import java.util.List;
@@ -13,10 +15,10 @@ import java.util.Optional;
  */
 public interface TransactionService {
 
-    List<Transaction> getAllTransaction();
+    TransactionListDTO getAllTransaction();
 
-    Optional<Transaction> getTransactionById(Long id);
+    TransactionDTO getTransactionById(Long id);
 
-    Transaction createTransaction(CreateTransactionDTO transaction);
+    TransactionDTO createTransaction(TransactionCreateDTO transactionCreateDTO);
 
 }

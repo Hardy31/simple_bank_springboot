@@ -129,7 +129,7 @@ public class AgreementServiceImpl implements AgreementService {
             throw new NegativeDataException(ErrorMessage.NEGATIVE_DATA);
         }
         Long productId = Long.parseLong(agreementDTO.getProductDTO().getId());
-        Long accountId = Long.parseLong(agreementDTO.getAccountDTO().getId());
+        Long accountId = Long.parseLong(agreementDTO.getAccountDTO().toString());
 
         Product product = productRepository.findById(productId).orElseThrow(
                 () -> new ProductNotFoundException(ErrorMessage.PRODUCT_NOT_FOUND)
