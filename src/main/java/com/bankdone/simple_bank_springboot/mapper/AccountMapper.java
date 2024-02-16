@@ -16,11 +16,14 @@ import java.util.List;
 public interface AccountMapper {
 
     @Mapping(target = "clientDTO", source = "account.client")
+    @Mapping(target = "clientDTO.managerDTO", source = "account.client.manager")
     AccountDTO convertToDTO(Account account);
     Account convertToEntity(AccountDTO accountDTO);
 
     @Mapping(target = "createdAt", expression = "java(LocalDateTime.now())")
+    @Mapping(target = "code", source = "currencyCode")
     Account creatToEntity(AccountCreateDTO accountCreateDTO);
+
 
     List<AccountDTO> convertToAccountDTOList (List<Account> accountList);
 

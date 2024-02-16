@@ -2,19 +2,25 @@ package com.bankdone.simple_bank_springboot.business.impl;
 
 import com.bankdone.simple_bank_springboot.business.AccountService;
 import com.bankdone.simple_bank_springboot.business.exeption.AccountNotFoundException;
+import com.bankdone.simple_bank_springboot.business.exeption.ClientNotFoundException;
 import com.bankdone.simple_bank_springboot.business.exeption.ErrorMessage;
 import com.bankdone.simple_bank_springboot.business.exeption.NegativeDataException;
 import com.bankdone.simple_bank_springboot.data_access.AccountRepository;
+import com.bankdone.simple_bank_springboot.data_access.ClientRepository;
+import com.bankdone.simple_bank_springboot.data_access.ManagerRepository;
 import com.bankdone.simple_bank_springboot.dto.AccountCreateDTO;
 import com.bankdone.simple_bank_springboot.dto.AccountDTO;
 import com.bankdone.simple_bank_springboot.dto.AccountListDTO;
 import com.bankdone.simple_bank_springboot.entity.Account;
 import com.bankdone.simple_bank_springboot.entity.Agreement;
+import com.bankdone.simple_bank_springboot.entity.Client;
+import com.bankdone.simple_bank_springboot.entity.Manager;
 import com.bankdone.simple_bank_springboot.entity.enums.AccountStatus;
 import com.bankdone.simple_bank_springboot.entity.enums.AccountType;
 import com.bankdone.simple_bank_springboot.entity.enums.CurrencyCode;
 import com.bankdone.simple_bank_springboot.mapper.AccountMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -49,12 +55,15 @@ import java.util.List;
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class AccountServiceImpl implements AccountService {
 
     /**
      * AccountRepository используется для получения данных по счетам из БД
      */
     private final AccountRepository accountRepository;
+    private final ClientRepository clientRepository;
+    private final ManagerRepository managerRepository;
     private final AccountMapper accountMapper;
 
     /**
@@ -67,12 +76,18 @@ public class AccountServiceImpl implements AccountService {
         if (accountCreateDTO.getClientId() == null) {
             throw new NullPointerException("clientId cannot be null");
         }
+        Client client = clientRepository.findById(Long.parseLong(accountCreateDTO.getClientId())).orElseThrow(
+                ()->new ClientNotFoundException(ErrorMessage.CLIENT_NOT_FOUND)
+        );
 
         if (Double.parseDouble(accountCreateDTO.getBalance()) < 0.0) {
             throw new NegativeDataException(ErrorMessage.NEGATIVE_DATA);
         }
+        Account accountCreate = accountMapper.creatToEntity(accountCreateDTO);
+        accountCreate.setClient(client);
 
-        Account account = accountRepository.save(accountMapper.creatToEntity(accountCreateDTO));
+log.info("AccountServiceImpl create(AccountCreateDTO accountCreateDTO) accountCreate {}", accountCreate);
+        Account account = accountRepository.save(accountCreate);
         AccountDTO result = accountMapper.convertToDTO(accountRepository.save(account));
 
         return result;
@@ -88,6 +103,9 @@ public class AccountServiceImpl implements AccountService {
         Account account = accountRepository.findById(id).orElseThrow(
                 ()->new AccountNotFoundException(ErrorMessage.ACCOUNT_NOT_FOUND)
         );
+        log.info("AccountServiceImpl getById(Long id) {}", account);
+//        Менеджер не поподает в account-client-Manager
+        Manager manager = managerRepository.findById(account.getClient().getManager().getId()).get();
         AccountDTO result = accountMapper.convertToDTO(account);
         return result;
 

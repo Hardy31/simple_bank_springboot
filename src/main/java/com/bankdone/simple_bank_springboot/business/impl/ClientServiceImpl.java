@@ -120,6 +120,13 @@ public class ClientServiceImpl implements ClientService {
         Client client = clientMapper.convertToEntity( clientDTO);
         client.setCreatedAt(clientRepository.findById(client.getId()).get().getCreatedAt());
         client.setUpdatedAt(LocalDateTime.now());
+
+        String managerID = clientDTO.getId();
+        Long managerId = Long.parseLong(managerID);
+        Manager manager = managerRepository.findById(managerId).orElseThrow(
+                ()->new ManagerNotFoundException(ErrorMessage.Manager_NOT_FOUND)
+        );
+
         Client savedClient1 = clientRepository.save(client);
         Long clientId = savedClient1.getId();
         Client requestClient = clientRepository.findById(clientId).orElseThrow(
