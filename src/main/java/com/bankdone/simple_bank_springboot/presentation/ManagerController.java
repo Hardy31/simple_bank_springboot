@@ -10,6 +10,10 @@ import com.bankdone.simple_bank_springboot.entity.enums.ManagerStatus;
 //import io.swagger.annotations.Api;
 //import io.swagger.annotations.ApiOperation;
 //import io.swagger.v3.oas.annotations.OpenAPI31;
+//import io.swagger.annotations.Api;
+//import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -40,7 +44,8 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/rest/managers")
 @RequiredArgsConstructor
-//@Api (description = "ManagerController  пример работы Swagger")
+//@Api(description = "ManagerController  пример работы Swagger")
+@Tag(name = "Tag 1", description = "ManagerController  пример работы Swagger")
 public class ManagerController {
 
     /**
@@ -56,6 +61,7 @@ public class ManagerController {
     @GetMapping("")
     @ResponseStatus(HttpStatus.OK)
 //    @ApiOperation("Получение списка всех Менеджеров")
+    @Operation(summary = "manager", description = "Получение списка всех Менеджеров")
     public List<ManagerDTO> getAllManagers() {
         log.info("ManagerController - getAllManagers() ");
         return managerService.getAllManagers();
@@ -72,6 +78,7 @@ public class ManagerController {
     @GetMapping("/status/{status}")
     @ResponseStatus(HttpStatus.OK)
 //    @ApiOperation("Получение списка всех Менеджеров со статусом ???")
+    @Operation(summary = "manager", description = "Получение списка всех Менеджеров со статусом ???")
     public List<ManagerDTO> getAllManagersByStatus(@PathVariable String status) {
         log.info("ManagerController getAllManagersByStatus(@PathVariable String status) : {}", status);
         return managerService.getAllManagersByStatus(ManagerStatus.valueOf(status));
@@ -85,6 +92,7 @@ public class ManagerController {
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
 //    @ApiOperation("Получение Менеджера по его Id")
+    @Operation(summary = "manager", description = "Получение Менеджера по его Id")
     public ManagerDTO getManagerById(@PathVariable Long id) {
         log.info("ManagerController getManagerById(@PathVariable Long id) : {} ", id);
         return managerService.getManagerById(id);
@@ -97,6 +105,7 @@ public class ManagerController {
      */
     @DeleteMapping("/{id}")
 //    @ApiOperation("Удаление Менеджера по его Id")
+    @Operation(summary = "manager", description = "Удаление Менеджера по его Id")
     public void delete(@PathVariable Long id) {
         log.info("ManagerController delete(@PathVariable Long id) : {}", id);
         managerService.deleteManagerById(id);
@@ -110,6 +119,7 @@ public class ManagerController {
      */
     @PostMapping("")
 //    @ApiOperation("Создание Менеджера ")
+    @Operation(summary = "manager", description = "Создание Менеджера ")
     public ManagerDTO create(@RequestBody ManagerCreatDTO managerDTO) {
         log.info("ManagerController create(@RequestBody Manager manager!!!!!) : {}", managerDTO);
         ManagerDTO responsManagerDTO = managerService.createManager(managerDTO);
@@ -124,6 +134,7 @@ public class ManagerController {
      */
     @PutMapping("/{id}")
 //    @ApiOperation("Изменение данных в модели Менеджер по его Id")
+    @Operation(summary = "manager", description = "Изменение данных в модели Менеджер по его Id")
     public ManagerDTO edit(@PathVariable Long id, @RequestBody ManagerDTO managerDTO) {
         log.info("ManagerController edit(" +
                 "@PathVariable Long id = {} , " +
@@ -141,6 +152,7 @@ public class ManagerController {
      */
     @GetMapping("/with/{data}")
 //    @ApiOperation("Получение списка всех Менеджеров работающих с определенной даты")
+    @Operation(summary = "manager", description = "Получение списка всех Менеджеров работающих с определенной даты")
     public List<ManagerDTO> getAllManagersWorkingWith(
             @PathVariable(value = "data")
             @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime data) {
@@ -155,6 +167,7 @@ public class ManagerController {
      */
     @PostMapping("/by-FIO")
 //    @ApiOperation("Получение списка всех Менеджеров по его фамилии")
+    @Operation(summary = "manager", description = "Получение списка всех Менеджеров по его фамилии")
     public String getManagerByNameSurname(@RequestBody ManagerDTO managerDTO) {
 
         log.info("ManagerController getManagerByNameSurname(@RequestBody Manager manager) : {} ", managerDTO);
@@ -174,6 +187,7 @@ public class ManagerController {
      */
     @PostMapping("/by-period")
 //    @ApiOperation("Получение списка всех Менеджеров работавщих в период ????")
+    @Operation(summary = "manager", description = "Получение списка всех Менеджеров работавщих в период ????")
     public List<ManagerDTO> getAllManagersByPeriod(@RequestBody PeriodDTO periodDTO)
     {
         log.info("ManagerController etAllManagersByPeriod(@RequestBody PeriodDTO periodDTO) " +
@@ -199,6 +213,7 @@ public class ManagerController {
      */
     @GetMapping("with/{dateWith}/to/{dateTo}")
 //    @ApiOperation("Получение списка всех Менеджеров устрившихся на работу в период С По")
+    @Operation(summary = "manager", description = "Получение списка всех Менеджеров устрившихся на работу в период С По")
     public List<ManagerDTO> getAllManagersCreatAtWithTo(
             @PathVariable (value = "dateWith")
             @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime dateWith,

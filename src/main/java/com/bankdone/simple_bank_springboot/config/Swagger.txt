@@ -1,0 +1,26 @@
+
+
+http://localhost:8080/swagger-ui/index.html
+
+в pom.xml
+
+замена
+<!--        <version>2.7.3</version>-->
+        <version>3.0.4</version>
+
+
+добавлена зависимость:
+
+ <!--Подключаем Swager 3 -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>2.3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-spring-web</artifactId>
+            <version>3.0.0</version>
+        </dependency>
+
+

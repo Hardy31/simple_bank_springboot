@@ -80,8 +80,10 @@ public class ClientServiceImpl implements ClientService {
      */
     @CacheEvict("Clients")
     public ClientDTO getClientById(Long id) {
-        ClientDTO result = clientMapper.convertToDTO(clientRepository.findById(id).get());
-        log.info("ClientServiceImpl getClientById(Long id) clientDTOLise - ", result);
+        Client temp = clientRepository.findById(id).get();
+        log.info("ClientServiceImpl getClientById(Long id) temp - 001", temp);
+        ClientDTO result = clientMapper.convertToDTO(temp);
+        log.info("ClientServiceImpl getClientById(Long id) clientDTOLise 111- ", result);
         return result;
 
     }

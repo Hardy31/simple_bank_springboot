@@ -2,15 +2,16 @@ package com.bankdone.simple_bank_springboot.entity;
 
 
 import com.bankdone.simple_bank_springboot.entity.enums.ClientStatus;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+//import javax.persistence.*;
 import java.time.LocalDateTime;
 
-import static javax.persistence.CascadeType.*;
+//import static javax.persistence.CascadeType.*;
 
 
 /**
@@ -44,7 +45,7 @@ import static javax.persistence.CascadeType.*;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table (name = "client", schema = "public")
+@Table(name = "client", schema = "public")
 public class Client {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

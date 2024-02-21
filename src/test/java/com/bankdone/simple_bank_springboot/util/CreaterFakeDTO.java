@@ -1,7 +1,12 @@
 package com.bankdone.simple_bank_springboot.util;
 
+import com.bankdone.simple_bank_springboot.dto.ClientCreatDTO;
+import com.bankdone.simple_bank_springboot.dto.ClientDTO;
 import com.bankdone.simple_bank_springboot.dto.ManagerCreatDTO;
 import com.bankdone.simple_bank_springboot.dto.ManagerDTO;
+import com.bankdone.simple_bank_springboot.entity.Client;
+import com.bankdone.simple_bank_springboot.entity.Transaction;
+import com.bankdone.simple_bank_springboot.entity.enums.ClientStatus;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Timestamp;
@@ -43,7 +48,43 @@ public class CreaterFakeDTO {
         return managerCreatFackDTO;
 
 
-//        public static CreateTransactionDTO CreateFakeTransactionDTO(){
+
+
+    }
+
+    public static ClientCreatDTO getClientToCreate() {
+        ClientCreatDTO clientCreatFackDTO = new ClientCreatDTO(
+                "ACTIVE",
+                "Naccound",
+                "nameClientF",
+                "SurnameClientF",
+                "emailClientF",
+                "addresClientF",
+                "phoneClientF",
+                "2"
+        );
+        return clientCreatFackDTO;
+    }
+    public static ClientDTO getClientDTO() {
+        ManagerDTO managerDTO = getManagerDTO(2L);
+//        new ClientDTO("3", "ACTIVE", "Naccound", "nameClientF", "SurnameClientF", "emailClientF", "addresClientF", "phoneClientF", managerDTO);
+        ClientDTO clientFackDTO = new ClientDTO(
+                "3",
+                "ACTIVE",
+                "Naccound",
+                "nameClientF",
+                "SurnameClientF",
+                "emailClientF",
+                "addresClientF",
+                "phoneClientF",
+                LocalDateTime.now(),
+                null,
+                managerDTO
+        );
+        return clientFackDTO;
+    }
+
+//            public static TransactionCreateDTO CreateFakeTransactionDTO(){
 ////        Account debetAccountTemplate = CreatorFakeEntity.getFakeAccount(9L);
 ////        Account credetAccountTemplate = CreatorFakeEntity.getFakeAccount(8L);
 //        CreateTransactionDTO createTransactionDTO =  CreateTransactionDTO.builder()
@@ -57,5 +98,4 @@ public class CreaterFakeDTO {
 //        return createTransactionDTO;
 //    }
 
-    }
 }

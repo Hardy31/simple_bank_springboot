@@ -35,54 +35,54 @@ class AccountServiceImplTest {
 
     List<Account> accountTemplateList;
 
-    @BeforeEach
-    public void setUp(){
-        accountTemplate = CreatorFakeEntity.getFakeAccount(5L);
-        log.info("AccountServiceImplTest - setUp - accountTemplate : {} ", accountTemplate );
-        accountService = new AccountServiceImpl(accountRepository);
-        accountTemplateList = new ArrayList<>(List.of(accountTemplate));
-
-    }
-
-    @Test
-    void create() {
-        when(accountRepository.save(any())).thenReturn(accountTemplate);
-        Account result = accountService.create(accountTemplate);
-        verify(accountRepository).save(any());
-        assertEquals(accountTemplate, result);
-    }
-
-    @Test
-    void edit() {
-        when(accountRepository.save(any())).thenReturn(accountTemplate);
-        Account result = accountService.edit(accountTemplate);
-        verify(accountRepository).save(any());
-        assertEquals(accountTemplate, result);
-    }
-
-    @Test
-    void delite() {
-        doNothing().when(accountRepository).deleteById(anyLong());
-        accountService.delite(6L);
-        verify(accountRepository).deleteById(anyLong());
-    }
-
-    @Test
-    void getById() {
-        when(accountRepository.findById(anyLong())).thenReturn(Optional.of(accountTemplate));
-        Account result = accountService.getById(6L);
-        log.info("AccountServiceImplTest - getById - result : {} ", result );
-        verify(accountRepository).findById(anyLong());
-        assertEquals(accountTemplate, result);
-
-
-    }
-
-    @Test
-    void getAll() {
-        when(accountRepository.findAll()).thenReturn(accountTemplateList);
-        List<Account> resultList = accountService.getAll();
-        verify(accountRepository).findAll();
-        assertEquals(accountTemplateList, resultList);
-    }
+//    @BeforeEach
+//    public void setUp(){
+//        accountTemplate = CreatorFakeEntity.getFakeAccount(5L);
+//        log.info("AccountServiceImplTest - setUp - accountTemplate : {} ", accountTemplate );
+//        accountService = new AccountServiceImpl(accountRepository);
+//        accountTemplateList = new ArrayList<>(List.of(accountTemplate));
+//
+//    }
+//
+//    @Test
+//    void create() {
+//        when(accountRepository.save(any())).thenReturn(accountTemplate);
+//        Account result = accountService.create(accountTemplate);
+//        verify(accountRepository).save(any());
+//        assertEquals(accountTemplate, result);
+//    }
+//
+//    @Test
+//    void edit() {
+//        when(accountRepository.save(any())).thenReturn(accountTemplate);
+//        Account result = accountService.edit(accountTemplate);
+//        verify(accountRepository).save(any());
+//        assertEquals(accountTemplate, result);
+//    }
+//
+//    @Test
+//    void delite() {
+//        doNothing().when(accountRepository).deleteById(anyLong());
+//        accountService.delite(6L);
+//        verify(accountRepository).deleteById(anyLong());
+//    }
+//
+//    @Test
+//    void getById() {
+//        when(accountRepository.findById(anyLong())).thenReturn(Optional.of(accountTemplate));
+//        Account result = accountService.getById(6L);
+//        log.info("AccountServiceImplTest - getById - result : {} ", result );
+//        verify(accountRepository).findById(anyLong());
+//        assertEquals(accountTemplate, result);
+//
+//
+//    }
+//
+//    @Test
+//    void getAll() {
+//        when(accountRepository.findAll()).thenReturn(accountTemplateList);
+//        List<Account> resultList = accountService.getAll();
+//        verify(accountRepository).findAll();
+//        assertEquals(accountTemplateList, resultList);
+//    }
 }

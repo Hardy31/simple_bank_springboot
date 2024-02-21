@@ -170,7 +170,7 @@ public class AgreementServiceImpl implements AgreementService {
      * @return List<Agreement>
      */
     @Override
-    @Cacheable("Agreements")
+    @CachePut("Agreements")
     public List<AgreementDTO> getAll() {
 
         return new AgreementListDTO(agreementMapper.convertToAgreementDTOList(
