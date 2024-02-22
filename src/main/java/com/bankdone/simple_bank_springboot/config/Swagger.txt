@@ -1,3 +1,4 @@
+https://github.com/springdoc/springdoc-openapi
 
 
 http://localhost:8080/swagger-ui/index.html
@@ -15,12 +16,14 @@ http://localhost:8080/swagger-ui/index.html
         <dependency>
             <groupId>org.springdoc</groupId>
                 <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-            <version>2.3.0</version>
-        </dependency>
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-spring-web</artifactId>
-            <version>3.0.0</version>
+            <version>2.0.2</version>
         </dependency>
 
 
+ Конфигурационный файл не обязателен. Он необходим для облагараживания  стартовой страници.
+
+ Аннотации не обязательны.  Swagger сам разберет контроллеры и предоставит структуру DTO
+
+Ссылка для просмотра  документации :
+
+http://localhost:8080/swagger-ui/index.html
