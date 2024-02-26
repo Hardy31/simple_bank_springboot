@@ -1,0 +1,15 @@
+[ {
+  "id" : 1,
+  "createdAt" : "1998-07-07 00:00:00.000000",
+  "firstName" : "Aron",
+  "lastName" : "Galpern",
+  "status" : "ACTIVE",
+  "updatedAt" : ""
+}, {
+  "id" : 2,
+  "createdAt" : "1998-07-08 00:00:00.000000",
+  "firstName" : "Haim",
+  "lastName" : "Mizrahim",
+  "status" : "ACTIVE",
+  "updatedAt" : "2023-11-10 00:00:00.000000"
+} ]

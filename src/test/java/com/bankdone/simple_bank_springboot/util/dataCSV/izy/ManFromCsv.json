@@ -1,0 +1,15 @@
+[ {
+  "id" : 1,
+  "firstName" : "Aron",
+  "lastName" : "Galpern",
+  "status" : "ACTIVE",
+  "createdAt" : null,
+  "updatedAt" : null
+}, {
+  "id" : 2,
+  "firstName" : "Haim",
+  "lastName" : "Mizrahim",
+  "status" : "ACTIVE",
+  "createdAt" : null,
+  "updatedAt" : null
+} ]

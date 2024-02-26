@@ -1,0 +1,45 @@
+При запушеннои приложении в терминале
+//        curl http://localhost:8080/rest/managers/2
+//        curl localhost:8080/rest/managers/2
+
+{"id":"2","firstName":"Haim","lastName":"Mizrahim","status":"ACTIVE","createdAt":"1998-07-08T00:00:00.000000000","updatedAt":"2023-11-10T00:00:00.000000000"}alex@alex-pc:~/Документы/DaniilT/simple_bank_springboot$
+
+Тестовый фреймворк Spring MVC Test, также известный как MockMvc, обеспечивает поддержку тестирования приложений Spring MVC. Он выполняет полную обработку запросов Spring MVC через имитируемые объекты-запросы и объекты-ответов вместо работающего сервера.
+
+MockMvc можно использовать отдельно для выполнения запросов и проверки ответов.
+Его  можно использовать через WebTestClient, где MockMvc подключен в качестве сервера для обработки запросов.
+Преимуществом WebTestClient является возможность работы с объектами более высокого уровня вместо сырых данных,
+а также возможность перехода к полноценным, сквозным HTTP-тестам на реальном сервере с использованием того же API-интерфейса тестирования.
+
+Разберем на примере создания Manager
+
+
+        @Test
+            void createTest() throws Exception {
+                //  мокируем работу сервеса
+                when(managerService.createManager(any(ManagerCreatDTO.class))).thenReturn(managerDTO);
+                // создаем проверочный обект Manager через статический  построитель   reateFakeManager()
+                Manager fakManager = CreatorFakeEntity.createFakeManager();
+                // через библиотеку Jackson . класс ObjectMapper() сериализуем созданный обект
+                String json = new ObjectMapper().writeValueAsString(fakManager);
+                log.info("ManagerControllerTest createTest() JSON Request - {}" , json);
+                // через MockMvcRequestBuilders определяем запрос который будет подставляться  в тестируемый контроллер.
+                RequestBuilder request = MockMvcRequestBuilders
+                        .post("/rest/managers")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json);
+                //Так как поле createAt у нас определяется при маппинге, нам необходимо заполнить его вручную.
+                createAt = CreaterFakeDTO.now;
+                // выполнения запросов и проверки ответов
+                mockMvc.perform(request)
+                        .andDo(print())             // печатает ответ в консоль
+                        .andExpect(status().isOk())     // проверка статуса
+                        .andExpect(content().contentType(MediaType.APPLICATION_JSON))   // проверка типа  ответа
+                        .andExpect(jsonPath("$.id").value(managerTemplate.getId()))     // проверка значений ответа
+                        .andExpect(jsonPath("$.firstName").value(managerTemplate.getFirstName()))
+                        .andExpect(jsonPath("$.lastName").value(managerTemplate.getLastName()))
+                        .andExpect(jsonPath("$.status").value(managerTemplate.getStatus().toString()))
+                        .andExpect(jsonPath("$.createdAt").value(managerTemplate.getCreatedAt().toString()))     //Форма представления ManagerDTO.createdAt!
+                        .andExpect(jsonPath("$.updatedAt").value(managerTemplate.getUpdatedAt()))
+                        .andReturn();
+            }

@@ -5,6 +5,7 @@ import com.bankdone.simple_bank_springboot.dto.ManagerCreatDTO;
 import com.bankdone.simple_bank_springboot.dto.ManagerDTO;
 import com.bankdone.simple_bank_springboot.dto.ManagerListDTO;
 import com.bankdone.simple_bank_springboot.entity.Manager;
+import com.bankdone.simple_bank_springboot.util.CSVParser;
 import com.bankdone.simple_bank_springboot.util.CreaterFakeDTO;
 import com.bankdone.simple_bank_springboot.util.CreatorFakeEntity;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -28,11 +29,13 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.junit.jupiter.api.Assertions.*;
@@ -90,9 +93,10 @@ class ManagerControllerTest {
     void createTest() throws Exception {
         when(managerService.createManager(any(ManagerCreatDTO.class))).thenReturn(managerDTO);
 
+
         Manager fakManager = CreatorFakeEntity.createFakeManager();
         String json = new ObjectMapper().writeValueAsString(fakManager);
-
+        log.info("ManagerControllerTest createTest() JSON Request - {}" , json);
         RequestBuilder request = MockMvcRequestBuilders
                 .post("/rest/managers")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -108,7 +112,7 @@ class ManagerControllerTest {
                 .andExpect(jsonPath("$.firstName").value(managerTemplate.getFirstName()))
                 .andExpect(jsonPath("$.lastName").value(managerTemplate.getLastName()))
                 .andExpect(jsonPath("$.status").value(managerTemplate.getStatus().toString()))
-                .andExpect(jsonPath("$.createdAt").value(managerTemplate.getCreatedAt().toString()))     //как протестировать дату
+                .andExpect(jsonPath("$.createdAt").value(managerTemplate.getCreatedAt().toString()))     //Форма представления ManagerDTO.createdAt!
                 .andExpect(jsonPath("$.updatedAt").value(managerTemplate.getUpdatedAt()))
                 .andReturn();
     }
@@ -125,7 +129,9 @@ class ManagerControllerTest {
 
         when(managerService.getAllManagers()).thenReturn(managerDTOList);
 
-        MvcResult result = mockMvc.perform(get("/rest/managers")).andExpect(status().isOk()).andReturn();
+        MvcResult result = mockMvc.perform(get("/rest/managers"))
+                .andExpect(status().isOk())
+                .andReturn();
 
         verify(managerService, times(1)).getAllManagers();
     }
@@ -153,5 +159,6 @@ class ManagerControllerTest {
 
         verify(managerService, times(1)).getManagerById(anyLong());
     }
+
 
 }
