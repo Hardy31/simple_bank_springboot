@@ -1,12 +1,11 @@
 package com.bankdone.simple_bank_springboot.presentation;
 
 import com.bankdone.simple_bank_springboot.business.impl.ManagerServiceImpl;
-import com.bankdone.simple_bank_springboot.dto.ManagerCreatDTO;
-import com.bankdone.simple_bank_springboot.dto.ManagerDTO;
-import com.bankdone.simple_bank_springboot.dto.ManagerListDTO;
+import com.bankdone.simple_bank_springboot.dto.*;
 import com.bankdone.simple_bank_springboot.entity.Manager;
 import com.bankdone.simple_bank_springboot.util.CreaterFakeDTO;
 import com.bankdone.simple_bank_springboot.util.CreatorFakeEntity;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
@@ -21,7 +20,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.*;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -51,22 +53,26 @@ import static org.mockito.Mockito.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
+
 //https://www.youtube.com/watch?v=QTrNqhzniws
 
-@ExtendWith(MockitoExtension.class)
+@ExtendWith(SpringExtension.class)
+@WebMvcTest(controllers = ManagerController.class)
 @Slf4j
 class ManagerControllerTest {
-    @Mock
+    @MockBean
     private ManagerServiceImpl managerService;
-    @InjectMocks
+//    @InjectMocks
     private ManagerController managerController;
+//   @Autowired
     private ObjectMapper objectMapper;
+    @Autowired
     private MockMvc mockMvc;
     Manager managerTemplate;
     List<Manager> managerListTemplate;
     LocalDateTime createAt;
     LocalDateTime UpdatedAt;
-    ManagerCreatDTO managerCreatFackDTO;
+    ManagerCreatDTO managerCreatFakDTO;
     ManagerDTO managerDTO;
     private List<ManagerDTO> managerDTOList;
     private ManagerListDTO managerListDTO;
@@ -75,11 +81,11 @@ class ManagerControllerTest {
     void setUp() {
         managerTemplate = CreatorFakeEntity.getFakeManager(1L);
         managerListTemplate = List.of(managerTemplate, CreatorFakeEntity.getFakeManager(2L));
-        mockMvc = MockMvcBuilders.standaloneSetup(managerController).build();
+//        mockMvc = MockMvcBuilders.standaloneSetup(managerController).build();
 
         LocalDateTime createdAt = managerTemplate.getCreatedAt();
         LocalDateTime UpdatedAt = managerTemplate.getUpdatedAt();
-        managerCreatFackDTO = CreaterFakeDTO.getManagerToCreate();
+        managerCreatFakDTO = CreaterFakeDTO.getManagerToCreate();
         managerDTO = CreaterFakeDTO.getManagerDTO(1l);
 
         managerDTOList = new ArrayList<>(List.of(managerDTO));
@@ -116,23 +122,31 @@ class ManagerControllerTest {
     @Test
     void getAllManagersTest() throws Exception {
 
-        String json = new ObjectMapper().writeValueAsString(managerListTemplate);
-
-        RequestBuilder request = MockMvcRequestBuilders
+        RequestBuilder request =  MockMvcRequestBuilders
                 .get("/rest/managers")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(json);
+                .contentType(MediaType.APPLICATION_JSON);
 
         when(managerService.getAllManagers()).thenReturn(managerDTOList);
+        MvcResult mvcResult = mockMvc.perform(request).andExpect(status().isOk()).andReturn();
 
-        MvcResult result = mockMvc.perform(get("/rest/managers")).andExpect(status().isOk()).andReturn();
+        //Из полученного результата взять ответ и преобразовать в JSON
+        String responsJson = mvcResult.getResponse().getContentAsString();
+        log.info("Respons Client {} responsJson_____________", responsJson);
+
+        //перобразуем полученный JSON  c бект класса ClientDTO
+
+        objectMapper = new ObjectMapper().findAndRegisterModules();;
+         ManagerListDTO actualManagerDTOList = objectMapper.readValue(responsJson, ManagerListDTO.class);
+        compareListDTO(new ManagerListDTO(managerDTOList), actualManagerDTOList);
+//        ManagerDTO actualManagerDTO = objectMapper.readValue(responsJson, ManagerDTO.class);
+//        compareDTO(managerDTO, actualManagerDTO);
 
         verify(managerService, times(1)).getAllManagers();
     }
 
 
     @Test
-    void getManagerById() throws Exception {
+    void getManagerByIdTest() throws Exception {
 
         when(managerService.getManagerById(any())).thenReturn(managerDTO);
 
@@ -153,5 +167,23 @@ class ManagerControllerTest {
 
         verify(managerService, times(1)).getManagerById(anyLong());
     }
+    private void compareDTO(ManagerDTO expectedDTO, ManagerDTO actualDTO) {
+        assertAll(
+                () -> assertEquals(expectedDTO.getId(), actualDTO.getId()),
+                () -> assertEquals(expectedDTO.getStatus(), actualDTO.getStatus()),
+                () -> assertEquals(expectedDTO.getFirstName(), actualDTO.getFirstName()),
+                () -> assertEquals(expectedDTO.getLastName(), actualDTO.getLastName()),
+                () -> assertEquals(expectedDTO.getCreatedAt(), actualDTO.getCreatedAt()),
+                () -> assertEquals(expectedDTO.getUpdatedAt(), actualDTO.getUpdatedAt())
+
+        );
+    }
+    private void compareListDTO(ManagerListDTO expectedListDTO, ManagerListDTO actualListDTO) {
+        assertEquals(expectedListDTO.getManagerDTOList().size(), actualListDTO.getManagerDTOList().size());
+        for (int i = 0; i < expectedListDTO.getManagerDTOList().size(); i++) {
+            compareDTO(expectedListDTO.getManagerDTOList().get(i), actualListDTO.getManagerDTOList().get(i));
+        }
+    }
+
 
 }
