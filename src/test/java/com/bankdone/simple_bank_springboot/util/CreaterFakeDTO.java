@@ -7,12 +7,14 @@ import com.bankdone.simple_bank_springboot.dto.ManagerDTO;
 import com.bankdone.simple_bank_springboot.entity.Client;
 import com.bankdone.simple_bank_springboot.entity.Transaction;
 import com.bankdone.simple_bank_springboot.entity.enums.ClientStatus;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Slf4j
+@Setter
 public class CreaterFakeDTO {
 
     public static LocalDateTime now = LocalDateTime.now();
@@ -77,6 +79,25 @@ public class CreaterFakeDTO {
                 "emailClientF",
                 "addresClientF",
                 "phoneClientF",
+                LocalDateTime.now(),
+                null,
+                managerDTO
+        );
+        return clientFackDTO;
+    }
+
+    public static ClientDTO getClientDTOFoUpdate() {
+        ManagerDTO managerDTO = getManagerDTO(2L);
+//        new ClientDTO("3", "ACTIVE", "Naccound", "nameClientF", "SurnameClientF", "emailClientF", "addresClientF", "phoneClientF", managerDTO);
+        ClientDTO clientFackDTO = new ClientDTO(
+                "3",
+                "ACTIVE",
+                "Naccound",
+                "nameClientUpdate",
+                "SurnameClientUpdate",
+                "emailClientUpdate",
+                "addresClientUpdate",
+                "phoneClientUpdate",
                 LocalDateTime.now(),
                 null,
                 managerDTO

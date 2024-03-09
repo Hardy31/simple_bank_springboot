@@ -1,10 +1,12 @@
 package com.bankdone.simple_bank_springboot.presentation;
 
+import com.bankdone.simple_bank_springboot.business.ClientService;
 import com.bankdone.simple_bank_springboot.business.impl.ClientServiceImpl;
-import com.bankdone.simple_bank_springboot.dto.ClientCreatDTO;
-import com.bankdone.simple_bank_springboot.dto.ClientDTO;
+import com.bankdone.simple_bank_springboot.dto.*;
 import com.bankdone.simple_bank_springboot.util.CreaterFakeDTO;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,6 +24,9 @@ import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -43,11 +48,15 @@ public class ClientControllerTest {
     private ObjectMapper objectMapper;
     private ClientController clientController;
     ClientCreatDTO clientCreatDTOFake;
-    ClientDTO clientDTOFake;
+    ClientDTO clientDTOFake, clientDTOFake1;
+    ClientListDTO clientListDTO;
 
     @BeforeEach
     void seUp(){
         clientDTOFake = CreaterFakeDTO.getClientDTO();
+        clientDTOFake1 = CreaterFakeDTO.getClientDTO();
+        clientListDTO = new ClientListDTO(List.of(clientDTOFake, clientDTOFake1));
+
 //        mockMvc = MockMvcBuilders.standaloneSetup(clientController).build();
         ObjectMapper objectMapper = new ObjectMapper();
 
@@ -102,20 +111,62 @@ public class ClientControllerTest {
         verify(clientService, times(1)).getClientById(Long.valueOf(clientDTOFake.getId()));
     }
     @Test
-    void geAllClients() {
+    void geAllClients() throws Exception {
         RequestBuilder request = MockMvcRequestBuilders.get("/rest/clients").contentType(MediaType.APPLICATION_JSON);
-//        when(clientService.getAllClients()).thenReturn(C)
-        
+        when(clientService.getAllClients()).thenReturn(clientListDTO.getClientDTOList());
+        MvcResult mvcResult = mockMvc.perform(request).andExpect(status().isOk()).andReturn();
+
+        //Из полученного результата взять ответ и преобразовать в JSON
+        String responsJson = mvcResult.getResponse().getContentAsString();
+        objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
+
+
+        ClientDTO[] actualClientDTOArray = objectMapper.readValue(responsJson, ClientDTO[].class);
+        List<ClientDTO> listClientDTO = Arrays.asList(actualClientDTOArray);
+        ClientListDTO actualClientDTOList = new ClientListDTO(listClientDTO);
+
+
+
+        compareListDTO(clientListDTO, actualClientDTOList);
+        verify(clientService, times(1)).getAllClients();
 
     }
 
 
     @Test
-    void editClient() {
+    void editClient() throws Exception {
+        objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
+        ClientDTO clientDtoForApdate = CreaterFakeDTO.getClientDTOFoUpdate();
+        //
+        String requestJson = objectMapper.writeValueAsString(clientDtoForApdate);
+        RequestBuilder request = MockMvcRequestBuilders
+                .put("/rest/clients")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(clientDtoForApdate));
+
+        when(clientService.editClieny(any(ClientDTO.class))).thenReturn(clientDtoForApdate);
+
+        var mvcResult = mockMvc.perform(request).andExpect(status().isOk()).andReturn();
+        ClientDTO actualClientDTO = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), ClientDTO.class);
+        compareDTO(clientDtoForApdate, actualClientDTO);
+        verify(clientService, times(1)).editClieny(clientDtoForApdate);
+
+
+
+
+
     }
 
     @Test
-    void deleteClientById() {
+    void deleteClientById() throws Exception {
+        Long id = 3L;
+        RequestBuilder request = MockMvcRequestBuilders
+                .delete("/rest/clients/{id}", id)
+                .contentType(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(request).andExpect(status().isOk());
+        verify(clientService, times(1)).delite(anyLong());
+
     }
 
     private void compareDTO(ClientDTO expectedDTO, ClientDTO actualDTO) {
@@ -130,5 +181,12 @@ public class ClientControllerTest {
                 () -> assertEquals(expectedDTO.getPhone(), actualDTO.getPhone()),
                 () -> assertEquals(expectedDTO.getManagerDTO().getId(), actualDTO.getManagerDTO().getId())
         );
+    }
+
+    private void compareListDTO(ClientListDTO expectedListDTO, ClientListDTO actualListDTO) {
+        assertEquals(expectedListDTO.getClientDTOList().size(), actualListDTO.getClientDTOList().size());
+        for (int i = 0; i < expectedListDTO.getClientDTOList().size(); i++) {
+            compareDTO(expectedListDTO.getClientDTOList().get(i), actualListDTO.getClientDTOList().get(i));
+        }
     }
 }

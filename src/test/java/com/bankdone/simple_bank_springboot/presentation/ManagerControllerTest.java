@@ -8,6 +8,7 @@ import com.bankdone.simple_bank_springboot.util.CreatorFakeEntity;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.jayway.jsonpath.JsonPath;
@@ -34,6 +35,7 @@ import java.io.OutputStream;
 import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
@@ -73,7 +75,7 @@ class ManagerControllerTest {
     LocalDateTime createAt;
     LocalDateTime UpdatedAt;
     ManagerCreatDTO managerCreatFakDTO;
-    ManagerDTO managerDTO;
+    ManagerDTO managerDTO, managerDTO1;
     private List<ManagerDTO> managerDTOList;
     private ManagerListDTO managerListDTO;
 
@@ -87,8 +89,9 @@ class ManagerControllerTest {
         LocalDateTime UpdatedAt = managerTemplate.getUpdatedAt();
         managerCreatFakDTO = CreaterFakeDTO.getManagerToCreate();
         managerDTO = CreaterFakeDTO.getManagerDTO(1l);
+        managerDTO1 = CreaterFakeDTO.getManagerDTO(2l);
 
-        managerDTOList = new ArrayList<>(List.of(managerDTO));
+        managerDTOList = new ArrayList<>(List.of(managerDTO,managerDTO1));
         managerListDTO = new ManagerListDTO(managerDTOList);
     }
 
@@ -96,8 +99,10 @@ class ManagerControllerTest {
     void createTest() throws Exception {
         when(managerService.createManager(any(ManagerCreatDTO.class))).thenReturn(managerDTO);
 
+        objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());;
         Manager fakManager = CreatorFakeEntity.createFakeManager();
         String json = new ObjectMapper().writeValueAsString(fakManager);
+//        String json = new ObjectMapper().registerModule(new JavaTimeModule()).toString();;
 
         RequestBuilder request = MockMvcRequestBuilders
                 .post("/rest/managers")
@@ -135,12 +140,19 @@ class ManagerControllerTest {
 
         //перобразуем полученный JSON  c бект класса ClientDTO
 
-        objectMapper = new ObjectMapper().findAndRegisterModules();;
-         ManagerListDTO actualManagerDTOList = objectMapper.readValue(responsJson, ManagerListDTO.class);
-        compareListDTO(new ManagerListDTO(managerDTOList), actualManagerDTOList);
-//        ManagerDTO actualManagerDTO = objectMapper.readValue(responsJson, ManagerDTO.class);
-//        compareDTO(managerDTO, actualManagerDTO);
+        objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
+
+        /**
+         * Не нравится вот это рещение!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+         */
+        ManagerDTO[] actualManagerDTOArray = objectMapper.readValue(responsJson, ManagerDTO[].class);
+         List<ManagerDTO> liatManagerDTO = Arrays.asList(actualManagerDTOArray);
+        ManagerListDTO actualManagerDTOList = new ManagerListDTO(liatManagerDTO);
+
+
+
+        compareListDTO(new ManagerListDTO(managerDTOList), actualManagerDTOList);
         verify(managerService, times(1)).getAllManagers();
     }
 
