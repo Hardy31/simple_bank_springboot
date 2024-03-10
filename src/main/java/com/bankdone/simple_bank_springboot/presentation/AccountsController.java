@@ -61,7 +61,7 @@ public class AccountsController {
      *  сохраняет в БД и возвращает созданный Счет
      */
     @PostMapping("")
-    public AccountDTO cteate(@RequestBody AccountCreateDTO accountCreateDTO) {
+    public AccountDTO create(@RequestBody AccountCreateDTO accountCreateDTO) {
         log.info("AccountsController cteate(@RequestBody Account account) : {}", accountCreateDTO);
         return accountService.create(accountCreateDTO);
     }

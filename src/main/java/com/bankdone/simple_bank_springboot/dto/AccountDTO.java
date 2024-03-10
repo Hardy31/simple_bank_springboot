@@ -18,10 +18,24 @@ public class AccountDTO {
     String status;
     String balance;
     String currencyCode;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS")
     LocalDateTime createdAt;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
     LocalDateTime updatedAt;
     ClientDTO clientDTO;
 
+    @Override
+    public String toString() {
+        return "AccountDTO{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", type='" + type + '\'' +
+                ", status='" + status + '\'' +
+                ", balance='" + balance + '\'' +
+                ", currencyCode='" + currencyCode + '\'' +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ", clientDTO=" + clientDTO +
+                '}';
+    }
 }

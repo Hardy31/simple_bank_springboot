@@ -1,9 +1,6 @@
 package com.bankdone.simple_bank_springboot.util;
 
-import com.bankdone.simple_bank_springboot.dto.ClientCreatDTO;
-import com.bankdone.simple_bank_springboot.dto.ClientDTO;
-import com.bankdone.simple_bank_springboot.dto.ManagerCreatDTO;
-import com.bankdone.simple_bank_springboot.dto.ManagerDTO;
+import com.bankdone.simple_bank_springboot.dto.*;
 import com.bankdone.simple_bank_springboot.entity.Client;
 import com.bankdone.simple_bank_springboot.entity.Transaction;
 import com.bankdone.simple_bank_springboot.entity.enums.ClientStatus;
@@ -104,6 +101,57 @@ public class CreaterFakeDTO {
         );
         return clientFackDTO;
     }
+
+    public static AccountCreateDTO getAccountToCreate() {
+
+        AccountCreateDTO accountCreateDTO = new AccountCreateDTO(
+                "number1",
+                "IRA",
+                "ACTIVE",
+                "2995645.56",
+                "RUB",
+                LocalDateTime.now(),
+                null,
+                "1"
+        );
+        return accountCreateDTO;
+    }
+    public static AccountDTO getAccountDTO() {
+        ClientDTO clientDTO = getClientDTO();
+
+        AccountDTO accountDTO = new AccountDTO(
+                "1",
+                "number1",
+                "IRA",
+                "ACTIVE",
+                "2995645.56",
+                "RUB",
+                LocalDateTime.now(),
+                null,
+                clientDTO
+        );
+        return accountDTO;
+    }
+
+    public static AccountDTO getAccountDTOForUpdate() {
+        ClientDTO clientDTO = getClientDTO();
+
+        AccountDTO accountDTO = new AccountDTO(
+                "1",
+                "numberUpdate",
+                "IRA",
+                "ACTIVE",
+                "99999.56",
+                "RUB",
+                LocalDateTime.now(),
+                null,
+                clientDTO
+        );
+        return accountDTO;
+    }
+
+
+
 
 //            public static TransactionCreateDTO CreateFakeTransactionDTO(){
 ////        Account debetAccountTemplate = CreatorFakeEntity.getFakeAccount(9L);
